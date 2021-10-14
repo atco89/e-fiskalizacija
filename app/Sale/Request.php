@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Fiskalizacija\Sale;
 
+use DateTime;
 use Fiskalizacija\Constants\TransactionType;
 use Fiskalizacija\Interfaces\Item;
 use Fiskalizacija\Interfaces\Options;
 use Fiskalizacija\Interfaces\Payment;
-use DateTime;
 
 abstract class Request
 {
@@ -152,7 +152,7 @@ abstract class Request
         return array_map(function (Payment $payment): array {
             return [
                 'amount' => $payment->amount(),
-                'paymentType' => $payment->paymentType(),
+                'paymentType' => $payment->type(),
             ];
         }, $this->payments);
     }

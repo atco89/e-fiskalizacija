@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Fiskalizacija\Sale;
 
-use Fiskalizacija\Interfaces\TaxItem;
 use DateTime;
 use Exception;
+use Fiskalizacija\Interfaces\TaxItem;
 use stdClass;
 
 final class Response
