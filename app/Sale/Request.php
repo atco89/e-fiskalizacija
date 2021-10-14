@@ -6,7 +6,7 @@ namespace Fiskalizacija\Sale;
 use Fiskalizacija\Constants\TransactionType;
 use Fiskalizacija\Interfaces\Item;
 use Fiskalizacija\Interfaces\Options;
-use Fiskalizacija\Interfaces\Payment;
+use Fiskalizacija\Interfaces\PaymentType;
 use DateTime;
 
 abstract class Request
@@ -74,7 +74,7 @@ abstract class Request
     /**
      * List of Payments for the invoice, where each Payment defines its method and amount
      *
-     * @return Payment[]
+     * @return PaymentType[]
      */
     private array $payments;
     /**
@@ -95,7 +95,7 @@ abstract class Request
      * @param string $invoiceNumber
      * @param DateTime $dateAndTimeOfIssue
      * @param Item[] $items
-     * @param Payment[] $payments
+     * @param PaymentType[] $payments
      * @param string $cashierId
      * @param string|null $buyerId
      */
@@ -145,11 +145,11 @@ abstract class Request
     /**
      * List of Payments for the invoice, where each Payment defines its method and amount
      *
-     * @return Payment[]
+     * @return PaymentType[]
      */
     private function payments(): array
     {
-        return array_map(function (Payment $payment): array {
+        return array_map(function (PaymentType $payment): array {
             return [
                 'amount' => $payment->amount(),
                 'paymentType' => $payment->paymentType(),

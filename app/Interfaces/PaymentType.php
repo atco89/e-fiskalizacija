@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Fiskalizacija\Interfaces;
 
-interface Payment
+interface PaymentType
 {
 
     /**
@@ -14,5 +14,5 @@ interface Payment
     /**
      * @return int
      */
-    public function paymentType(): int;
+    public function type(): int;
 }
