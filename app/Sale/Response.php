@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Sale;
+namespace Fiskalizacija\Sale;
 
-use App\Interfaces\TaxItem;
+use Fiskalizacija\Interfaces\TaxItem;
 use DateTime;
 use Exception;
 use stdClass;

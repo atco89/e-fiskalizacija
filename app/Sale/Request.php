@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Sale;
+namespace Fiskalizacija\Sale;
 
-use App\Constants\TransactionType;
-use App\Interfaces\Item;
-use App\Interfaces\Options;
-use App\Interfaces\Payment;
+use Fiskalizacija\Constants\TransactionType;
+use Fiskalizacija\Interfaces\Item;
+use Fiskalizacija\Interfaces\Options;
+use Fiskalizacija\Interfaces\Payment;
 use DateTime;
 
 abstract class Request

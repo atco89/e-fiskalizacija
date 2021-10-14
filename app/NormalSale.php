@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App;
+namespace Fiskalizacija;
 
-use App\Constants\InvoiceType;
-use App\Sale\Sale;
+use Fiskalizacija\Constants\InvoiceType;
+use Fiskalizacija\Sale\Sale;
 
 final class NormalSale extends Sale
 {

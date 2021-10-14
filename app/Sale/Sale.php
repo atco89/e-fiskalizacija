@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Sale;
+namespace Fiskalizacija\Sale;
 
-use App\Exceptions\BadRequestException;
-use App\Interfaces\Configuration;
-use App\Interfaces\Item;
-use App\Interfaces\Payment;
+use Fiskalizacija\Exceptions\BadRequestException;
+use Fiskalizacija\Interfaces\Configuration;
+use Fiskalizacija\Interfaces\Item;
+use Fiskalizacija\Interfaces\Payment;
 use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
