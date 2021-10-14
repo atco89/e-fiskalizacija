@@ -6,7 +6,7 @@ namespace Fiskalizacija\Sale;
 use Fiskalizacija\Exceptions\BadRequestException;
 use Fiskalizacija\Interfaces\Configuration;
 use Fiskalizacija\Interfaces\Item;
-use Fiskalizacija\Interfaces\PaymentType;
+use Fiskalizacija\Interfaces\Payment;
 use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -32,7 +32,7 @@ abstract class Sale extends Request
      * @param string $invoiceNumber
      * @param DateTime $dateAndTimeOfIssue
      * @param Item[] $items
-     * @param PaymentType[] $payments
+     * @param Payment[] $payments
      * @param string $cashierId
      */
     public function __construct(
