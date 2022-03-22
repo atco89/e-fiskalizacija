@@ -35,4 +35,9 @@ interface Configuration
      * @return string
      */
     public function language(): string;
+
+    /**
+     * @return string
+     */
+    public function certPath(): string;
 }

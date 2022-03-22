@@ -56,10 +56,11 @@ abstract class Sale extends Request
      */
     public function run(): Response
     {
-        $client = new Client();
-        $response = $client->post($this->configuration->baseUrl() . self::URI, [
+        $guzzleClient = new Client();
+        $response = $guzzleClient->post($this->configuration->baseUrl() . self::URI, [
+            RequestOptions::CERT    => $this->cert(),
             RequestOptions::HEADERS => $this->headers(),
-            RequestOptions::JSON => $this->requestBody()
+            RequestOptions::JSON    => $this->requestBody()
         ]);
 
         if ($response->getStatusCode() !== 200) {
@@ -72,14 +73,25 @@ abstract class Sale extends Request
     /**
      * @return array
      */
+    private function cert(): array
+    {
+        return [
+            $this->configuration->certPath(),
+            $this->configuration->password(),
+        ];
+    }
+
+    /**
+     * @return array
+     */
     private function headers(): array
     {
         return [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'RequestId' => $this->requestUuid,
+            'Accept'          => 'application/json',
+            'Content-Type'    => 'application/json',
+            'RequestId'       => $this->requestUuid,
             'Accept-Language' => $this->configuration->language(),
-            'PAC' => $this->configuration->pac(),
+            'PAC'             => $this->configuration->pac(),
         ];
     }
 
