@@ -58,7 +58,7 @@ abstract class Sale extends Request
     {
         $guzzleClient = new Client();
         $response = $guzzleClient->post($this->configuration->baseUrl() . self::URI, [
-            RequestOptions::CERT    => $this->cert(),
+            RequestOptions::CERT    => $this->configuration->certPath(),
             RequestOptions::HEADERS => $this->headers(),
             RequestOptions::JSON    => $this->requestBody()
         ]);
@@ -68,17 +68,6 @@ abstract class Sale extends Request
         }
 
         return $this->response($response);
-    }
-
-    /**
-     * @return array
-     */
-    private function cert(): array
-    {
-        return [
-            $this->configuration->certPath(),
-            $this->configuration->password(),
-        ];
     }
 
     /**
