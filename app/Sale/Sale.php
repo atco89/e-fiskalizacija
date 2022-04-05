@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Fiskalizacija\Sale;
 
 use DateTime;
+use Exception;
 use Fiskalizacija\Interfaces\Configuration;
 
 abstract class Sale extends Request
@@ -40,11 +41,17 @@ abstract class Sale extends Request
 
     /**
      * @return bool|string
+     * @throws Exception
      */
     public function run(): bool|string
     {
-        $curl = curl_init($this->configuration->apiUrl());
+        $curl = curl_init();
         curl_setopt_array($curl, $this->configuration->options($this->requestUuid, $this->requestBody()));
-        return curl_exec($curl);
+        $response = curl_exec($curl);
+        curl_close($curl);
+        if ($response === false) {
+            throw new Exception(curl_error($curl));
+        }
+        return $response;
     }
 }

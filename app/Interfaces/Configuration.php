@@ -7,43 +7,41 @@ abstract class Configuration
 {
 
     /**
-     * @return string
-     */
-    final public function apiUrl(): string
-    {
-        return 'https://vsdc.sandbox.taxcore.online/api/v3/invoices';
-    }
-
-    /**
      * @param string $requestId
      * @param array $requestBody
      * @return array
+     * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
      */
     final public function options(string $requestId, array $requestBody): array
     {
         return [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING       => '',
-            CURLOPT_MAXREDIRS      => 10,
-            CURLOPT_TIMEOUT        => 0,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_VERBOSE        => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-            CURLOPT_SSLCERTTYPE    => 'P12',
-            CURLOPT_SSLCERT        => $this->certPath(),
-            CURLOPT_SSLCERTPASSWD  => $this->password(),
-            CURLOPT_HTTPHEADER     => $this->headers($requestId),
-            CURLOPT_CUSTOMREQUEST  => 'POST',
-            CURLOPT_POSTFIELDS     => $requestBody,
+            CURLOPT_URL           => $this->apiUrl(),
+            CURLOPT_HTTPHEADER    => $this->headers($requestId),
+            CURLOPT_POST          => true,
+            CURLOPT_SSLCERTTYPE   => 'P12',
+            CURLOPT_SSLCERT       => $this->certPath(),
+            CURLOPT_SSLCERTPASSWD => $this->password(),
+            CURLOPT_POSTFIELDS    => $requestBody,
         ];
     }
 
     /**
      * @return string
      */
+    private function apiUrl(): string
+    {
+        return 'https://vsdc.sandbox.taxcore.online/api/v3/invoices';
+    }
+
+    /**
+     * @return string
+     */
     abstract protected function certPath(): string;
+
+    /**
+     * @return string
+     */
+    abstract protected function sslKey(): string;
 
     /**
      * @return string
