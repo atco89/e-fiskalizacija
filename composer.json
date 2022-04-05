@@ -17,8 +17,8 @@
   },
   "require": {
     "php": ">=8.0",
+    "guzzlehttp/guzzle": "7.4.2",
     "ext-json": "*",
-    "ext-curl": "*",
-    "guzzlehttp/guzzle": "7.4.2"
+    "ext-curl": "*"
   }
 }

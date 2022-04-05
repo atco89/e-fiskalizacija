@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Interfaces;
+namespace Fiskalizacija\Entities;
 
 interface Payment
 {
@@ -15,4 +15,9 @@ interface Payment
      * @return int
      */
     public function type(): int;
+
+    /**
+     * @return string
+     */
+    public function name(): string;
 }

@@ -5,8 +5,9 @@ namespace Fiskalizacija\Sale;
 
 use DateTime;
 use Exception;
-use Fiskalizacija\Interfaces\Configuration;
-use Fiskalizacija\Interfaces\Item;
+use Fiskalizacija\Entities\Configuration;
+use Fiskalizacija\Entities\Item;
+use Fiskalizacija\Invoice\Properties;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
@@ -45,11 +46,11 @@ abstract class Sale extends Request
     }
 
     /**
-     * @return Response
+     * @return Properties
      * @throws GuzzleException
      * @throws Exception
      */
-    public function run(): Response
+    public function run(): Properties
     {
         $client = new Client();
         $response = $client->post($this->configuration->apiUrl(), [
@@ -59,18 +60,21 @@ abstract class Sale extends Request
         ]);
 
         if ($response->getStatusCode() !== 200) {
-            throw new Exception('Guzzle error');
+            throw new Exception($response->getBody()->getContents());
         }
 
-        return $this->response($response);
+        return $this->response($this, $response);
     }
 
     /**
-     * @param ResponseInterface $response
-     * @return Response
+     * @param Request $request
+     * @param ResponseInterface $responseInterface
+     * @return Properties
+     * @throws Exception
      */
-    private function response(ResponseInterface $response): Response
+    private function response(Request $request, ResponseInterface $responseInterface): Properties
     {
-        return new Response(json_decode($response->getBody()->getContents()));
+        $response = json_decode($responseInterface->getBody()->getContents());
+        return new Properties($request, $response);
     }
 }

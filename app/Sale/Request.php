@@ -5,9 +5,9 @@ namespace Fiskalizacija\Sale;
 
 use DateTime;
 use Fiskalizacija\Constants\TransactionType;
-use Fiskalizacija\Interfaces\Item;
-use Fiskalizacija\Interfaces\Options;
-use Fiskalizacija\Interfaces\Payment;
+use Fiskalizacija\Entities\Item;
+use Fiskalizacija\Entities\Options;
+use Fiskalizacija\Entities\Payment;
 
 abstract class Request
 {
@@ -218,5 +218,101 @@ abstract class Request
                 return false;
             }
         };
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestUuid(): string
+    {
+        return $this->requestUuid;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInvoiceType(): int
+    {
+        return $this->invoiceType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTransactionType(): int
+    {
+        return $this->transactionType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBuyerCostCenterId(): ?string
+    {
+        return $this->buyerCostCenterId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReferentDocumentNumber(): ?string
+    {
+        return $this->referentDocumentNumber;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReferentDocumentDT(): ?string
+    {
+        return $this->referentDocumentDT;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInvoiceNumber(): string
+    {
+        return $this->invoiceNumber;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateAndTimeOfIssue(): DateTime
+    {
+        return $this->dateAndTimeOfIssue;
+    }
+
+    /**
+     * @return Item[]
+     */
+    public function getItems(): array
+    {
+        return $this->items;
+    }
+
+    /**
+     * @return Payment[]
+     */
+    public function getPayments(): array
+    {
+        return $this->payments;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCashierId(): string
+    {
+        return $this->cashierId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBuyerId(): ?string
+    {
+        return $this->buyerId;
     }
 }
