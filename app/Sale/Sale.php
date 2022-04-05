@@ -74,7 +74,7 @@ abstract class Sale extends Request
      */
     private function response(Request $request, ResponseInterface $responseInterface): Properties
     {
-        $response = json_decode($responseInterface->getBody()->getContents());
+        $response = new Response(json_decode($responseInterface->getBody()->getContents()));
         return new Properties($request, $response);
     }
 }
