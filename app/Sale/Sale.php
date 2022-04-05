@@ -4,22 +4,10 @@ declare(strict_types=1);
 namespace Fiskalizacija\Sale;
 
 use DateTime;
-use Fiskalizacija\Exceptions\BadRequestException;
 use Fiskalizacija\Interfaces\Configuration;
-use Fiskalizacija\Interfaces\Item;
-use Fiskalizacija\Interfaces\Payment;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\RequestOptions;
-use Psr\Http\Message\ResponseInterface;
 
 abstract class Sale extends Request
 {
-
-    /**
-     * @const string
-     */
-    const URI = '/v3/invoices';
 
     /**
      * @var Configuration
@@ -31,9 +19,10 @@ abstract class Sale extends Request
      * @param string $requestUuid
      * @param string $invoiceNumber
      * @param DateTime $dateAndTimeOfIssue
-     * @param Item[] $items
-     * @param Payment[] $payments
+     * @param array $items
+     * @param array $payments
      * @param string $cashierId
+     * @noinspection PhpPureAttributeCanBeAddedInspection
      */
     public function __construct(
         Configuration $configuration,
@@ -50,46 +39,12 @@ abstract class Sale extends Request
     }
 
     /**
-     * @return Response
-     * @throws BadRequestException
-     * @throws GuzzleException
+     * @return bool|string
      */
-    public function run(): Response
+    public function run(): bool|string
     {
-        $guzzleClient = new Client();
-        $response = $guzzleClient->post($this->configuration->baseUrl() . self::URI, [
-            RequestOptions::CERT    => $this->configuration->certPath(),
-            RequestOptions::HEADERS => $this->headers(),
-            RequestOptions::JSON    => $this->requestBody()
-        ]);
-
-        if ($response->getStatusCode() !== 200) {
-            throw new BadRequestException();
-        }
-
-        return $this->response($response);
-    }
-
-    /**
-     * @return array
-     */
-    private function headers(): array
-    {
-        return [
-            'Accept'          => 'application/json',
-            'Content-Type'    => 'application/json',
-            'RequestId'       => $this->requestUuid,
-            'Accept-Language' => $this->configuration->language(),
-            'PAC'             => $this->configuration->pac(),
-        ];
-    }
-
-    /**
-     * @param ResponseInterface $response
-     * @return Response
-     */
-    private function response(ResponseInterface $response): Response
-    {
-        return new Response(json_decode($response->getBody()->getContents()));
+        $curl = curl_init($this->configuration->apiUrl());
+        curl_setopt_array($curl, $this->configuration->options($this->requestUuid, $this->requestBody()));
+        return curl_exec($curl);
     }
 }

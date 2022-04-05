@@ -2,8 +2,7 @@
   "name": "atco89/e-fiskalizacija",
   "description": "Fiskalizacija",
   "version": "1.0.0",
-  "readme": "README.md",
-  "time": "2021-11-01",
+  "time": "2022-05-01",
   "authors": [
     {
       "name": "Aleksandar Rakić",
@@ -17,8 +16,8 @@
     }
   },
   "require": {
-    "php": ">=7.4",
-    "guzzlehttp/guzzle": "7.3.0",
-    "ext-json": "*"
+    "php": ">=8.0",
+    "ext-json": "*",
+    "ext-curl": "*"
   }
 }
