@@ -7,53 +7,16 @@ abstract class Configuration
 {
 
     /**
-     * @param string $requestId
-     * @param array $requestBody
-     * @return array
-     * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
-     */
-    final public function options(string $requestId, array $requestBody): array
-    {
-        return [
-            CURLOPT_URL           => $this->apiUrl(),
-            CURLOPT_HTTPHEADER    => $this->headers($requestId),
-            CURLOPT_POST          => true,
-            CURLOPT_SSLCERTTYPE   => 'P12',
-            CURLOPT_SSLCERT       => $this->certPath(),
-            CURLOPT_SSLCERTPASSWD => $this->password(),
-            CURLOPT_POSTFIELDS    => $requestBody,
-        ];
-    }
-
-    /**
      * @return string
      */
-    private function apiUrl(): string
-    {
-        return 'https://vsdc.sandbox.taxcore.online/api/v3/invoices';
-    }
-
-    /**
-     * @return string
-     */
-    abstract protected function certPath(): string;
-
-    /**
-     * @return string
-     */
-    abstract protected function sslKey(): string;
-
-    /**
-     * @return string
-     */
-    abstract protected function password(): string;
+    abstract public function apiUrl(): string;
 
     /**
      * @param string $requestId
      * @return string[]
      * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
      */
-    private function headers(string $requestId): array
+    final public function headers(string $requestId): array
     {
         return [
             'Accept'          => 'application/json',
@@ -73,4 +36,22 @@ abstract class Configuration
      * @return string
      */
     abstract protected function pac(): string;
+
+    /**
+     * @return string[]
+     */
+    final public function certs(): array
+    {
+        return [$this->certPath(), $this->password()];
+    }
+
+    /**
+     * @return string
+     */
+    abstract protected function certPath(): string;
+
+    /**
+     * @return string
+     */
+    abstract protected function password(): string;
 }

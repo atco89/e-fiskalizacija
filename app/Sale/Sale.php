@@ -6,6 +6,11 @@ namespace Fiskalizacija\Sale;
 use DateTime;
 use Exception;
 use Fiskalizacija\Interfaces\Configuration;
+use Fiskalizacija\Interfaces\Item;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 abstract class Sale extends Request
 {
@@ -20,7 +25,7 @@ abstract class Sale extends Request
      * @param string $requestUuid
      * @param string $invoiceNumber
      * @param DateTime $dateAndTimeOfIssue
-     * @param array $items
+     * @param Item[] $items
      * @param array $payments
      * @param string $cashierId
      * @noinspection PhpPureAttributeCanBeAddedInspection
@@ -40,18 +45,32 @@ abstract class Sale extends Request
     }
 
     /**
-     * @return bool|string
+     * @return Response
+     * @throws GuzzleException
      * @throws Exception
      */
-    public function run(): bool|string
+    public function run(): Response
     {
-        $curl = curl_init();
-        curl_setopt_array($curl, $this->configuration->options($this->requestUuid, $this->requestBody()));
-        $response = curl_exec($curl);
-        curl_close($curl);
-        if ($response === false) {
-            throw new Exception(curl_error($curl));
+        $client = new Client();
+        $response = $client->post($this->configuration->apiUrl(), [
+            RequestOptions::CERT    => $this->configuration->certs(),
+            RequestOptions::HEADERS => $this->configuration->headers($this->requestUuid),
+            RequestOptions::JSON    => $this->requestBody()
+        ]);
+
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception('Guzzle error');
         }
-        return $response;
+
+        return $this->response($response);
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @return Response
+     */
+    private function response(ResponseInterface $response): Response
+    {
+        return new Response(json_decode($response->getBody()->getContents()));
     }
 }
