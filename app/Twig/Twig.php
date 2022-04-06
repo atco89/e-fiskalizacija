@@ -21,19 +21,10 @@ final class Twig
      */
     public function __construct(Configuration $configuration)
     {
-        $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../../resources/views'), ['cache' => false]);
-        $this->setupEnvironment($configuration, $this->environment);
-    }
-
-    /**
-     * @param Configuration $configuration
-     * @param Environment $environment
-     * @return void
-     */
-    private function setupEnvironment(Configuration $configuration, Environment $environment): void
-    {
-        $environment->addGlobal('merchant_log_path', $configuration->merchantLogoPath());
-        $environment->addFunction(new TwigFunction('decimal',
+        $fileSystemLoader = new FilesystemLoader(__DIR__ . '/../../resources/views');
+        $this->environment = new Environment($fileSystemLoader, ['cache' => false]);
+        $this->environment->addGlobal('merchant_log_path', $configuration->merchantLogoPath());
+        $this->environment->addFunction(new TwigFunction('decimal',
             function (?string $number, int $precision = 2) {
                 return number_format(floatval($number), $precision, ',', '.');
             }
