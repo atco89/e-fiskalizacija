@@ -6,5 +6,5 @@ namespace Fiskalizacija\Enums;
 enum TransactionType: int
 {
     case SALE = 0;
-    case REFUND = 0;
+    case REFUND = 1;
 }

@@ -14,6 +14,9 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 abstract class Sale extends Request
 {
@@ -22,6 +25,7 @@ abstract class Sale extends Request
      * @var Configuration
      */
     protected Configuration $configuration;
+
     /**
      * @var Twig
      */
@@ -54,7 +58,10 @@ abstract class Sale extends Request
     /**
      * @return string
      * @throws GuzzleException
-     * @throws Exception
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws TaxCoreRequestException
      */
     public function run(): string
     {
@@ -65,17 +72,20 @@ abstract class Sale extends Request
             RequestOptions::JSON    => $this->requestBody()
         ]);
 
-        if ($response->getStatusCode() !== 200) {
-            throw new TaxCoreRequestException();
+        if ($response->getStatusCode() === 200) {
+            return $this->response($this, $response);
         }
 
-        return $this->response($this, $response);
+        throw new TaxCoreRequestException();
     }
 
     /**
      * @param Request $request
      * @param ResponseInterface $responseInterface
      * @return string
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      * @throws Exception
      */
     private function response(Request $request, ResponseInterface $responseInterface): string

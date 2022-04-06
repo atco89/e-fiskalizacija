@@ -129,12 +129,28 @@ abstract class Request
     }
 
     /**
+     * Interfaces Type enumeration value: 0 - Normal, 1 - Proforma, 2 - Copy, 3 - Training, 4 - Advance
+     *
+     * @return int
+     */
+    abstract protected function invoiceType(): int;
+
+    /**
      * @return int
      */
     public function getTransactionType(): int
     {
         return $this->transactionType();
     }
+
+    /**
+     * Transaction Type enumeration
+     * 0 - Sale
+     * 1 - Refund
+     *
+     * @return int
+     */
+    abstract protected function transactionType(): int;
 
     /**
      * @return string|null
@@ -298,20 +314,4 @@ abstract class Request
             }
         };
     }
-
-    /**
-     * Interfaces Type enumeration value: 0 - Normal, 1 - Proforma, 2 - Copy, 3 - Training, 4 - Advance
-     *
-     * @return int
-     */
-    abstract protected function invoiceType(): int;
-
-    /**
-     * Transaction Type enumeration
-     * 0 - Sale
-     * 1 - Refund
-     *
-     * @return int
-     */
-    abstract protected function transactionType(): int;
 }
