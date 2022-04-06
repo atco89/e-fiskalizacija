@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Fiskalizacija\Sale;
 
 use DateTime;
-use Fiskalizacija\Constants\TransactionType;
 use Fiskalizacija\Entities\Item;
 use Fiskalizacija\Entities\Options;
 use Fiskalizacija\Entities\Payment;
@@ -16,22 +15,6 @@ abstract class Request
      * @var string
      */
     protected string $requestUuid;
-
-    /**
-     * Interfaces Type enumeration value: 0 - Normal, 1 - Proforma, 2 - Copy, 3 - Training, 4 - Advance
-     *
-     * @return int
-     */
-    protected int $invoiceType;
-
-    /**
-     * Transaction Type enumeration
-     * 0 - Sale
-     * 1 - Refund
-     *
-     * @return int
-     */
-    protected int $transactionType = TransactionType::SALE;
 
     /**
      * Cost Center ID provided by the buyer to the cashier in case Buyer’s company wants to track spending in
@@ -142,7 +125,7 @@ abstract class Request
      */
     public function getInvoiceType(): int
     {
-        return $this->invoiceType;
+        return $this->invoiceType();
     }
 
     /**
@@ -150,7 +133,7 @@ abstract class Request
      */
     public function getTransactionType(): int
     {
-        return $this->transactionType;
+        return $this->transactionType();
     }
 
     /**
@@ -232,8 +215,8 @@ abstract class Request
     {
         return [
             'dateAndTimeOfIssue'     => $this->dateAndTimeOfIssue->format(DATE_ISO8601),
-            'invoiceType'            => $this->invoiceType,
-            'transactionType'        => $this->transactionType,
+            'invoiceType'            => $this->invoiceType(),
+            'transactionType'        => $this->transactionType(),
             'payment'                => $this->payments(),
             'cashier'                => $this->cashierId,
             'buyerId'                => $this->buyerId,
@@ -315,4 +298,20 @@ abstract class Request
             }
         };
     }
+
+    /**
+     * Interfaces Type enumeration value: 0 - Normal, 1 - Proforma, 2 - Copy, 3 - Training, 4 - Advance
+     *
+     * @return int
+     */
+    abstract protected function invoiceType(): int;
+
+    /**
+     * Transaction Type enumeration
+     * 0 - Sale
+     * 1 - Refund
+     *
+     * @return int
+     */
+    abstract protected function transactionType(): int;
 }

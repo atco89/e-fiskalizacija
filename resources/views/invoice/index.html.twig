@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <img src="{{ merchant_log_path }}" alt="merchant-log" class="img-fluid w-50 py-2 px-3">
+                        <img src="{{ merchant_log_path }}" alt="merchant-log-path" class="img-fluid w-50 py-2 px-3">
                     </div>
                 </div>
                 <div class="row">
@@ -32,7 +32,7 @@
                         <table class="table table-sm table-borderless m-0 p-0">
                             <tr>
                                 <td class="align-middle">Касир:</td>
-                                <td class="align-middle text-end">{{ properties.getBuyer.getCashier }}</td>
+                                <td class="align-middle text-end">{{ properties.getCashier }}</td>
                             </tr>
                             {% if properties.getBuyer.getTaxIdentificationNumber is not empty %}
                                 <tr>
@@ -48,22 +48,22 @@
                             {% endif %}
                             <tr>
                                 <td class="align-middle">ПОС број:</td>
-                                <td class="align-middle text-end">{{ properties.getBuyer.getInvoiceNumber }}</td>
+                                <td class="align-middle text-end">{{ properties.getInvoiceNumber }}</td>
                             </tr>
                             <tr>
                                 <td class="align-middle">ПОС време:</td>
-                                <td class="align-middle text-end">{{ properties.getBuyer.getDateAndTimeOfIssue|date('d.m.Y H:i:s') }}</td>
+                                <td class="align-middle text-end">{{ properties.getDateAndTimeOfIssue | date('d.m.Y H:i:s') }}</td>
                             </tr>
-                            {% if properties.getBuyer.getReferentDocumentNumber is not empty %}
+                            {% if properties.getReferentDocumentNumber is not empty %}
                                 <tr>
                                     <td class="align-middle">Реф. број:</td>
-                                    <td class="align-middle text-end">{{ properties.getBuyer.getReferentDocumentNumber }}</td>
+                                    <td class="align-middle text-end">{{ properties.getReferentDocumentNumber }}</td>
                                 </tr>
                             {% endif %}
-                            {% if properties.getBuyer.getReferentDocumentDateAndTime is not empty %}
+                            {% if properties.getReferentDocumentDateAndTime is not empty %}
                                 <tr>
                                     <td class="align-middle">Реф. број:</td>
-                                    <td class="align-middle text-end">{{ properties.getBuyer.getReferentDocumentDateAndTime | date('d.m.Y H:i:s') }}</td>
+                                    <td class="align-middle text-end">{{ properties.getReferentDocumentDateAndTime | date('d.m.Y H:i:s') }}</td>
                                 </tr>
                             {% endif %}
                         </table>
@@ -89,13 +89,13 @@
                             </tr>
                             {% for item in properties.getItems %}
                                 <tr>
-                                    <td colspan="4">{{ item.name }} ({{ item.labels|join(', ') }})</td>
+                                    <td colspan="4">{{ item.name }} ({{ item.labels | join(', ') }})</td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td class="text-center">{{ item.price | currency_no_string }}</td>
-                                    <td class="text-center">{{ item.quantity | double(2) }}</td>
-                                    <td class="text-end">{{ item.amount | currency_no_string }}</td>
+                                    <td class="text-center">{{ item.price | decimal }}</td>
+                                    <td class="text-center">{{ item.quantity | decimal }}</td>
+                                    <td class="text-end">{{ item.amount | decimal }}</td>
                                 </tr>
                             {% endfor %}
                         </table>
@@ -111,12 +111,12 @@
                         <table class="table table-sm table-borderless m-0 p-0">
                             <tr>
                                 <td>За уплату</td>
-                                <td class="text-end">{{ properties.getAmount | currency_no_string }}</td>
+                                <td class="text-end">{{ properties.getAmount | decimal }}</td>
                             </tr>
                             {% for payment in properties.getPayment %}
                                 <tr>
                                     <td>{{ payment.name }}</td>
-                                    <td class="text-end">{{ payment.amount | currency_no_string }}</td>
+                                    <td class="text-end">{{ payment.amount | decimal }}</td>
                                 </tr>
                             {% endfor %}
                         </table>
@@ -139,9 +139,9 @@
                             {% for taxItem in properties.getTaxItems %}
                                 <tr>
                                     <td>{{ taxItem.label }}</td>
-                                    <td></td>
-                                    <td class="text-center">{{ taxItem.rate | double(2) }}%</td>
-                                    <td class="text-end">{{ taxItem.amount | currency_no_string }}</td>
+                                    <td>{{ taxItem.categoryName }}</td>
+                                    <td class="text-center">{{ taxItem.rate | decimal }} %</td>
+                                    <td class="text-end">{{ taxItem.amount | decimal }}</td>
                                 </tr>
                             {% endfor %}
                         </table>

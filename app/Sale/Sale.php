@@ -7,6 +7,7 @@ use DateTime;
 use Exception;
 use Fiskalizacija\Entities\Configuration;
 use Fiskalizacija\Entities\Item;
+use Fiskalizacija\Exceptions\TaxCoreRequestException;
 use Fiskalizacija\Invoice\Properties;
 use Fiskalizacija\Twig\Twig;
 use GuzzleHttp\Client;
@@ -47,7 +48,7 @@ abstract class Sale extends Request
     {
         parent::__construct($requestUuid, $invoiceNumber, $dateAndTimeOfIssue, $items, $payments, $cashierId);
         $this->configuration = $configuration;
-        $this->twig = new Twig();
+        $this->twig = new Twig($this->configuration);
     }
 
     /**
@@ -65,7 +66,7 @@ abstract class Sale extends Request
         ]);
 
         if ($response->getStatusCode() !== 200) {
-            throw new Exception($response->getBody()->getContents());
+            throw new TaxCoreRequestException();
         }
 
         return $this->response($this, $response);

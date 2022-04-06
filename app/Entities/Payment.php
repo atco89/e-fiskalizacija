@@ -3,21 +3,42 @@ declare(strict_types=1);
 
 namespace Fiskalizacija\Entities;
 
-interface Payment
+use Fiskalizacija\Enums\PaymentType;
+use Fiskalizacija\Exceptions\PaymentTypeNotFoundException;
+
+abstract class Payment
 {
 
     /**
      * @return float
      */
-    public function amount(): float;
+    abstract public function amount(): float;
+
+    /**
+     * @return string
+     * @throws PaymentTypeNotFoundException
+     */
+    final public function name(): string
+    {
+        switch ($this->type()) {
+            case PaymentType::CASH:
+                return 'Готовина';
+            case PaymentType::CARD:
+                return 'Картица';
+            case PaymentType::CHECK:
+                return 'Чекови';
+            case PaymentType::WIRE_TRANSFER:
+                return 'Вирман';
+            case PaymentType::VOUCHER:
+                return 'Ваучер';
+            case PaymentType::MOBILE_MONEY:
+                return 'Мобилни';
+        }
+        throw new PaymentTypeNotFoundException();
+    }
 
     /**
      * @return int
      */
-    public function type(): int;
-
-    /**
-     * @return string
-     */
-    public function name(): string;
+    abstract public function type(): int;
 }
