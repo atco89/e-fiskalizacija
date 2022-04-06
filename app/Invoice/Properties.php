@@ -25,6 +25,31 @@ final class Properties
     private Buyer $buyer;
 
     /**
+     * @var string
+     */
+    private string $cashier;
+
+    /**
+     * @var string
+     */
+    private string $invoiceNumber;
+
+    /**
+     * @var DateTime
+     */
+    private DateTime $dateAndTimeOfIssue;
+
+    /**
+     * @var string|null
+     */
+    private ?string $referentDocumentNumber;
+
+    /**
+     * @var string|null
+     */
+    private ?string $referentDocumentDateAndTime;
+
+    /**
      * @var float
      */
     private float $amount;
@@ -73,6 +98,11 @@ final class Properties
     {
         $this->merchant = new Merchant($response);
         $this->buyer = new Buyer($request);
+        $this->cashier = $request->getCashierId();
+        $this->invoiceNumber = $request->getInvoiceNumber();
+        $this->dateAndTimeOfIssue = $request->getDateAndTimeOfIssue();
+        $this->referentDocumentNumber = $request->getReferentDocumentNumber();
+        $this->referentDocumentDateAndTime = $request->getReferentDocumentDT();
         $this->amount = $response->totalAmount();
         $this->items = $request->getItems();
         $this->payment = $request->getPayments();
@@ -97,6 +127,46 @@ final class Properties
     public function getBuyer(): Buyer
     {
         return $this->buyer;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCashier(): string
+    {
+        return $this->cashier;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInvoiceNumber(): string
+    {
+        return $this->invoiceNumber;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateAndTimeOfIssue(): DateTime
+    {
+        return $this->dateAndTimeOfIssue;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReferentDocumentNumber(): ?string
+    {
+        return $this->referentDocumentNumber;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReferentDocumentDateAndTime(): ?string
+    {
+        return $this->referentDocumentDateAndTime;
     }
 
     /**

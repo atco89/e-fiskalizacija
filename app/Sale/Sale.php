@@ -8,6 +8,7 @@ use Exception;
 use Fiskalizacija\Entities\Configuration;
 use Fiskalizacija\Entities\Item;
 use Fiskalizacija\Invoice\Properties;
+use Fiskalizacija\Twig\Twig;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
@@ -20,6 +21,10 @@ abstract class Sale extends Request
      * @var Configuration
      */
     protected Configuration $configuration;
+    /**
+     * @var Twig
+     */
+    private Twig $twig;
 
     /**
      * @param Configuration $configuration
@@ -29,7 +34,6 @@ abstract class Sale extends Request
      * @param Item[] $items
      * @param array $payments
      * @param string $cashierId
-     * @noinspection PhpPureAttributeCanBeAddedInspection
      */
     public function __construct(
         Configuration $configuration,
@@ -43,14 +47,15 @@ abstract class Sale extends Request
     {
         parent::__construct($requestUuid, $invoiceNumber, $dateAndTimeOfIssue, $items, $payments, $cashierId);
         $this->configuration = $configuration;
+        $this->twig = new Twig();
     }
 
     /**
-     * @return Properties
+     * @return string
      * @throws GuzzleException
      * @throws Exception
      */
-    public function run(): Properties
+    public function run(): string
     {
         $client = new Client();
         $response = $client->post($this->configuration->apiUrl(), [
@@ -69,12 +74,14 @@ abstract class Sale extends Request
     /**
      * @param Request $request
      * @param ResponseInterface $responseInterface
-     * @return Properties
+     * @return string
      * @throws Exception
      */
-    private function response(Request $request, ResponseInterface $responseInterface): Properties
+    private function response(Request $request, ResponseInterface $responseInterface): string
     {
         $response = new Response(json_decode($responseInterface->getBody()->getContents()));
-        return new Properties($request, $response);
+        return $this->twig->getEnvironment()->render('./invoice/index.html.twig', [
+            'properties' => new Properties($request, $response),
+        ]);
     }
 }

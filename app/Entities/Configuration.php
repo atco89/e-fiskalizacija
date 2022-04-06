@@ -9,6 +9,11 @@ abstract class Configuration
     /**
      * @return string
      */
+    abstract public function merchantLogoPath(): string;
+
+    /**
+     * @return string
+     */
     abstract public function apiUrl(): string;
 
     /**

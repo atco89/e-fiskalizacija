@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+{% block container %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <img src="{{ merchant_log_path }}" alt="merchant-log" class="img-fluid w-50 py-2 px-3">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="border-top border-bottom">
+                            <p class="text-center m-0 p-1">
+                                <strong>Фискални рачун</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <p class="my-0 text-center">{{ properties.getMerchant.getTaxIdentificationNumber }}</p>
+                        <p class="my-0 text-center">{{ properties.getMerchant.getBusinessName }}</p>
+                        <p class="my-0 text-center">{{ properties.getMerchant.getLocationName }}</p>
+                        <p class="my-0 text-center">{{ properties.getMerchant.getAddress }}</p>
+                        <p class="my-0 text-center">{{ properties.getMerchant.getDistrict }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-sm table-borderless m-0 p-0">
+                            <tr>
+                                <td class="align-middle">Касир:</td>
+                                <td class="align-middle text-end">{{ properties.getBuyer.getCashier }}</td>
+                            </tr>
+                            {% if properties.getBuyer.getTaxIdentificationNumber is not empty %}
+                                <tr>
+                                    <td class="align-middle">ПИБ купца:</td>
+                                    <td class="align-middle text-end">{{ properties.getBuyer.getTaxIdentificationNumber }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if properties.getBuyer.getBuyerCostCenter is not empty %}
+                                <tr>
+                                    <td class="align-middle">Податак купца:</td>
+                                    <td class="align-middle text-end">{{ properties.getBuyer.getBuyerCostCenter }}</td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <td class="align-middle">ПОС број:</td>
+                                <td class="align-middle text-end">{{ properties.getBuyer.getInvoiceNumber }}</td>
+                            </tr>
+                            <tr>
+                                <td class="align-middle">ПОС време:</td>
+                                <td class="align-middle text-end">{{ properties.getBuyer.getDateAndTimeOfIssue|date('d.m.Y H:i:s') }}</td>
+                            </tr>
+                            {% if properties.getBuyer.getReferentDocumentNumber is not empty %}
+                                <tr>
+                                    <td class="align-middle">Реф. број:</td>
+                                    <td class="align-middle text-end">{{ properties.getBuyer.getReferentDocumentNumber }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if properties.getBuyer.getReferentDocumentDateAndTime is not empty %}
+                                <tr>
+                                    <td class="align-middle">Реф. број:</td>
+                                    <td class="align-middle text-end">{{ properties.getBuyer.getReferentDocumentDateAndTime | date('d.m.Y H:i:s') }}</td>
+                                </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="border-top border-bottom">
+                            <p class="text-center m-0 p-1">
+                                Продаја
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-sm table-borderless m-0 p-0">
+                            <tr>
+                                <td class="text-start">Назив</td>
+                                <td class="text-center">Цена</td>
+                                <td class="text-center">Количина</td>
+                                <td class="text-end">Укупно</td>
+                            </tr>
+                            {% for item in properties.getItems %}
+                                <tr>
+                                    <td colspan="4">{{ item.name }} ({{ item.labels|join(', ') }})</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-center">{{ item.price | currency_no_string }}</td>
+                                    <td class="text-center">{{ item.quantity | double(2) }}</td>
+                                    <td class="text-end">{{ item.amount | currency_no_string }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="border-bottom"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-sm table-borderless m-0 p-0">
+                            <tr>
+                                <td>За уплату</td>
+                                <td class="text-end">{{ properties.getAmount | currency_no_string }}</td>
+                            </tr>
+                            {% for payment in properties.getPayment %}
+                                <tr>
+                                    <td>{{ payment.name }}</td>
+                                    <td class="text-end">{{ payment.amount | currency_no_string }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="border-bottom"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-sm table-borderless m-0 p-0">
+                            <tr>
+                                <td class="text-start">Ознака</td>
+                                <td class="text-center">Назив</td>
+                                <td class="text-center">Стопа</td>
+                                <td class="text-end">Порез</td>
+                            </tr>
+                            {% for taxItem in properties.getTaxItems %}
+                                <tr>
+                                    <td>{{ taxItem.label }}</td>
+                                    <td></td>
+                                    <td class="text-center">{{ taxItem.rate | double(2) }}%</td>
+                                    <td class="text-end">{{ taxItem.amount | currency_no_string }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="border-bottom"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-sm table-borderless m-0 p-0">
+                            <tr>
+                                <td>Укупно порез</td>
+                                <td class="text-end">2.18</td>
+                            </tr>
+                            <tr>
+                                <td>ПФР време</td>
+                                <td class="text-end">{{ properties.getSdcDateTime | date('d.m.Y H:i:s') }}</td>
+                            </tr>
+                            <tr>
+                                <td>ПФР бр. рачуна</td>
+                                <td class="text-end">{{ properties.getSdcInterfacesNumber }}</td>
+                            </tr>
+                            <tr>
+                                <td>Бројачи</td>
+                                <td class="text-end">{{ properties.getInvoiceCounter }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <img src="data:image/gif;base64, {{ properties.getQrCode }}" alt="qr-code" class="img-fluid"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

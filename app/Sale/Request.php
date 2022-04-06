@@ -130,97 +130,6 @@ abstract class Request
     }
 
     /**
-     * @return string[]
-     */
-    protected function requestBody(): array
-    {
-        return [
-            'dateAndTimeOfIssue'     => $this->dateAndTimeOfIssue->format(DATE_ISO8601),
-            'invoiceType'            => $this->invoiceType,
-            'transactionType'        => $this->transactionType,
-            'payment'                => $this->payments(),
-            'cashier'                => $this->cashierId,
-            'buyerId'                => $this->buyerId,
-            'buyerCostCenterId'      => $this->buyerCostCenterId,
-            'invoiceNumber'          => $this->invoiceNumber,
-            'referentDocumentNumber' => $this->referentDocumentNumber,
-            'referentDocumentDT'     => $this->referentDocumentDT,
-            'items'                  => $this->items(),
-            'options'                => [
-                'OmitQRCodeGen'             => intval($this->options()->omitQRCodeGen()),
-                'OmitTextualRepresentation' => intval($this->options()->omitTextualRepresentation()),
-            ],
-        ];
-    }
-
-    /**
-     * List of Payments for the invoice, where each Payment defines its method and amount
-     *
-     * @return Payment[]
-     */
-    private function payments(): array
-    {
-        return array_map(function (Payment $payment): array {
-            return [
-                'amount'      => $payment->amount(),
-                'paymentType' => $payment->type(),
-            ];
-        }, $this->payments);
-    }
-
-    /**
-     * Each invoice contains at least one Item in Items collection
-     * (E-SDC should support minimum 250, recommended up to 500)
-     *
-     * @return Item[]
-     */
-    private function items(): array
-    {
-        return array_map(function (Item $item): array {
-            return [
-                'gtin'        => $item->globalTradeItemNumber(),
-                'name'        => $item->name(),
-                'quantity'    => $item->quantity(),
-                'unitPrice'   => $item->price(),
-                'labels'      => $item->labels(),
-                'totalAmount' => $item->amount(),
-            ];
-        }, $this->items);
-    }
-
-    /**
-     * Key/value collection defines the output of E-SDC invoice fiscalization, to optimize resources. Key: OmitQRCodeGen
-     * Key: OmitQRCodeGen
-     * Value: "1" to omit QR Code generation by E-SDC and "0" to generate and return QR code.
-     * Key: OmitTextualRepresentation
-     * Value: "1" to omit generation of textual representation by E-SDC and "0" to generate
-     * return textual representation to POS.
-     *
-     * @return Options
-     */
-    private function options(): Options
-    {
-        return new class implements Options {
-
-            /**
-             * @return bool
-             */
-            public function omitQRCodeGen(): bool
-            {
-                return false;
-            }
-
-            /**
-             * @return bool
-             */
-            public function omitTextualRepresentation(): bool
-            {
-                return false;
-            }
-        };
-    }
-
-    /**
      * @return string
      */
     public function getRequestUuid(): string
@@ -314,5 +223,96 @@ abstract class Request
     public function getBuyerId(): ?string
     {
         return $this->buyerId;
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function requestBody(): array
+    {
+        return [
+            'dateAndTimeOfIssue'     => $this->dateAndTimeOfIssue->format(DATE_ISO8601),
+            'invoiceType'            => $this->invoiceType,
+            'transactionType'        => $this->transactionType,
+            'payment'                => $this->payments(),
+            'cashier'                => $this->cashierId,
+            'buyerId'                => $this->buyerId,
+            'buyerCostCenterId'      => $this->buyerCostCenterId,
+            'invoiceNumber'          => $this->invoiceNumber,
+            'referentDocumentNumber' => $this->referentDocumentNumber,
+            'referentDocumentDT'     => $this->referentDocumentDT,
+            'items'                  => $this->items(),
+            'options'                => [
+                'OmitQRCodeGen'             => intval($this->options()->omitQRCodeGen()),
+                'OmitTextualRepresentation' => intval($this->options()->omitTextualRepresentation()),
+            ],
+        ];
+    }
+
+    /**
+     * List of Payments for the invoice, where each Payment defines its method and amount
+     *
+     * @return Payment[]
+     */
+    private function payments(): array
+    {
+        return array_map(function (Payment $payment): array {
+            return [
+                'amount'      => $payment->amount(),
+                'paymentType' => $payment->type(),
+            ];
+        }, $this->payments);
+    }
+
+    /**
+     * Each invoice contains at least one Item in Items collection
+     * (E-SDC should support minimum 250, recommended up to 500)
+     *
+     * @return Item[]
+     */
+    private function items(): array
+    {
+        return array_map(function (Item $item): array {
+            return [
+                'gtin'        => $item->globalTradeItemNumber(),
+                'name'        => $item->name(),
+                'quantity'    => $item->quantity(),
+                'unitPrice'   => $item->price(),
+                'labels'      => $item->labels(),
+                'totalAmount' => $item->amount(),
+            ];
+        }, $this->items);
+    }
+
+    /**
+     * Key/value collection defines the output of E-SDC invoice fiscalization, to optimize resources. Key: OmitQRCodeGen
+     * Key: OmitQRCodeGen
+     * Value: "1" to omit QR Code generation by E-SDC and "0" to generate and return QR code.
+     * Key: OmitTextualRepresentation
+     * Value: "1" to omit generation of textual representation by E-SDC and "0" to generate
+     * return textual representation to POS.
+     *
+     * @return Options
+     */
+    private function options(): Options
+    {
+        return new class implements Options {
+
+            /**
+             * @return bool
+             */
+            public function omitQRCodeGen(): bool
+            {
+                return false;
+            }
+
+            /**
+             * @return bool
+             */
+            public function omitTextualRepresentation(): bool
+            {
+                return false;
+            }
+        };
     }
 }
