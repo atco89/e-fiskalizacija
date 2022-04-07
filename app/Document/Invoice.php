@@ -11,9 +11,9 @@ final class Invoice
 {
 
     /**
-     * @var string
+     * @var array
      */
-    private string $paperSize;
+    private array $paperSize;
 
     /**
      * @var string
