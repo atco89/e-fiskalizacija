@@ -21,17 +21,17 @@ abstract class Payment
     final public function name(): string
     {
         switch ($this->type()) {
-            case PaymentType::CASH:
+            case PaymentType::CASH->value:
                 return 'Готовина';
-            case PaymentType::CARD:
+            case PaymentType::CARD->value:
                 return 'Платна картица';
-            case PaymentType::CHECK:
+            case PaymentType::CHECK->value:
                 return 'Чекови';
-            case PaymentType::WIRE_TRANSFER:
+            case PaymentType::WIRE_TRANSFER->value:
                 return 'Вирман';
-            case PaymentType::VOUCHER:
+            case PaymentType::VOUCHER->value:
                 return 'Ваучер';
-            case PaymentType::MOBILE_MONEY:
+            case PaymentType::MOBILE_MONEY->value:
                 return 'Мобилно плаћање';
         }
         throw new PaymentTypeNotFoundException();

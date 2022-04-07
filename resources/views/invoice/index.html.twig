@@ -138,8 +138,8 @@
                             </tr>
                             {% for taxItem in properties.getTaxItems %}
                                 <tr>
-                                    <td>{{ taxItem.label }}</td>
-                                    <td>{{ taxItem.categoryName }}</td>
+                                    <td class="text-start">{{ taxItem.label }}</td>
+                                    <td class="text-center">{{ taxItem.categoryName }}</td>
                                     <td class="text-center">{{ taxItem.rate | decimal }} %</td>
                                     <td class="text-end">{{ taxItem.amount | decimal }}</td>
                                 </tr>
@@ -157,7 +157,7 @@
                         <table class="table table-sm table-borderless m-0 p-0">
                             <tr>
                                 <td>Укупно порез</td>
-                                <td class="text-end">2.18</td>
+                                <td class="text-end">{{ properties.getTaxAmount | decimal }}</td>
                             </tr>
                             <tr>
                                 <td>ПФР време</td>

@@ -71,6 +71,11 @@ final class Properties
     private array $taxItems;
 
     /**
+     * @var float
+     */
+    private float $taxAmount;
+
+    /**
      * @var DateTime
      */
     private DateTime $sdcDateTime;
@@ -109,10 +114,28 @@ final class Properties
         $this->items = $request->getItems();
         $this->payment = $request->getPayments();
         $this->taxItems = $response->taxItems();
+        $this->taxAmount = $this->calculateTaxAmount($this->taxItems);
         $this->sdcDateTime = $response->sdcDateTime();
         $this->sdcInterfacesNumber = $response->invoiceNumber();
         $this->invoiceCounter = $response->invoiceCounter();
         $this->qrCode = $response->verificationQRCode();
+    }
+
+
+    /**
+     * @param TaxItem[] $items
+     * @return float
+     */
+    private function calculateTaxAmount(array $items): float
+    {
+        if (empty($items)) {
+            return 0.00;
+        }
+
+        return array_reduce($items, function (?float $carry, TaxItem $item): float {
+            $carry += $item->amount();
+            return $carry;
+        });
     }
 
     /**
@@ -201,6 +224,14 @@ final class Properties
     public function getTaxItems(): array
     {
         return $this->taxItems;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTaxAmount(): float
+    {
+        return $this->taxAmount;
     }
 
     /**
