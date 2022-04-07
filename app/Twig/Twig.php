@@ -27,7 +27,11 @@ final class Twig
     public function __construct(Configuration $configuration)
     {
         $this->environment = new Environment(new FilesystemLoader(self::FILE_SYSTEM_LOADER_PATH));
-        $this->environment->addGlobal('merchant_log_path', $configuration->merchantLogoPath());
+        $this->environment->addFilter(new TwigFilter('merchant_log_path',
+            function () use ($configuration): string {
+                return base64_encode(file_get_contents($configuration->merchantLogoPath()));
+            }
+        ));
         $this->environment->addFilter(new TwigFilter('decimal',
             function (?string $number, int $precision = 2) {
                 $number = empty($number) ? 0.00 : floatval($number);
