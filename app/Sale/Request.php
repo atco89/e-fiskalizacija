@@ -310,7 +310,7 @@ abstract class Request
              */
             public function omitTextualRepresentation(): bool
             {
-                return true;
+                return false;
             }
         };
     }
