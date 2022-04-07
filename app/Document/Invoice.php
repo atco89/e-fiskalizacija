@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Fiskalizacija\Document;
 
-use Dompdf\Adapter\CPDF;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -35,7 +34,7 @@ final class Invoice
      */
     public function __construct(string $documentContent)
     {
-        $this->paperSize = CPDF::$PAPER_SIZES['commercial #10 envelope'];
+        $this->paperSize = [0, 0, 226.77, 999.99];
         $this->orientation = 'portrait';
         $this->documentContent = $documentContent;
         $this->dompdf = $this->loadDompdf();
