@@ -10,6 +10,7 @@ use Fiskalizacija\Entities\Item;
 use Fiskalizacija\Entities\Merchant;
 use Fiskalizacija\Entities\Payment;
 use Fiskalizacija\Exceptions\TaxCoreRequestException;
+use Fiskalizacija\Invoice\Properties;
 use Fiskalizacija\Twig\Twig;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -85,10 +86,16 @@ abstract class Sale extends Request
      * @param Request $request
      * @param ResponseInterface $responseInterface
      * @return Invoice
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     private function response(Merchant $merchant, Request $request, ResponseInterface $responseInterface): Invoice
     {
         $response = new Response(json_decode($responseInterface->getBody()->getContents()));
-        return new Invoice($response->journal());
+        $documentContent = $this->twig->getEnvironment()->render('./invoice/index.html.twig', [
+            'properties' => new Properties($merchant, $request, $response),
+        ]);
+        return new Invoice($documentContent);
     }
 }
