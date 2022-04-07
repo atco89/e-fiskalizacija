@@ -110,7 +110,7 @@
                     <div class="col-12">
                         <table class="table table-sm table-borderless m-0 p-0">
                             <tr>
-                                <td>За уплату</td>
+                                <td>Укупан износ</td>
                                 <td class="text-end">{{ properties.getAmount | decimal }}</td>
                             </tr>
                             {% for payment in properties.getPayment %}
@@ -132,7 +132,7 @@
                         <table class="table table-sm table-borderless m-0 p-0">
                             <tr>
                                 <td class="text-start">Ознака</td>
-                                <td class="text-center">Назив</td>
+                                <td class="text-center">Име</td>
                                 <td class="text-center">Стопа</td>
                                 <td class="text-end">Порез</td>
                             </tr>
@@ -144,6 +144,10 @@
                                     <td class="text-end">{{ taxItem.amount | decimal }}</td>
                                 </tr>
                             {% endfor %}
+                            <tr>
+                                <td colspan="3">Укупан износ пореза</td>
+                                <td class="text-end">{{ properties.getTaxAmount | decimal }}</td>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -156,19 +160,15 @@
                     <div class="col-12">
                         <table class="table table-sm table-borderless m-0 p-0">
                             <tr>
-                                <td>Укупно порез</td>
-                                <td class="text-end">{{ properties.getTaxAmount | decimal }}</td>
-                            </tr>
-                            <tr>
                                 <td>ПФР време</td>
                                 <td class="text-end">{{ properties.getSdcDateTime | date('d.m.Y H:i:s') }}</td>
                             </tr>
                             <tr>
-                                <td>ПФР бр. рачуна</td>
+                                <td>ПФР број рачуна</td>
                                 <td class="text-end">{{ properties.getSdcInterfacesNumber }}</td>
                             </tr>
                             <tr>
-                                <td>Бројачи</td>
+                                <td>Бројач рачуна</td>
                                 <td class="text-end">{{ properties.getInvoiceCounter }}</td>
                             </tr>
                         </table>
