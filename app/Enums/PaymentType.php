@@ -5,11 +5,11 @@ namespace Fiskalizacija\Enums;
 
 enum PaymentType: int
 {
-    case OTHER = 1;
-    case CASH = 2;
-    case CARD = 3;
-    case CHECK = 4;
-    case WIRE_TRANSFER = 5;
-    case VOUCHER = 6;
-    case MOBILE_MONEY = 7;
+    case OTHER = 0;
+    case CASH = 1;
+    case CARD = 2;
+    case CHECK = 3;
+    case WIRE_TRANSFER = 4;
+    case VOUCHER = 5;
+    case MOBILE_MONEY = 6;
 }

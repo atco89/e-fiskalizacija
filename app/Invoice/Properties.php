@@ -6,6 +6,7 @@ namespace Fiskalizacija\Invoice;
 use DateTime;
 use Exception;
 use Fiskalizacija\Entities\Item;
+use Fiskalizacija\Entities\Merchant;
 use Fiskalizacija\Entities\Payment;
 use Fiskalizacija\Entities\TaxItem;
 use Fiskalizacija\Sale\Request;
@@ -20,9 +21,9 @@ final class Properties
     private Merchant $merchant;
 
     /**
-     * @var Buyer
+     * @var LegalEntityBuyer
      */
-    private Buyer $buyer;
+    private LegalEntityBuyer $buyer;
 
     /**
      * @var string
@@ -90,19 +91,20 @@ final class Properties
     private string $qrCode;
 
     /**
+     * @param Merchant $merchant
      * @param Request $request
      * @param Response $response
      * @throws Exception
      */
-    public function __construct(Request $request, Response $response)
+    public function __construct(Merchant $merchant, Request $request, Response $response)
     {
-        $this->merchant = new Merchant($response);
-        $this->buyer = new Buyer($request);
-        $this->cashier = $request->getCashierId();
+        $this->merchant = $merchant;
+        $this->buyer = new LegalEntityBuyer($request);
+        $this->cashier = $request->getCashier();
         $this->invoiceNumber = $request->getInvoiceNumber();
         $this->dateAndTimeOfIssue = $request->getDateAndTimeOfIssue();
         $this->referentDocumentNumber = $request->getReferentDocumentNumber();
-        $this->referentDocumentDateAndTime = $request->getReferentDocumentDT();
+        $this->referentDocumentDateAndTime = $request->getReferentDocumentDateTime();
         $this->amount = $response->totalAmount();
         $this->items = $request->getItems();
         $this->payment = $request->getPayments();
@@ -122,9 +124,9 @@ final class Properties
     }
 
     /**
-     * @return Buyer
+     * @return LegalEntityBuyer
      */
-    public function getBuyer(): Buyer
+    public function getBuyer(): LegalEntityBuyer
     {
         return $this->buyer;
     }

@@ -6,10 +6,15 @@ namespace Fiskalizacija\Twig;
 use Fiskalizacija\Entities\Configuration;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use Twig\TwigFunction;
+use Twig\TwigFilter;
 
 final class Twig
 {
+
+    /**
+     * @const string
+     */
+    const FILE_SYSTEM_LOADER_PATH = __DIR__ . '/../../resources/views';
 
     /**
      * @var Environment
@@ -21,12 +26,12 @@ final class Twig
      */
     public function __construct(Configuration $configuration)
     {
-        $fileSystemLoader = new FilesystemLoader(__DIR__ . '/../../resources/views');
-        $this->environment = new Environment($fileSystemLoader, ['cache' => false]);
+        $this->environment = new Environment(new FilesystemLoader(self::FILE_SYSTEM_LOADER_PATH));
         $this->environment->addGlobal('merchant_log_path', $configuration->merchantLogoPath());
-        $this->environment->addFunction(new TwigFunction('decimal',
+        $this->environment->addFilter(new TwigFilter('decimal',
             function (?string $number, int $precision = 2) {
-                return number_format(floatval($number), $precision, ',', '.');
+                $number = empty($number) ? 0.00 : floatval($number);
+                return number_format($number, $precision, ',', '.');
             }
         ));
     }

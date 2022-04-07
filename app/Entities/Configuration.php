@@ -7,6 +7,16 @@ abstract class Configuration
 {
 
     /**
+     * @const string
+     */
+    const APPLICATION_JSON = 'application/json';
+
+    /**
+     * @return Merchant
+     */
+    abstract public function merchant(): Merchant;
+
+    /**
      * @return string
      */
     abstract public function merchantLogoPath(): string;
@@ -24,8 +34,8 @@ abstract class Configuration
     final public function headers(string $requestId): array
     {
         return [
-            'Accept'          => 'application/json',
-            'Content-Type'    => 'application/json',
+            'Accept'          => Configuration::APPLICATION_JSON,
+            'Content-Type'    => Configuration::APPLICATION_JSON,
             'RequestId'       => $requestId,
             'Accept-Language' => $this->language(),
             'PAC'             => $this->pac(),

@@ -20,11 +20,11 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <p class="my-0 text-center">{{ properties.getMerchant.getTaxIdentificationNumber }}</p>
-                        <p class="my-0 text-center">{{ properties.getMerchant.getBusinessName }}</p>
-                        <p class="my-0 text-center">{{ properties.getMerchant.getLocationName }}</p>
-                        <p class="my-0 text-center">{{ properties.getMerchant.getAddress }}</p>
-                        <p class="my-0 text-center">{{ properties.getMerchant.getDistrict }}</p>
+                        <p class="my-0 text-center">{{ properties.getMerchant.tin }}</p>
+                        <p class="my-0 text-center">{{ properties.getMerchant.name }}</p>
+                        <p class="my-0 text-center">{{ properties.getMerchant.branchName }}</p>
+                        <p class="my-0 text-center">{{ properties.getMerchant.address }}</p>
+                        <p class="my-0 text-center">{{ properties.getMerchant.district }}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -34,10 +34,10 @@
                                 <td class="align-middle">Касир:</td>
                                 <td class="align-middle text-end">{{ properties.getCashier }}</td>
                             </tr>
-                            {% if properties.getBuyer.getTaxIdentificationNumber is not empty %}
+                            {% if properties.getBuyer.getTin is not empty %}
                                 <tr>
                                     <td class="align-middle">ПИБ купца:</td>
-                                    <td class="align-middle text-end">{{ properties.getBuyer.getTaxIdentificationNumber }}</td>
+                                    <td class="align-middle text-end">{{ properties.getBuyer.getTin }}</td>
                                 </tr>
                             {% endif %}
                             {% if properties.getBuyer.getBuyerCostCenter is not empty %}

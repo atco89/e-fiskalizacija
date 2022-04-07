@@ -35,7 +35,7 @@ final class Response
     }
 
     /**
-     * UID of SDC's Secure Element digital certificate.
+     * UID of SDC`s Secure Element digital certificate.
      *
      * @return string
      */

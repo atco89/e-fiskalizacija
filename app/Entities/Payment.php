@@ -24,7 +24,7 @@ abstract class Payment
             case PaymentType::CASH:
                 return 'Готовина';
             case PaymentType::CARD:
-                return 'Картица';
+                return 'Платна картица';
             case PaymentType::CHECK:
                 return 'Чекови';
             case PaymentType::WIRE_TRANSFER:
@@ -32,7 +32,7 @@ abstract class Payment
             case PaymentType::VOUCHER:
                 return 'Ваучер';
             case PaymentType::MOBILE_MONEY:
-                return 'Мобилни';
+                return 'Мобилно плаћање';
         }
         throw new PaymentTypeNotFoundException();
     }

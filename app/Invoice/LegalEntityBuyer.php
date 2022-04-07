@@ -5,13 +5,13 @@ namespace Fiskalizacija\Invoice;
 
 use Fiskalizacija\Sale\Request;
 
-final class Buyer
+final class LegalEntityBuyer
 {
 
     /**
      * @var string|null
      */
-    private ?string $taxIdentificationNumber;
+    private ?string $tin;
 
     /**
      * @var string|null
@@ -24,16 +24,16 @@ final class Buyer
      */
     public function __construct(Request $request)
     {
-        $this->taxIdentificationNumber = $request->getBuyerId();
+        $this->tin = $request->getBuyerId();
         $this->buyerCostCenter = $request->getBuyerCostCenterId();
     }
 
     /**
      * @return string|null
      */
-    public function getTaxIdentificationNumber(): ?string
+    public function getTin(): ?string
     {
-        return $this->taxIdentificationNumber;
+        return $this->tin;
     }
 
     /**
