@@ -36,11 +36,10 @@ final class Invoice
      */
     public function __construct(string $documentContent)
     {
-        $connector = new FilePrintConnector("php://stdout");
-        $printer = new Printer($connector);
-        $printer->text("Hello World!\n");
-        $printer->cut();
-        $printer->close();
+        $this->paperSize = [0, 0, 226.77, 999.99];
+        $this->orientation = 'portrait';
+        $this->documentContent = $documentContent;
+        $this->dompdf = $this->loadDompdf();
     }
 
     /**
