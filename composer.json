@@ -21,7 +21,6 @@
     "twig/twig": "3.3.10",
     "dompdf/dompdf": "^1.2",
     "ext-json": "*",
-    "ext-curl": "*",
-    "mike42/escpos-php": "^3.0"
+    "ext-curl": "*"
   }
 }
