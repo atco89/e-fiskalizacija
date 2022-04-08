@@ -185,7 +185,7 @@
                             {% endfor %}
                             <tr class="bordered-top bordered-bottom">
                                 <td colspan="3">Укупно порез:</td>
-                                <td class="text-end">{{ properties.getTaxAmount }}</td>
+                                <td class="text-end">{{ properties.getTaxAmount | decimal }}</td>
                             </tr>
                         </table>
                     </div>
