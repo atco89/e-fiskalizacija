@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Fiskalizacija\Sale;
 
 use DateTime;
-use Fiskalizacija\Document\Invoice;
+use Exception;
 use Fiskalizacija\Entities\Configuration;
 use Fiskalizacija\Entities\Item;
 use Fiskalizacija\Entities\Merchant;
@@ -58,14 +58,10 @@ abstract class Sale extends Request
     }
 
     /**
-     * @return Invoice
-     * @throws GuzzleException
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @return string
      * @throws TaxCoreRequestException
      */
-    public function run(): Invoice
+    public function run(): string
     {
         $guzzleClient = new Client();
         $response = $guzzleClient->post($this->configuration->apiUrl(), [
@@ -85,17 +81,14 @@ abstract class Sale extends Request
      * @param Merchant $merchant
      * @param Request $request
      * @param ResponseInterface $responseInterface
-     * @return Invoice
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @return string
+     * @throws Exception
      */
-    private function response(Merchant $merchant, Request $request, ResponseInterface $responseInterface): Invoice
+    private function response(Merchant $merchant, Request $request, ResponseInterface $responseInterface): string
     {
         $response = new Response(json_decode($responseInterface->getBody()->getContents()));
-        $documentContent = $this->twig->getEnvironment()->render('./invoice/index.html.twig', [
+        return $this->twig->getEnvironment()->render('./invoice/index.html.twig', [
             'properties' => new Properties($merchant, $request, $response),
         ]);
-        return new Invoice($documentContent);
     }
 }
