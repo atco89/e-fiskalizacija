@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Fiskalizacija;
 
-use Fiskalizacija\Interfaces\Configuration;
+use Fiskalizacija\Entities\Configuration;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;

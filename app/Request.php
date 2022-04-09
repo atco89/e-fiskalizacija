@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace Fiskalizacija;
 
 use DateTime;
-use Fiskalizacija\Interfaces\Cashier;
-use Fiskalizacija\Interfaces\Invoice;
-use Fiskalizacija\Interfaces\InvoiceType;
-use Fiskalizacija\Interfaces\Item;
-use Fiskalizacija\Interfaces\Options;
-use Fiskalizacija\Interfaces\Payment;
-use Fiskalizacija\Interfaces\TransactionType;
+use Fiskalizacija\Entities\Cashier;
+use Fiskalizacija\Entities\Invoice;
+use Fiskalizacija\Entities\InvoiceType;
+use Fiskalizacija\Entities\Item;
+use Fiskalizacija\Entities\Options;
+use Fiskalizacija\Entities\Payment;
+use Fiskalizacija\Entities\TransactionType;
 use GuzzleHttp\RequestOptions;
 
 abstract class Request

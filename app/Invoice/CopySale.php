@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Fiskalizacija\Invoice;
 
-use Fiskalizacija\Interfaces\Configuration;
-use Fiskalizacija\Interfaces\Invoice;
-use Fiskalizacija\Interfaces\InvoiceType;
-use Fiskalizacija\Interfaces\TransactionType;
+use Fiskalizacija\Entities\Configuration;
+use Fiskalizacija\Entities\Invoice;
+use Fiskalizacija\Entities\InvoiceType;
+use Fiskalizacija\Entities\TransactionType;
 use Fiskalizacija\Sale;
 
 final class CopySale extends Sale

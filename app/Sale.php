@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Fiskalizacija;
 
 use Exception;
+use Fiskalizacija\Entities\Configuration;
+use Fiskalizacija\Entities\Invoice;
 use Fiskalizacija\Exceptions\TaxCoreRequestException;
-use Fiskalizacija\Interfaces\Configuration;
-use Fiskalizacija\Interfaces\Invoice;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;

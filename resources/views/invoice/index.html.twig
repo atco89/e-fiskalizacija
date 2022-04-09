@@ -61,14 +61,14 @@
                                         {{ properties.getInvoice.cashier.surname }}
                                     {% elseif properties.getInvoice.merchant.cashierDisplayType == 'NAME_SURNAME' %}
                                         {{
-                                        properties.getInvoice.cashier.name ~ ' ' ~
-                                        properties.getInvoice.cashier.surname
+                                            properties.getInvoice.cashier.name ~ ' ' ~
+                                            properties.getInvoice.cashier.surname
                                         }}
                                     {% elseif properties.getInvoice.merchant.cashierDisplayType == 'FULL_NAME' %}
                                         {{
-                                        properties.getInvoice.cashier.identifier ~ ' - ' ~
-                                        properties.getInvoice.cashier.name ~ ' ' ~
-                                        properties.getInvoice.cashier.surname
+                                            properties.getInvoice.cashier.identifier ~ ' - ' ~
+                                            properties.getInvoice.cashier.name ~ ' ' ~
+                                            properties.getInvoice.cashier.surname
                                         }}
                                     {% endif %}
                                 </td>
@@ -130,7 +130,7 @@
                                 <td class="text-center">Кол.</td>
                                 <td class="text-end">Укупно</td>
                             </tr>
-                            {% for item in properties.items %}
+                            {% for item in properties.getInvoice.items %}
                                 <tr>
                                     <td colspan="4">{{ item.name }} ({{ item.labels | join(', ') }})</td>
                                 </tr>
@@ -162,9 +162,9 @@
                         <table class="table table-sm table-borderless">
                             <tr>
                                 <td class="text-start">ЗА УПЛАТУ:</td>
-                                <td class="text-end">{{ properties.amount | decimal }}</td>
+                                <td class="text-end">{{ properties.getInvoice.amount | decimal }}</td>
                             </tr>
-                            {% for paymentType in properties.paymentTypes %}
+                            {% for paymentType in properties.getInvoice.paymentTypes %}
                                 <tr>
                                     <td class="text-start">{{ paymentType.name }}:</td>
                                     <td class="text-end">{{ paymentType.amount | decimal }}</td>

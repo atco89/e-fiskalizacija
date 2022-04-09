@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Interfaces;
+namespace Fiskalizacija\Entities;
 
 interface Configuration
 {

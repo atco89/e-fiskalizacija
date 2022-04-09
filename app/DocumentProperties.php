@@ -5,8 +5,8 @@ namespace Fiskalizacija;
 
 use DateTime;
 use Exception;
-use Fiskalizacija\Interfaces\Invoice;
-use Fiskalizacija\Interfaces\TaxItem;
+use Fiskalizacija\Entities\Invoice;
+use Fiskalizacija\Entities\TaxItem;
 
 final class DocumentProperties
 {
