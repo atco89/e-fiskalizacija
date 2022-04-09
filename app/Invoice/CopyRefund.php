@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Fiskalizacija\Invoice;
 
-use Fiskalizacija\Configuration;
+use Fiskalizacija\Interfaces\Configuration;
 use Fiskalizacija\Interfaces\Invoice;
 use Fiskalizacija\Interfaces\InvoiceType;
 use Fiskalizacija\Interfaces\TransactionType;
