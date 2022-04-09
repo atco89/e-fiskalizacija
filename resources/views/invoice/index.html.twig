@@ -195,17 +195,17 @@
                                 <td class="text-center">Стопа</td>
                                 <td class="text-end">Порез</td>
                             </tr>
-                            {% for taxRate in properties.taxRates %}
+                            {% for taxItem in properties.getTaxItems %}
                                 <tr>
-                                    <td class="text-start">{{ taxRate.label }}</td>
-                                    <td class="text-center">{{ taxRate.categoryName }}</td>
-                                    <td class="text-end">{{ taxRate.rate | decimal }} %</td>
-                                    <td class="text-end">{{ taxRate.amount | decimal }}</td>
+                                    <td class="text-start">{{ taxItem.label }}</td>
+                                    <td class="text-center">{{ taxItem.categoryName }}</td>
+                                    <td class="text-end">{{ taxItem.rate | decimal }} %</td>
+                                    <td class="text-end">{{ taxItem.amount | decimal }}</td>
                                 </tr>
                             {% endfor %}
                             <tr class="bordered-top bordered-bottom">
                                 <td colspan="3">Укупно порез:</td>
-                                <td class="text-end">{{ properties.taxAmount | decimal }}</td>
+                                <td class="text-end">{{ properties.getTaxAmount | decimal }}</td>
                             </tr>
                         </table>
                     </div>

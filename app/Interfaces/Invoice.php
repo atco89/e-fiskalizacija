@@ -62,14 +62,4 @@ interface Invoice
      * @return Payment[]
      */
     public function paymentTypes(): array;
-
-    /**
-     * @return TaxItem[]
-     */
-    public function taxRates(): array;
-
-    /**
-     * @return float
-     */
-    public function taxAmount(): float;
 }
