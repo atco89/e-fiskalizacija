@@ -8,7 +8,7 @@
                 <!-- MERCHANT LOGO START -->
                 <div class="row">
                     <div class="col-12 text-center">
-                        <img src="data:image/png;base64, {{ merchant_log_path }}"
+                        <img src="data:image/png;base64, {{ '' | merchant_log_path }}"
                              alt="merchant-log-path"
                              class="img-fluid w-50 px-4 py-2"/>
                     </div>
@@ -53,18 +53,18 @@
                             <tr>
                                 <td class="align-middle text-start">Касир:</td>
                                 <td class="align-middle text-end">
-                                    {% if properties.getInvoice.merchant.cashierDisplayType == 'IDENTIFIER' %}
+                                    {% if properties.getInvoice.merchant.cashierDisplayType.value == 'IDENTIFIER' %}
                                         {{ properties.getInvoice.cashier.identifier }}
-                                    {% elseif properties.getInvoice.merchant.cashierDisplayType == 'NAME' %}
+                                    {% elseif properties.getInvoice.merchant.cashierDisplayType.value == 'NAME' %}
                                         {{ properties.getInvoice.cashier.name }}
-                                    {% elseif properties.getInvoice.merchant.cashierDisplayType == 'SURNAME' %}
+                                    {% elseif properties.getInvoice.merchant.cashierDisplayType.value == 'SURNAME' %}
                                         {{ properties.getInvoice.cashier.surname }}
-                                    {% elseif properties.getInvoice.merchant.cashierDisplayType == 'NAME_SURNAME' %}
+                                    {% elseif properties.getInvoice.merchant.cashierDisplayType.value == 'NAME_SURNAME' %}
                                         {{
                                             properties.getInvoice.cashier.name ~ ' ' ~
                                             properties.getInvoice.cashier.surname
                                         }}
-                                    {% elseif properties.getInvoice.merchant.cashierDisplayType == 'FULL_NAME' %}
+                                    {% elseif properties.getInvoice.merchant.cashierDisplayType.value == 'FULL_NAME' %}
                                         {{
                                             properties.getInvoice.cashier.identifier ~ ' - ' ~
                                             properties.getInvoice.cashier.name ~ ' ' ~

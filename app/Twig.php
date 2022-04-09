@@ -22,11 +22,11 @@ final class Twig
     public function __construct(Configuration $configuration)
     {
         $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../resources/views'));
-        $this->environment->addGlobal('merchant_log_path',
+        $this->environment->addFilter(new TwigFilter('merchant_log_path',
             function () use ($configuration): string {
                 return base64_encode(file_get_contents($configuration->logoPath()));
             }
-        );
+        ));
         $this->environment->addFilter(new TwigFilter('decimal',
             function (?string $number, int $precision = 2) {
                 $formattedNumber = empty($number) ? 0.00 : floatval($number);
