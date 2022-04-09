@@ -5,7 +5,7 @@ namespace Fiskalizacija\Sale;
 
 use DateTime;
 use Exception;
-use Fiskalizacija\Entities\TaxItem;
+use Fiskalizacija\Domain\TaxItem;
 use stdClass;
 
 final class Response

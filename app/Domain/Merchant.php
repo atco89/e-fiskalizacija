@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Entities;
+namespace Fiskalizacija\Domain;
 
 interface Merchant
 {
@@ -30,4 +30,9 @@ interface Merchant
      * @return string
      */
     public function district(): string;
+
+    /**
+     * @return CashierDisplayType
+     */
+    public function cashierDisplayType(): CashierDisplayType;
 }

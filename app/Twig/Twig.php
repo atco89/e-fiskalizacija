@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Fiskalizacija\Twig;
 
-use Fiskalizacija\Entities\Configuration;
+use Fiskalizacija\Domain\Configuration;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
@@ -27,11 +27,11 @@ final class Twig
     public function __construct(Configuration $configuration)
     {
         $this->environment = new Environment(new FilesystemLoader(self::FILE_SYSTEM_LOADER_PATH));
-        $this->environment->addFilter(new TwigFilter('merchant_log_path',
+        $this->environment->addGlobal('merchant_log_path',
             function () use ($configuration): string {
-                return base64_encode(file_get_contents($configuration->merchantLogoPath()));
+                return base64_encode(file_get_contents($configuration->logoPath()));
             }
-        ));
+        );
         $this->environment->addFilter(new TwigFilter('decimal',
             function (?string $number, int $precision = 2) {
                 $formattedNumber = empty($number) ? 0.00 : floatval($number);

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Enums;
+namespace Fiskalizacija\Domain;
 
 enum TransactionType: int
 {

@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace Fiskalizacija\Sale;
 
 use DateTime;
-use Fiskalizacija\Entities\Cashier;
-use Fiskalizacija\Entities\Item;
-use Fiskalizacija\Entities\Options;
-use Fiskalizacija\Entities\Payment;
+use Fiskalizacija\Domain\Cashier;
+use Fiskalizacija\Domain\Invoice;
+use Fiskalizacija\Domain\Item;
+use Fiskalizacija\Domain\Options;
+use Fiskalizacija\Domain\Payment;
 
 abstract class Request
 {
@@ -83,34 +84,19 @@ abstract class Request
      *
      * @return string|null
      */
-    private ?string $buyerId;
+    private ?string $buyerId = null;
 
     /**
-     * @param string $requestUuid
-     * @param string $invoiceNumber
-     * @param DateTime $dateAndTimeOfIssue
-     * @param Item[] $items
-     * @param Payment[] $payments
-     * @param Cashier $cashier
-     * @param string|null $buyer
+     * @param Invoice $invoice
      */
-    public function __construct(
-        string   $requestUuid,
-        string   $invoiceNumber,
-        DateTime $dateAndTimeOfIssue,
-        array    $items,
-        array    $payments,
-        Cashier  $cashier,
-        ?string  $buyer = null
-    )
+    public function __construct(Invoice $invoice)
     {
-        $this->requestId = $requestUuid;
-        $this->invoiceNumber = $invoiceNumber;
-        $this->dateAndTimeOfIssue = $dateAndTimeOfIssue;
-        $this->items = $items;
-        $this->payments = $payments;
-        $this->cashier = $cashier;
-        $this->buyerId = $buyer;
+        $this->requestId = $invoice->requestId();
+        $this->invoiceNumber = $invoice->number();
+        $this->dateAndTimeOfIssue = $invoice->issueDateTime();
+        $this->items = $invoice->items();
+        $this->payments = $invoice->paymentTypes();
+        $this->cashier = $invoice->cashier();
     }
 
     /**

@@ -3,14 +3,10 @@ declare(strict_types=1);
 
 namespace Fiskalizacija\Sale;
 
-use DateTime;
 use Exception;
-use Fiskalizacija\Entities\Cashier;
-use Fiskalizacija\Entities\Configuration;
-use Fiskalizacija\Entities\Item;
-use Fiskalizacija\Entities\Payment;
+use Fiskalizacija\Domain\Configuration;
+use Fiskalizacija\Domain\Invoice;
 use Fiskalizacija\Exceptions\TaxCoreRequestException;
-use Fiskalizacija\Invoice\Properties;
 use Fiskalizacija\Twig\Twig;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -24,46 +20,39 @@ abstract class Sale extends Request
 {
 
     /**
+     * @var Twig
+     */
+    protected Twig $twig;
+
+    /**
      * @var Configuration
      */
     protected Configuration $configuration;
 
     /**
-     * @var Twig
+     * @var Invoice
      */
-    private Twig $twig;
+    protected Invoice $invoice;
 
     /**
      * @param Configuration $configuration
-     * @param string $requestId
-     * @param string $invoiceNumber
-     * @param DateTime $dateAndTimeOfIssue
-     * @param Item[] $items
-     * @param Payment[] $payments
-     * @param Cashier $cashier
+     * @param Invoice $invoice
      */
-    public function __construct(
-        Configuration $configuration,
-        string        $requestId,
-        string        $invoiceNumber,
-        DateTime      $dateAndTimeOfIssue,
-        array         $items,
-        array         $payments,
-        Cashier       $cashier
-    )
+    public function __construct(Configuration $configuration, Invoice $invoice)
     {
-        parent::__construct($requestId, $invoiceNumber, $dateAndTimeOfIssue, $items, $payments, $cashier);
+        parent::__construct($invoice);
+        $this->invoice = $invoice;
         $this->configuration = $configuration;
-        $this->twig = new Twig($this->configuration);
+        $this->twig = new Twig($configuration);
     }
 
     /**
      * @return string
+     * @throws GuzzleException
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      * @throws TaxCoreRequestException
-     * @throws GuzzleException
      */
     public function run(): string
     {
@@ -75,15 +64,14 @@ abstract class Sale extends Request
         ]);
 
         if ($response->getStatusCode() === 200) {
-            return $this->response($this->configuration, $this, $response);
+            return $this->response($this->invoice, $response);
         }
 
         throw new TaxCoreRequestException();
     }
 
     /**
-     * @param Configuration $configuration
-     * @param Request $request
+     * @param Invoice $invoice
      * @param ResponseInterface $responseInterface
      * @return string
      * @throws LoaderError
@@ -92,13 +80,12 @@ abstract class Sale extends Request
      * @throws Exception
      */
     private function response(
-        Configuration     $configuration,
-        Request           $request,
+        Invoice           $invoice,
         ResponseInterface $responseInterface
     ): string
     {
         $response = new Response(json_decode($responseInterface->getBody()->getContents()));
-        $properties = new Properties($configuration, $request, $response);
+        $properties = new Properties($invoice, $response);
         return $this->twig->getEnvironment()->render('./invoice/index.html.twig', ['properties' => $properties]);
     }
 }

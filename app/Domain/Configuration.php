@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Entities;
-
-use Fiskalizacija\Enums\CashierDisplayType;
+namespace Fiskalizacija\Domain;
 
 abstract class Configuration
 {
@@ -14,19 +12,9 @@ abstract class Configuration
     const APPLICATION_JSON = 'application/json';
 
     /**
-     * @return CashierDisplayType|null
-     */
-    abstract public function cashierDisplayType(): ?CashierDisplayType;
-
-    /**
-     * @return Merchant
-     */
-    abstract public function merchant(): Merchant;
-
-    /**
      * @return string
      */
-    abstract public function merchantLogoPath(): string;
+    abstract public function logoPath(): string;
 
     /**
      * @return string
