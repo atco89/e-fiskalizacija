@@ -53,25 +53,38 @@
                             <tr>
                                 <td class="align-middle text-start">Касир:</td>
                                 <td class="align-middle text-end">
-                                    {{
+                                    {% if properties.getInvoice.merchant.cashierDisplayType == 'IDENTIFIER' %}
+                                        {{ properties.getInvoice.cashier.identifier }}
+                                    {% elseif properties.getInvoice.merchant.cashierDisplayType == 'NAME' %}
+                                        {{ properties.getInvoice.cashier.name }}
+                                    {% elseif properties.getInvoice.merchant.cashierDisplayType == 'SURNAME' %}
+                                        {{ properties.getInvoice.cashier.surname }}
+                                    {% elseif properties.getInvoice.merchant.cashierDisplayType == 'NAME_SURNAME' %}
+                                        {{
+                                        properties.getInvoice.cashier.name ~ ' ' ~
+                                        properties.getInvoice.cashier.surname
+                                        }}
+                                    {% elseif properties.getInvoice.merchant.cashierDisplayType == 'FULL_NAME' %}
+                                        {{
                                         properties.getInvoice.cashier.identifier ~ ' - ' ~
                                         properties.getInvoice.cashier.name ~ ' ' ~
                                         properties.getInvoice.cashier.surname
-                                    }}
+                                        }}
+                                    {% endif %}
                                 </td>
                             </tr>
 
-                            {% if properties.buyer.buyerId is not empty %}
+                            {% if properties.getInvoice.buyer.buyerId is not empty %}
                                 <tr>
                                     <td class="align-middle text-start">ПИБ купца:</td>
-                                    <td class="align-middle text-end">{{ properties.buyer.buyerId }}</td>
+                                    <td class="align-middle text-end">{{ properties.getInvoice.buyer.buyerId }}</td>
                                 </tr>
                             {% endif %}
 
-                            {% if properties.buyer.buyerCostCenterId is not empty %}
+                            {% if properties.getInvoice.buyer.buyerCostCenterId is not empty %}
                                 <tr>
                                     <td class="align-middle text-start">Податак купца:</td>
-                                    <td class="align-middle text-end">{{ properties.buyer.buyerCostCenterId }}</td>
+                                    <td class="align-middle text-end">{{ properties.getInvoice.buyer.buyerCostCenterId }}</td>
                                 </tr>
                             {% endif %}
 
