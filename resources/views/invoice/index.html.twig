@@ -53,25 +53,11 @@
                             <tr>
                                 <td class="align-middle text-start">Касир:</td>
                                 <td class="align-middle text-end">
-                                    {% switch properties.getConfiguration.cashierDisplayType %}
-                                        {% case 'IDENTIFIER' %}
-                                            {{ properties.getInvoice.cashier.identifier }}
-                                        {% case 'NAME' %}
-                                            {{ properties.getInvoice.cashier.name }}
-                                        {% case 'SURNAME' %}
-                                            {{ properties.getInvoice.cashier.surname }}
-                                        {% case 'FULL_NAME' %}
-                                            {{
-                                                properties.getInvoice.cashier.name ~ ' ' ~
-                                                properties.getInvoice.cashier.surname
-                                            }}
-                                        {% default %}
-                                            {{
-                                                properties.getInvoice.cashier.identifier ~ ' - ' ~
-                                                properties.getInvoice.cashier.name ~ ' ' ~
-                                                properties.getInvoice.cashier.surname
-                                            }}
-                                    {% endswitch %}
+                                    {{
+                                        properties.getInvoice.cashier.identifier ~ ' - ' ~
+                                        properties.getInvoice.cashier.name ~ ' ' ~
+                                        properties.getInvoice.cashier.surname
+                                    }}
                                 </td>
                             </tr>
 

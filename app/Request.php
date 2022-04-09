@@ -255,7 +255,9 @@ abstract class Request
             'payment'                => $this->payments(),
             'invoiceNumber'          => $this->invoiceNumber,
             'referentDocumentNumber' => $this->referentDocumentNumber,
-            'referentDocumentDT'     => $this->referentDocumentDateTime->format(DATE_ISO8601),
+            'referentDocumentDT'     => $this->referentDocumentDateTime instanceof DateTime
+                ? $this->referentDocumentDateTime->format(DATE_ISO8601)
+                : $this->referentDocumentDateTime,
             'options'                => $this->options(),
             'items'                  => $this->items(),
         ];
