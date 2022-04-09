@@ -18,11 +18,6 @@ abstract class Sale extends Request
 {
 
     /**
-     * @var Twig
-     */
-    protected Twig $twig;
-
-    /**
      * @var Configuration
      */
     protected Configuration $configuration;
@@ -33,15 +28,20 @@ abstract class Sale extends Request
     protected Invoice $invoice;
 
     /**
+     * @var Twig
+     */
+    protected Twig $twig;
+
+    /**
      * @param Configuration $configuration
      * @param Invoice $invoice
      */
     public function __construct(Configuration $configuration, Invoice $invoice)
     {
         parent::__construct($invoice);
-        $this->invoice = $invoice;
         $this->configuration = $configuration;
-        $this->twig = new Twig($configuration);
+        $this->invoice = $invoice;
+        $this->twig = new Twig($this->configuration);
     }
 
     /**
