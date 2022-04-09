@@ -14,9 +14,9 @@ abstract class Configuration
     const APPLICATION_JSON = 'application/json';
 
     /**
-     * @return CashierDisplayType
+     * @return CashierDisplayType|null
      */
-    abstract public function cashierDisplayType(): CashierDisplayType;
+    abstract public function cashierDisplayType(): ?CashierDisplayType;
 
     /**
      * @return Merchant
