@@ -5,9 +5,9 @@ namespace Fiskalizacija\Sale;
 
 use DateTime;
 use Exception;
+use Fiskalizacija\Entities\Cashier;
 use Fiskalizacija\Entities\Configuration;
 use Fiskalizacija\Entities\Item;
-use Fiskalizacija\Entities\Merchant;
 use Fiskalizacija\Entities\Payment;
 use Fiskalizacija\Exceptions\TaxCoreRequestException;
 use Fiskalizacija\Invoice\Properties;
@@ -40,7 +40,7 @@ abstract class Sale extends Request
      * @param DateTime $dateAndTimeOfIssue
      * @param Item[] $items
      * @param Payment[] $payments
-     * @param string $cashier
+     * @param Cashier $cashier
      */
     public function __construct(
         Configuration $configuration,
@@ -49,7 +49,7 @@ abstract class Sale extends Request
         DateTime      $dateAndTimeOfIssue,
         array         $items,
         array         $payments,
-        string        $cashier
+        Cashier       $cashier
     )
     {
         parent::__construct($requestId, $invoiceNumber, $dateAndTimeOfIssue, $items, $payments, $cashier);
@@ -59,7 +59,11 @@ abstract class Sale extends Request
 
     /**
      * @return string
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      * @throws TaxCoreRequestException
+     * @throws GuzzleException
      */
     public function run(): string
     {
@@ -71,24 +75,30 @@ abstract class Sale extends Request
         ]);
 
         if ($response->getStatusCode() === 200) {
-            return $this->response($this->configuration->merchant(), $this, $response);
+            return $this->response($this->configuration, $this, $response);
         }
 
         throw new TaxCoreRequestException();
     }
 
     /**
-     * @param Merchant $merchant
+     * @param Configuration $configuration
      * @param Request $request
      * @param ResponseInterface $responseInterface
      * @return string
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      * @throws Exception
      */
-    private function response(Merchant $merchant, Request $request, ResponseInterface $responseInterface): string
+    private function response(
+        Configuration     $configuration,
+        Request           $request,
+        ResponseInterface $responseInterface
+    ): string
     {
         $response = new Response(json_decode($responseInterface->getBody()->getContents()));
-        return $this->twig->getEnvironment()->render('./invoice/index.html.twig', [
-            'properties' => new Properties($merchant, $request, $response),
-        ]);
+        $properties = new Properties($configuration, $request, $response);
+        return $this->twig->getEnvironment()->render('./invoice/index.html.twig', ['properties' => $properties]);
     }
 }

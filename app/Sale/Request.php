@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Fiskalizacija\Sale;
 
 use DateTime;
+use Fiskalizacija\Entities\Cashier;
 use Fiskalizacija\Entities\Item;
 use Fiskalizacija\Entities\Options;
 use Fiskalizacija\Entities\Payment;
@@ -73,9 +74,9 @@ abstract class Request
     /**
      * Cashier’s identification.
      *
-     * @return string
+     * @return Cashier
      */
-    private string $cashier;
+    private Cashier $cashier;
 
     /**
      * Taxpayer ID of the Buyer. It is mandatory for B2B transactions; otherwise, it's optional.
@@ -90,7 +91,7 @@ abstract class Request
      * @param DateTime $dateAndTimeOfIssue
      * @param Item[] $items
      * @param Payment[] $payments
-     * @param string $cashier
+     * @param Cashier $cashier
      * @param string|null $buyer
      */
     public function __construct(
@@ -99,7 +100,7 @@ abstract class Request
         DateTime $dateAndTimeOfIssue,
         array    $items,
         array    $payments,
-        string   $cashier,
+        Cashier  $cashier,
         ?string  $buyer = null
     )
     {
@@ -209,9 +210,9 @@ abstract class Request
     }
 
     /**
-     * @return string
+     * @return Cashier
      */
-    public function getCashier(): string
+    public function getCashier(): Cashier
     {
         return $this->cashier;
     }
@@ -234,7 +235,7 @@ abstract class Request
             'invoiceType'            => $this->invoiceType(),
             'transactionType'        => $this->transactionType(),
             'payment'                => $this->payments(),
-            'cashier'                => $this->cashier,
+            'cashier'                => $this->cashier->identifier(),
             'buyerId'                => $this->buyerId,
             'buyerCostCenterId'      => $this->buyerCostCenterId,
             'invoiceNumber'          => $this->invoiceNumber,

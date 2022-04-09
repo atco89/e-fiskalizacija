@@ -5,7 +5,7 @@ namespace Fiskalizacija\Invoice;
 
 use Fiskalizacija\Sale\Request;
 
-final class LegalEntityBuyer
+final class Buyer
 {
 
     /**

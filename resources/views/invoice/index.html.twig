@@ -8,7 +8,8 @@
                 <!-- MERCHANT LOGO START -->
                 <div class="row">
                     <div class="col-12 text-center">
-                        <img src="data:image/png;base64, {{ merchant_log_path }}" alt="merchant-log-path"
+                        <img src="data:image/png;base64, {{ merchant_log_path }}"
+                             alt="merchant-log-path"
                              class="img-fluid w-50 px-4 py-2"/>
                     </div>
                 </div>
@@ -32,27 +33,45 @@
                         <table class="table table-sm table-borderless">
                             <tr>
                                 <td class="align-middle text-start">ПИБ:</td>
-                                <td class="align-middle text-end">{{ properties.getMerchant.tin }}</td>
+                                <td class="align-middle text-end">{{ properties.getConfiguration.getMerchant.tin }}</td>
                             </tr>
                             <tr>
                                 <td class="align-middle text-start">Предузеће:</td>
-                                <td class="align-middle text-end">{{ properties.getMerchant.name }}</td>
+                                <td class="align-middle text-end">{{ properties.getConfiguration.getMerchant.name }}</td>
                             </tr>
                             <tr>
                                 <td class="align-middle text-start">Име:</td>
-                                <td class="align-middle text-end">{{ properties.getMerchant.branchName }}</td>
+                                <td class="align-middle text-end">{{ properties.getConfiguration.getMerchant.branchName }}</td>
                             </tr>
                             <tr>
                                 <td class="align-middle text-start">Адреса:</td>
-                                <td class="align-middle text-end">{{ properties.getMerchant.address }}</td>
+                                <td class="align-middle text-end">{{ properties.getConfiguration.getMerchant.address }}</td>
                             </tr>
                             <tr>
                                 <td class="align-middle text-start">Место:</td>
-                                <td class="align-middle text-end">{{ properties.getMerchant.district }}</td>
+                                <td class="align-middle text-end">{{ properties.getConfiguration.getMerchant.district }}</td>
                             </tr>
+
                             <tr>
                                 <td class="align-middle text-start">Касир:</td>
-                                <td class="align-middle text-end">{{ properties.getCashier }}</td>
+                                <td class="align-middle text-end">
+                                    {% switch properties.getConfiguration.cashierDisplayType %}
+                                        {% case 'IDENTIFIER' %}
+                                            {{ properties.getCashier.identifier }}
+                                        {% case 'NAME' %}
+                                            {{ properties.getCashier.name }}
+                                        {% case 'SURNAME' %}
+                                            {{ properties.getCashier.surname }}
+                                        {% case 'FULL_NAME' %}
+                                            {{ properties.getCashier.name ~ ' ' ~ properties.getCashier.surname }}
+                                        {% default %}
+                                            {{
+                                                properties.getCashier.identifier ~ ' - ' ~
+                                                properties.getCashier.name ~ ' ' ~
+                                                properties.getCashier.surname
+                                            }}
+                                    {% endswitch %}
+                                </td>
                             </tr>
 
                             {% if properties.getBuyer.getTin is not empty %}
@@ -215,7 +234,9 @@
                 <!-- QR CODE CONTAINER START -->
                 <div class="row my-2">
                     <div class="col-12 text-center">
-                        <img src="data:image/gif;base64, {{ properties.getQrCode }}" alt="qr-code" id="qr-code-image"
+                        <img src="data:image/gif;base64, {{ properties.getQrCode }}"
+                             alt="qr-code"
+                             id="qr-code-image"
                              class="img-fluid"/>
                     </div>
                 </div>

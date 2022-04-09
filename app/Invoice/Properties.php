@@ -5,8 +5,9 @@ namespace Fiskalizacija\Invoice;
 
 use DateTime;
 use Exception;
+use Fiskalizacija\Entities\Cashier;
+use Fiskalizacija\Entities\Configuration;
 use Fiskalizacija\Entities\Item;
-use Fiskalizacija\Entities\Merchant;
 use Fiskalizacija\Entities\Payment;
 use Fiskalizacija\Entities\TaxItem;
 use Fiskalizacija\Sale\Request;
@@ -16,19 +17,19 @@ final class Properties
 {
 
     /**
-     * @var Merchant
+     * @var Configuration
      */
-    private Merchant $merchant;
+    private Configuration $configuration;
 
     /**
-     * @var LegalEntityBuyer
+     * @var Buyer
      */
-    private LegalEntityBuyer $buyer;
+    private Buyer $buyer;
 
     /**
-     * @var string
+     * @var Cashier
      */
-    private string $cashier;
+    private Cashier $cashier;
 
     /**
      * @var string
@@ -96,15 +97,15 @@ final class Properties
     private string $qrCode;
 
     /**
-     * @param Merchant $merchant
+     * @param Configuration $configuration
      * @param Request $request
      * @param Response $response
      * @throws Exception
      */
-    public function __construct(Merchant $merchant, Request $request, Response $response)
+    public function __construct(Configuration $configuration, Request $request, Response $response)
     {
-        $this->merchant = $merchant;
-        $this->buyer = new LegalEntityBuyer($request);
+        $this->configuration = $configuration;
+        $this->buyer = new Buyer($request);
         $this->cashier = $request->getCashier();
         $this->invoiceNumber = $request->getInvoiceNumber();
         $this->dateAndTimeOfIssue = $request->getDateAndTimeOfIssue();
@@ -123,41 +124,41 @@ final class Properties
 
 
     /**
-     * @param TaxItem[] $items
+     * @param TaxItem[]|null $items
      * @return float
      */
-    private function calculateTaxAmount(array $items): float
+    private function calculateTaxAmount(?array $items): float
     {
         if (empty($items)) {
-            return 0.00;
+            return 0.0000;
         }
 
         return array_reduce($items, function (?float $carry, TaxItem $item): float {
-            $carry += $item->amount();
+            $carry += round($item->amount(), 4);
             return $carry;
         });
     }
 
     /**
-     * @return Merchant
+     * @return Configuration
      */
-    public function getMerchant(): Merchant
+    public function getConfiguration(): Configuration
     {
-        return $this->merchant;
+        return $this->configuration;
     }
 
     /**
-     * @return LegalEntityBuyer
+     * @return Buyer
      */
-    public function getBuyer(): LegalEntityBuyer
+    public function getBuyer(): Buyer
     {
         return $this->buyer;
     }
 
     /**
-     * @return string
+     * @return Cashier
      */
-    public function getCashier(): string
+    public function getCashier(): Cashier
     {
         return $this->cashier;
     }

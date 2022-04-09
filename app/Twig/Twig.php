@@ -34,8 +34,8 @@ final class Twig
         ));
         $this->environment->addFilter(new TwigFilter('decimal',
             function (?string $number, int $precision = 2) {
-                $number = empty($number) ? 0.00 : floatval($number);
-                return number_format($number, $precision, ',', '.');
+                $formattedNumber = empty($number) ? 0.00 : floatval($number);
+                return number_format($formattedNumber, $precision, ',', '.');
             }
         ));
     }

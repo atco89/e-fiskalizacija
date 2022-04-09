@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Fiskalizacija\Entities;
 
+use Fiskalizacija\Enums\CashierDisplayType;
+
 abstract class Configuration
 {
 
@@ -10,6 +12,11 @@ abstract class Configuration
      * @const string
      */
     const APPLICATION_JSON = 'application/json';
+
+    /**
+     * @return CashierDisplayType
+     */
+    abstract public function cashierDisplayType(): CashierDisplayType;
 
     /**
      * @return Merchant
