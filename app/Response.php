@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Sale;
+namespace Fiskalizacija;
 
 use DateTime;
 use Exception;
-use Fiskalizacija\Domain\TaxItem;
+use Fiskalizacija\Interfaces\TaxItem;
 use stdClass;
 
 final class Response

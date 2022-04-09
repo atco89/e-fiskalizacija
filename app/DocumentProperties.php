@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Sale;
+namespace Fiskalizacija;
 
 use DateTime;
 use Exception;
-use Fiskalizacija\Domain\Invoice;
+use Fiskalizacija\Interfaces\Invoice;
 
-final class Properties
+final class DocumentProperties
 {
 
     /**

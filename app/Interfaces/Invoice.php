@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Domain;
+namespace Fiskalizacija\Interfaces;
 
 use DateTime;
 
@@ -32,6 +32,11 @@ interface Invoice
      * @return DateTime|null
      */
     public function referentDocumentDateTime(): ?DateTime;
+
+    /**
+     * @return Buyer
+     */
+    public function buyer(): Buyer;
 
     /**
      * @return Merchant

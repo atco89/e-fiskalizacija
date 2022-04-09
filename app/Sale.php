@@ -1,16 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Sale;
+namespace Fiskalizacija;
 
 use Exception;
-use Fiskalizacija\Domain\Configuration;
-use Fiskalizacija\Domain\Invoice;
 use Fiskalizacija\Exceptions\TaxCoreRequestException;
-use Fiskalizacija\Twig\Twig;
+use Fiskalizacija\Interfaces\Configuration;
+use Fiskalizacija\Interfaces\Invoice;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -56,17 +54,11 @@ abstract class Sale extends Request
      */
     public function run(): string
     {
-        $guzzleClient = new Client();
-        $response = $guzzleClient->post($this->configuration->apiUrl(), [
-            RequestOptions::CERT    => $this->configuration->certs(),
-            RequestOptions::HEADERS => $this->configuration->headers($this->requestId),
-            RequestOptions::JSON    => $this->requestBody()
-        ]);
-
+        $client = new Client();
+        $response = $client->post($this->configuration->apiUrl(), $this->apiOptions());
         if ($response->getStatusCode() === 200) {
             return $this->response($this->invoice, $response);
         }
-
         throw new TaxCoreRequestException();
     }
 
@@ -85,7 +77,7 @@ abstract class Sale extends Request
     ): string
     {
         $response = new Response(json_decode($responseInterface->getBody()->getContents()));
-        $properties = new Properties($invoice, $response);
+        $properties = new DocumentProperties($invoice, $response);
         return $this->twig->getEnvironment()->render('./invoice/index.html.twig', ['properties' => $properties]);
     }
 }

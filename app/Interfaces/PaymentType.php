@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Domain;
+namespace Fiskalizacija\Interfaces;
 
 enum PaymentType: int
 {
