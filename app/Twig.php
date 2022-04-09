@@ -21,7 +21,7 @@ final class Twig
      */
     public function __construct(Configuration $configuration)
     {
-        $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../../resources/views'));
+        $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../resources/views'));
         $this->environment->addGlobal('merchant_log_path',
             function () use ($configuration): string {
                 return base64_encode(file_get_contents($configuration->logoPath()));
