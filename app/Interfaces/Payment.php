@@ -15,4 +15,9 @@ interface Payment
      * @return int
      */
     public function type(): int;
+
+    /**
+     * @return string
+     */
+    public function name(): string;
 }
