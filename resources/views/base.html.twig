@@ -48,10 +48,9 @@
         </style>
     </head>
     <body>
-        <script>
-            const invoiceWindow = window.open('', 'invoiceWindow', 'width=310,height=auto');
-            invoiceWindow.document.write({% block container %}{% endblock %});
-            invoiceWindow.print();
+        {% block container %}{% endblock %}
+        <script type="text/javascript">
+            window.print();
         </script>
     </body>
 </html>
