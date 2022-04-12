@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija;
+namespace TaxCore;
 
 use DateTime;
 use Exception;
-use Fiskalizacija\Entities\TaxItem;
 use stdClass;
+use TaxCore\Entities\TaxItem;
 
 final class Response
 {

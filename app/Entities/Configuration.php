@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Entities;
+namespace TaxCore\Entities;
 
 interface Configuration
 {

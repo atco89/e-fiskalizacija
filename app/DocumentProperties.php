@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija;
+namespace TaxCore;
 
 use DateTime;
 use Exception;
-use Fiskalizacija\Entities\Invoice;
-use Fiskalizacija\Entities\TaxItem;
+use TaxCore\Entities\Invoice;
+use TaxCore\Entities\TaxItem;
 
 final class DocumentProperties
 {

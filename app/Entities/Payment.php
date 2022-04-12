@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Entities;
+namespace TaxCore\Entities;
 
-use Fiskalizacija\Exceptions\PaymentTypeNotFoundException;
+use TaxCore\Exceptions\PaymentTypeNotFoundException;
 
 abstract class Payment
 {
@@ -20,13 +20,13 @@ abstract class Payment
     public function name(): string
     {
         return match ($this->type()) {
-            PaymentType::CASH->value => 'Готовина',
-            PaymentType::CARD->value => 'Платна картица',
-            PaymentType::CHECK->value => 'Чек',
+            PaymentType::CASH->value          => 'Готовина',
+            PaymentType::CARD->value          => 'Платна картица',
+            PaymentType::CHECK->value         => 'Чек',
             PaymentType::WIRE_TRANSFER->value => 'Вирман',
-            PaymentType::VOUCHER->value => 'Ваучер',
-            PaymentType::MOBILE_MONEY->value => 'Мобилни новац',
-            default => throw new PaymentTypeNotFoundException(),
+            PaymentType::VOUCHER->value       => 'Ваучер',
+            PaymentType::MOBILE_MONEY->value  => 'Мобилни новац',
+            default                           => throw new PaymentTypeNotFoundException(),
         };
     }
 

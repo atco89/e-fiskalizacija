@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija;
+namespace TaxCore;
 
 use Exception;
-use Fiskalizacija\Entities\Configuration;
-use Fiskalizacija\Entities\Invoice;
-use Fiskalizacija\Exceptions\TaxCoreRequestException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
+use TaxCore\Entities\Configuration;
+use TaxCore\Entities\Invoice;
+use TaxCore\Exceptions\TaxCoreRequestException;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;

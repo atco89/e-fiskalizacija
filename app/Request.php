@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija;
+namespace TaxCore;
 
 use DateTime;
-use Fiskalizacija\Entities\Cashier;
-use Fiskalizacija\Entities\Invoice;
-use Fiskalizacija\Entities\InvoiceType;
-use Fiskalizacija\Entities\Item;
-use Fiskalizacija\Entities\Options;
-use Fiskalizacija\Entities\Payment;
-use Fiskalizacija\Entities\TransactionType;
 use GuzzleHttp\RequestOptions;
+use TaxCore\Entities\Cashier;
+use TaxCore\Entities\Invoice;
+use TaxCore\Entities\InvoiceType;
+use TaxCore\Entities\Item;
+use TaxCore\Entities\Options;
+use TaxCore\Entities\Payment;
+use TaxCore\Entities\TransactionType;
 
 abstract class Request
 {

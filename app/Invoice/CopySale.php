@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija\Invoice;
+namespace TaxCore\Invoice;
 
-use Fiskalizacija\Entities\Configuration;
-use Fiskalizacija\Entities\Invoice;
-use Fiskalizacija\Entities\InvoiceType;
-use Fiskalizacija\Entities\TransactionType;
-use Fiskalizacija\Sale;
+use TaxCore\Entities\Configuration;
+use TaxCore\Entities\Invoice;
+use TaxCore\Entities\InvoiceType;
+use TaxCore\Entities\TransactionType;
+use TaxCore\Sale;
 
 final class CopySale extends Sale
 {

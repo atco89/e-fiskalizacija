@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Fiskalizacija;
+namespace TaxCore;
 
-use Fiskalizacija\Entities\Configuration;
+use TaxCore\Entities\Configuration;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
