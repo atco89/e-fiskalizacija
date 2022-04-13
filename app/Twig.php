@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore;
 
-use TaxCore\Entities\Configuration;
+use TaxCore\Entities\Merchant;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
@@ -17,22 +17,18 @@ final class Twig
     private Environment $environment;
 
     /**
-     * @param Configuration $configuration
+     * @param Merchant $merchant
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(Merchant $merchant)
     {
         $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../resources/views'));
-        $this->environment->addFilter(new TwigFilter('merchant_log_path',
-            function () use ($configuration): string {
-                return base64_encode(file_get_contents($configuration->logoPath()));
-            }
-        ));
-        $this->environment->addFilter(new TwigFilter('decimal',
-            function (?string $number, int $precision = 2) {
-                $formattedNumber = empty($number) ? 0.00 : floatval($number);
-                return number_format($formattedNumber, $precision, ',', '.');
-            }
-        ));
+        $this->environment->addFilter(new TwigFilter('merchant_log_path', function () use ($merchant): string {
+            return base64_encode(file_get_contents($merchant->logoPath()));
+        }));
+        $this->environment->addFilter(new TwigFilter('decimal', function (?string $number, int $precision = 2) {
+            $formattedNumber = empty($number) ? 0.00 : floatval($number);
+            return number_format($formattedNumber, $precision, ',', '.');
+        }));
     }
 
     /**

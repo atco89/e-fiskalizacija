@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 use TaxCore\Entities\Configuration;
+use TaxCore\Entities\Merchant;
 use TaxCore\Entities\RequestInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
 use Twig\Error\LoaderError;
@@ -17,22 +18,18 @@ final class Sale extends Request
 {
 
     /**
-     * @var Configuration
-     */
-    protected Configuration $configuration;
-
-    /**
      * @var Twig
      */
     protected Twig $twig;
 
     /**
+     * @param Merchant $merchant
      * @param Configuration $configuration
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(Merchant $merchant, Configuration $configuration)
     {
         parent::__construct($configuration);
-        $this->twig = new Twig($this->configuration);
+        $this->twig = new Twig($merchant);
     }
 
     /**

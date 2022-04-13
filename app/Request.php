@@ -6,8 +6,6 @@ namespace TaxCore;
 use DateTime;
 use GuzzleHttp\RequestOptions;
 use TaxCore\Entities\Configuration;
-use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\Item;
 use TaxCore\Entities\Payment;
 use TaxCore\Entities\RequestInterface;
@@ -18,7 +16,7 @@ abstract class Request
     /**
      * @var Configuration
      */
-    private Configuration $configuration;
+    protected Configuration $configuration;
 
     /**
      * @param Configuration $configuration
