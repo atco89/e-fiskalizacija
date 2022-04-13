@@ -167,6 +167,12 @@
                 <div class="row">
                     <div class="col-12">
                         <table class="table table-sm table-borderless">
+                            {% if properties.getRequest.remainingAmount is not empty %}
+                                <tr>
+                                    <td class="text-start">УКУПАН ИЗНОС:</td>
+                                    <td class="text-end">{{ properties.getRequest.remainingAmount | decimal }}</td>
+                                </tr>
+                            {% endif %}
                             <tr>
                                 <td class="text-start">ЗА УПЛАТУ:</td>
                                 <td class="text-end">{{ properties.getRequest.amount | decimal }}</td>
@@ -177,12 +183,6 @@
                                     <td class="text-end">{{ payment.amount | decimal }}</td>
                                 </tr>
                             {% endfor %}
-                            {% if properties.getRequest.remainingAmount is not empty %}
-                                <tr>
-                                    <td class="text-start">ОСТАТАК ЗА УПЛАТУ:</td>
-                                    <td class="text-end">{{ properties.getRequest.remainingAmount | decimal }}</td>
-                                </tr>
-                            {% endif %}
                         </table>
                     </div>
                 </div>
