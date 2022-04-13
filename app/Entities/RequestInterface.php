@@ -79,9 +79,4 @@ interface RequestInterface
      * @return float
      */
     public function amount(): float;
-
-    /**
-     * @return float|null
-     */
-    public function remainingAmount(): ?float;
 }
