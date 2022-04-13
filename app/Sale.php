@@ -13,7 +13,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-abstract class Sale extends Request
+final class Sale extends Request
 {
 
     /**

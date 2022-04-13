@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace TaxCore;
 
+use DateTime;
 use GuzzleHttp\RequestOptions;
 use TaxCore\Entities\Configuration;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\Item;
-use TaxCore\Entities\PaymentMethod;
+use TaxCore\Entities\Payment;
 use TaxCore\Entities\RequestInterface;
 
 abstract class Request
@@ -79,37 +80,29 @@ abstract class Request
             'cashier'                => $invoice->cashier()->id(),
             'buyerId'                => $invoice->buyerId(),
             'buyerCostCenterId'      => $invoice->buyerCostCenterId(),
-            'invoiceType'            => $this->invoiceType()->value,
-            'transactionType'        => $this->transactionType()->value,
+            'invoiceType'            => $invoice->invoiceType()->value,
+            'transactionType'        => $invoice->transactionType()->value,
             'payment'                => $this->formatPayments($invoice->payments()),
             'invoiceNumber'          => $invoice->invoiceNumber(),
             'referentDocumentNumber' => $invoice->referentDocumentNumber(),
-            'referentDocumentDT'     => $invoice->referentDocumentDateTime(),
+            'referentDocumentDT'     => $invoice->referentDocumentDateTime() instanceof DateTime
+                ? $invoice->referentDocumentDateTime()->format(DATE_ISO8601)
+                : null,
             'options'                => $this->options(),
             'items'                  => $this->formatItems($invoice->items()),
         ];
     }
 
     /**
-     * @return InvoiceType
-     */
-    abstract protected function invoiceType(): InvoiceType;
-
-    /**
-     * @return TransactionType
-     */
-    abstract protected function transactionType(): TransactionType;
-
-    /**
-     * @param PaymentMethod[] $payments
+     * @param Payment[] $payments
      * @return array
      */
     private function formatPayments(array $payments): array
     {
-        return array_map(function (PaymentMethod $payment): array {
+        return array_map(function (Payment $payment): array {
             return [
                 'amount'      => $payment->amount(),
-                'paymentType' => $payment->paymentType(),
+                'paymentType' => $payment->type(),
             ];
         }, $payments);
     }
