@@ -4,9 +4,21 @@ declare(strict_types=1);
 namespace TaxCore\Entities;
 
 use DateTime;
+use TaxCore\Entities\Enums\InvoiceType;
+use TaxCore\Entities\Enums\TransactionType;
 
 interface RequestInterface
 {
+
+    /**
+     * @return InvoiceType
+     */
+    public function invoiceType(): InvoiceType;
+
+    /**
+     * @return TransactionType
+     */
+    public function transactionType(): TransactionType;
 
     /**
      * @return string
