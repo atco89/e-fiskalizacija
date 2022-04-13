@@ -5,6 +5,8 @@ namespace TaxCore;
 
 use DateTime;
 use Exception;
+use TaxCore\Entities\Enums\InvoiceType;
+use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\RequestInterface;
 use TaxCore\Entities\Tax;
 
@@ -47,6 +49,11 @@ final class DocumentProperties
     private string $verificationQRCode;
 
     /**
+     * @var string
+     */
+    private string $title;
+
+    /**
      * @param RequestInterface $request
      * @param Response $response
      * @throws Exception
@@ -60,6 +67,31 @@ final class DocumentProperties
         $this->sdcInterfacesNumber = $response->invoiceNumber();
         $this->invoiceCounter = $response->invoiceCounter();
         $this->verificationQRCode = $response->verificationQRCode();
+        $this->title = $this->loadTitle();
+    }
+
+    /**
+     * @return string
+     */
+    private function loadTitle(): string
+    {
+        $invoiceType = $this->request->invoiceType();
+        if ($this->request->transactionType() === TransactionType::SALE) {
+            return match ($invoiceType) {
+                InvoiceType::NORMAL   => 'Продаја',
+                InvoiceType::PROFORMA => 'Проформа',
+                InvoiceType::COPY     => 'Копија',
+                InvoiceType::TRAINING => 'Обука',
+                InvoiceType::ADVANCE  => 'Авансни рачун',
+            };
+        }
+        return match ($invoiceType) {
+            InvoiceType::NORMAL   => 'Продаја - Повраћај',
+            InvoiceType::PROFORMA => 'Проформа - Повраћај',
+            InvoiceType::COPY     => 'Копија - Повраћај',
+            InvoiceType::TRAINING => 'Обука - Повраћај',
+            InvoiceType::ADVANCE  => 'Авансни рачун - Повраћај',
+        };
     }
 
     /**
@@ -132,5 +164,13 @@ final class DocumentProperties
     public function getVerificationQRCode(): string
     {
         return $this->verificationQRCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
     }
 }
