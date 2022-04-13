@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace TaxCore;
 
-use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 use TaxCore\Entities\Configuration;
-use TaxCore\Entities\Invoice;
+use TaxCore\Entities\RequestInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -23,28 +22,21 @@ abstract class Sale extends Request
     protected Configuration $configuration;
 
     /**
-     * @var Invoice
-     */
-    protected Invoice $invoice;
-
-    /**
      * @var Twig
      */
     protected Twig $twig;
 
     /**
      * @param Configuration $configuration
-     * @param Invoice $invoice
      */
-    public function __construct(Configuration $configuration, Invoice $invoice)
+    public function __construct(Configuration $configuration)
     {
-        parent::__construct($invoice);
-        $this->configuration = $configuration;
-        $this->invoice = $invoice;
+        parent::__construct($configuration);
         $this->twig = new Twig($this->configuration);
     }
 
     /**
+     * @param RequestInterface $request
      * @return string
      * @throws GuzzleException
      * @throws LoaderError
@@ -52,32 +44,32 @@ abstract class Sale extends Request
      * @throws SyntaxError
      * @throws TaxCoreRequestException
      */
-    public function run(): string
+    public function run(RequestInterface $request): string
     {
         $client = new Client();
-        $response = $client->post($this->configuration->apiUrl(), $this->apiOptions());
+        $response = $client->post($this->configuration->apiUrl(), $this->requestOptions($request));
         if ($response->getStatusCode() === 200) {
-            return $this->response($this->invoice, $response);
+            return $this->response($request, $response);
         }
         throw new TaxCoreRequestException();
     }
 
     /**
-     * @param Invoice $invoice
+     * @param RequestInterface $request
      * @param ResponseInterface $responseInterface
      * @return string
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws Exception
+     * @noinspection PhpUnhandledExceptionInspection
      */
     private function response(
-        Invoice           $invoice,
+        RequestInterface  $request,
         ResponseInterface $responseInterface
     ): string
     {
         $response = new Response(json_decode($responseInterface->getBody()->getContents()));
-        $properties = new DocumentProperties($invoice, $response);
+        $properties = new DocumentProperties($request, $response);
         return $this->twig->getEnvironment()->render('./invoice/index.html.twig', ['properties' => $properties]);
     }
 }

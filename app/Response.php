@@ -6,7 +6,7 @@ namespace TaxCore;
 use DateTime;
 use Exception;
 use stdClass;
-use TaxCore\Entities\TaxItem;
+use TaxCore\Entities\Tax;
 
 final class Response
 {
@@ -25,8 +25,6 @@ final class Response
     }
 
     /**
-     * UID of client's Secure Element digital certificate.
-     *
      * @return string
      */
     public function requestedBy(): string
@@ -35,8 +33,6 @@ final class Response
     }
 
     /**
-     * UID of SDC`s Secure Element digital certificate.
-     *
      * @return string
      */
     public function signedBy(): string
@@ -45,8 +41,6 @@ final class Response
     }
 
     /**
-     * Local date and time in ISO 8601 format provided by E-SDC.
-     *
      * @return DateTime
      * @throws Exception
      */
@@ -56,8 +50,6 @@ final class Response
     }
 
     /**
-     * Interfaces Counter in format transactionTypeCounter/totalCounter invoiceCounterExtension for example: 14/17NS.
-     *
      * @return string
      */
     public function invoiceCounter(): string
@@ -66,11 +58,6 @@ final class Response
     }
 
     /**
-     * First letters of Transaction Type and Interfaces Type of the invoice.
-     * NS for Normal Sale,
-     * CR – Copy Refund,
-     * TS – Training Sale, etc.
-     *
      * @return string
      */
     public function invoiceCounterExtension(): string
@@ -79,8 +66,6 @@ final class Response
     }
 
     /**
-     * SDC Interfaces Number in format requestedBy-signedBy-totalCounter.
-     *
      * @return string
      */
     public function invoiceNumber(): string
@@ -89,8 +74,6 @@ final class Response
     }
 
     /**
-     * VerificationURL generated in the Create Verification URL process.
-     *
      * @return string
      */
     public function verificationUrl(): string
@@ -99,8 +82,6 @@ final class Response
     }
 
     /**
-     * Base64 encoded byte array of GIF image created in the Create QR Code process.
-     *
      * @return string
      */
     public function verificationQRCode(): string
@@ -109,8 +90,6 @@ final class Response
     }
 
     /**
-     * Textual Representation of the invoice created in the Creation a Textual Representation of an Interfaces process.
-     *
      * @return string
      */
     public function journal(): string
@@ -119,8 +98,6 @@ final class Response
     }
 
     /**
-     * Total number of invoices signed by Secure Element. Returned by Sign Interfaces APDU command.
-     *
      * @return int
      */
     public function totalCounter(): int
@@ -129,8 +106,6 @@ final class Response
     }
 
     /**
-     * Total number of invoices for a requested type. Returned by Sign Interfaces APDU command.
-     *
      * @return int
      */
     public function transactionTypeCounter(): int
@@ -139,8 +114,6 @@ final class Response
     }
 
     /**
-     * Sum of all Items – total payable by the customer.
-     *
      * @return float
      */
     public function totalAmount(): float
@@ -149,8 +122,6 @@ final class Response
     }
 
     /**
-     * Base64 encoded byte array returned by Sign Interfaces APDU command.
-     *
      * @return string
      */
     public function encryptedInternalData(): string
@@ -159,8 +130,6 @@ final class Response
     }
 
     /**
-     * Base64 encoded byte array returned by Sign Interfaces APDU command.
-     *
      * @return string
      */
     public function signature(): string
@@ -169,14 +138,12 @@ final class Response
     }
 
     /**
-     * Array of TaxItem entities.
-     *
-     * @return TaxItem[]
+     * @return Tax[]
      */
     public function taxItems(): array
     {
-        return array_map(function (stdClass $item): TaxItem {
-            return new class($item) implements TaxItem {
+        return array_map(function (stdClass $item): Tax {
+            return new class($item) implements Tax {
 
                 private stdClass $item;
 
@@ -199,7 +166,7 @@ final class Response
                 /**
                  * @return string
                  */
-                public function categoryName(): string
+                public function name(): string
                 {
                     return $this->item->categoryName;
                 }
@@ -207,7 +174,7 @@ final class Response
                 /**
                  * @return int
                  */
-                public function categoryType(): int
+                public function type(): int
                 {
                     return $this->item->categoryType;
                 }
@@ -232,8 +199,6 @@ final class Response
     }
 
     /**
-     * Taxpayer Business Name obtained from digital certificate subject field.
-     *
      * @return string
      */
     public function businessName(): string
@@ -242,8 +207,6 @@ final class Response
     }
 
     /**
-     * Location Name obtained from digital certificate subject field.
-     *
      * @return string
      */
     public function locationName(): string
@@ -252,8 +215,6 @@ final class Response
     }
 
     /**
-     * Street address obtained from digital certificate subject field.
-     *
      * @return string
      */
     public function address(): string
@@ -262,8 +223,6 @@ final class Response
     }
 
     /**
-     * Tax Identification Number obtained from digital certificate subject field.
-     *
      * @return string
      */
     public function tin(): string
@@ -272,8 +231,6 @@ final class Response
     }
 
     /**
-     * District obtained from digital certificate subject field.
-     *
      * @return string
      */
     public function district(): string
@@ -282,8 +239,6 @@ final class Response
     }
 
     /**
-     * Revision of taxes used in the calculation.
-     *
      * @return int
      */
     public function taxGroupRevision(): int
@@ -292,15 +247,6 @@ final class Response
     }
 
     /**
-     * Manufacturer Registration Code is mandatory for audit package sent to the tax authority database,
-     * but it's optional for invoice response sent to POS.
-     * It always has the format MakeCode-SoftwareVersionCode-DeviceSerialNumber.
-     * Explanation: MakeCode -unique 2 characters received from the tax authority during accreditation.
-     * SoftwareVersionCode - unique 4 characters received during accreditation.
-     * SoftwareVersionCode - unique 4 characters received from the tax authroty during accreditation.
-     * DeviceSerialNumber - manufacturer serial number (max 32 characters) for each E-SDC installation.
-     * All 3 elements of MRC are mandatory.
-     *
      * @return string
      */
     public function mrc(): string
@@ -309,8 +255,6 @@ final class Response
     }
 
     /**
-     * Custom human-readable message that shall be printed or displayed by POS.
-     *
      * @return string|null
      */
     public function messages(): ?string

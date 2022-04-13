@@ -9,7 +9,7 @@ interface Item
     /**
      * @return string|null
      */
-    public function globalTradeItemNumber(): ?string;
+    public function barcode(): ?string;
 
     /**
      * @return string
@@ -24,7 +24,7 @@ interface Item
     /**
      * @return float
      */
-    public function price(): float;
+    public function unitPrice(): float;
 
     /**
      * @return string[]

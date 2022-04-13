@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-interface TaxItem
+interface Tax
 {
 
     /**
@@ -14,12 +14,12 @@ interface TaxItem
     /**
      * @return string
      */
-    public function categoryName(): string;
+    public function name(): string;
 
     /**
      * @return int
      */
-    public function categoryType(): int;
+    public function type(): int;
 
     /**
      * @return float

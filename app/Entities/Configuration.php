@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-interface Configuration
+interface Configuration extends Merchant
 {
 
     /**
@@ -30,9 +30,4 @@ interface Configuration
      * @return string
      */
     public function password(): string;
-
-    /**
-     * @return string
-     */
-    public function logoPath(): string;
 }

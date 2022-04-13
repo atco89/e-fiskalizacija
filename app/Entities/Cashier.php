@@ -9,7 +9,7 @@ interface Cashier
     /**
      * @return string
      */
-    public function identifier(): string;
+    public function id(): string;
 
     /**
      * @return string

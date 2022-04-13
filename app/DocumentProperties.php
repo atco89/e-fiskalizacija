@@ -5,19 +5,19 @@ namespace TaxCore;
 
 use DateTime;
 use Exception;
-use TaxCore\Entities\Invoice;
-use TaxCore\Entities\TaxItem;
+use TaxCore\Entities\RequestInterface;
+use TaxCore\Entities\Tax;
 
 final class DocumentProperties
 {
 
     /**
-     * @var Invoice
+     * @var RequestInterface
      */
-    private Invoice $invoice;
+    private RequestInterface $request;
 
     /**
-     * @var TaxItem[]
+     * @var Tax[]
      */
     private array $taxItems;
 
@@ -47,13 +47,13 @@ final class DocumentProperties
     private string $verificationQRCode;
 
     /**
-     * @param Invoice $invoice
+     * @param RequestInterface $request
      * @param Response $response
      * @throws Exception
      */
-    public function __construct(Invoice $invoice, Response $response)
+    public function __construct(RequestInterface $request, Response $response)
     {
-        $this->invoice = $invoice;
+        $this->request = $request;
         $this->taxItems = $response->taxItems();
         $this->taxAmount = $this->loadTaxAmount($this->taxItems);
         $this->sdcDateTime = $response->sdcDateTime();
@@ -63,7 +63,7 @@ final class DocumentProperties
     }
 
     /**
-     * @param TaxItem[] $taxItems
+     * @param Tax[] $taxItems
      * @return float
      */
     private function loadTaxAmount(array $taxItems): float
@@ -72,22 +72,22 @@ final class DocumentProperties
             return 0.0000;
         }
 
-        return array_reduce($taxItems, function (?float $carry, TaxItem $item): float {
+        return array_reduce($taxItems, function (?float $carry, Tax $item): float {
             $carry += $item->amount();
             return $carry;
         });
     }
 
     /**
-     * @return Invoice
+     * @return RequestInterface
      */
-    public function getInvoice(): Invoice
+    public function getRequest(): RequestInterface
     {
-        return $this->invoice;
+        return $this->request;
     }
 
     /**
-     * @return TaxItem[]
+     * @return Tax[]
      */
     public function getTaxItems(): array
     {

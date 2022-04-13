@@ -3,8 +3,15 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
+use TaxCore\Entities\Enums\CashierDisplayType;
+
 interface Merchant
 {
+
+    /**
+     * @return string
+     */
+    public function logoPath(): string;
 
     /**
      * @return string

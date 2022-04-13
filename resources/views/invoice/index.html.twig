@@ -31,76 +31,83 @@
                         <table class="table table-sm table-borderless">
                             <tr>
                                 <td class="align-middle text-start">ПИБ:</td>
-                                <td class="align-middle text-end">{{ properties.getInvoice.merchant.tin }}</td>
+                                <td class="align-middle text-end">{{ properties.getRequest.merchant.tin }}</td>
                             </tr>
                             <tr>
                                 <td class="align-middle text-start">Предузеће:</td>
-                                <td class="align-middle text-end">{{ properties.getInvoice.merchant.name }}</td>
+                                <td class="align-middle text-end">{{ properties.getRequest.merchant.name }}</td>
                             </tr>
                             <tr>
                                 <td class="align-middle text-start">Име:</td>
-                                <td class="align-middle text-end">{{ properties.getInvoice.merchant.branchName }}</td>
+                                <td class="align-middle text-end">{{ properties.getRequest.merchant.branchName }}</td>
                             </tr>
                             <tr>
                                 <td class="align-middle text-start">Адреса:</td>
-                                <td class="align-middle text-end">{{ properties.getInvoice.merchant.address }}</td>
+                                <td class="align-middle text-end">{{ properties.getRequest.merchant.address }}</td>
                             </tr>
                             <tr>
                                 <td class="align-middle text-start">Место:</td>
-                                <td class="align-middle text-end">{{ properties.getInvoice.merchant.district }}</td>
+                                <td class="align-middle text-end">{{ properties.getRequest.merchant.district }}</td>
                             </tr>
 
                             <tr>
                                 <td class="align-middle text-start">Касир:</td>
                                 <td class="align-middle text-end">
-                                    {% if properties.getInvoice.merchant.cashierDisplayType.value == 'IDENTIFIER' %}
-                                        {{ properties.getInvoice.cashier.identifier }}
-                                    {% elseif properties.getInvoice.merchant.cashierDisplayType.value == 'NAME' %}
-                                        {{ properties.getInvoice.cashier.name }}
-                                    {% elseif properties.getInvoice.merchant.cashierDisplayType.value == 'SURNAME' %}
-                                        {{ properties.getInvoice.cashier.surname }}
-                                    {% elseif properties.getInvoice.merchant.cashierDisplayType.value == 'NAME_SURNAME' %}
+                                    {% if properties.getRequest.merchant.cashierDisplayType.value == 'IDENTIFIER' %}
+                                        {{ properties.getRequest.cashier.id }}
+                                    {% elseif properties.getRequest.merchant.cashierDisplayType.value == 'NAME' %}
+                                        {{ properties.getRequest.cashier.name }}
+                                    {% elseif properties.getRequest.merchant.cashierDisplayType.value == 'SURNAME' %}
+                                        {{ properties.getRequest.cashier.surname }}
+                                    {% elseif properties.getRequest.merchant.cashierDisplayType.value == 'NAME_SURNAME' %}
                                         {{
-                                            properties.getInvoice.cashier.name ~ ' ' ~
-                                            properties.getInvoice.cashier.surname
+                                            properties.getRequest.cashier.name ~ ' ' ~
+                                            properties.getRequest.cashier.surname
                                         }}
-                                    {% elseif properties.getInvoice.merchant.cashierDisplayType.value == 'FULL_NAME' %}
+                                    {% elseif properties.getRequest.merchant.cashierDisplayType.value == 'FULL_NAME' %}
                                         {{
-                                            properties.getInvoice.cashier.identifier ~ ' - ' ~
-                                            properties.getInvoice.cashier.name ~ ' ' ~
-                                            properties.getInvoice.cashier.surname
+                                            properties.getRequest.cashier.id ~ ' - ' ~
+                                            properties.getRequest.cashier.name ~ ' ' ~
+                                            properties.getRequest.cashier.surname
                                         }}
                                     {% endif %}
                                 </td>
                             </tr>
 
-                            {% if properties.getInvoice.buyer.buyerId is not empty %}
+                            {% if properties.getRequest.buyerId is not empty %}
                                 <tr>
                                     <td class="align-middle text-start">ПИБ купца:</td>
-                                    <td class="align-middle text-end">{{ properties.getInvoice.buyer.buyerId }}</td>
+                                    <td class="align-middle text-end">{{ properties.getRequest.buyerId }}</td>
                                 </tr>
                             {% endif %}
 
-                            {% if properties.getInvoice.buyer.buyerCostCenterId is not empty %}
+                            {% if properties.getRequest.buyerCostCenterId is not empty %}
                                 <tr>
                                     <td class="align-middle text-start">Податак купца:</td>
-                                    <td class="align-middle text-end">{{ properties.getInvoice.buyer.buyerCostCenterId }}</td>
+                                    <td class="align-middle text-end">{{ properties.getRequest.buyerCostCenterId }}</td>
                                 </tr>
                             {% endif %}
 
                             <tr>
                                 <td class="align-middle text-start">ПОС број:</td>
-                                <td class="align-middle text-end">{{ properties.getInvoice.number }}</td>
+                                <td class="align-middle text-end">{{ properties.getRequest.invoiceNumber }}</td>
                             </tr>
                             <tr>
                                 <td class="align-middle text-start">ПОС време:</td>
-                                <td class="align-middle text-end">{{ properties.getInvoice.issueDateTime | date('d.m.Y H:i:s') }}</td>
+                                <td class="align-middle text-end">{{ properties.getRequest.issueDateTime | date('d.m.Y H:i:s') }}</td>
                             </tr>
 
-                            {% if properties.getInvoice.referentDocumentNumber is not empty %}
+                            {% if properties.getRequest.referentDocumentNumber is not empty %}
                                 <tr>
                                     <td class="align-middle text-start">Реф. број:</td>
-                                    <td class="align-middle text-end">{{ properties.getInvoice.referentDocumentNumber }}</td>
+                                    <td class="align-middle text-end">{{ properties.getRequest.referentDocumentNumber }}</td>
+                                </tr>
+                            {% endif %}
+
+                            {% if properties.getRequest.referentDocumentDateTime is not empty %}
+                                <tr>
+                                    <td class="align-middle text-start">Реф. број:</td>
+                                    <td class="align-middle text-end">{{ properties.getRequest.referentDocumentDateTime }}</td>
                                 </tr>
                             {% endif %}
 
@@ -130,13 +137,13 @@
                                 <td class="text-center">Кол.</td>
                                 <td class="text-end">Укупно</td>
                             </tr>
-                            {% for item in properties.getInvoice.items %}
+                            {% for item in properties.getRequest.items %}
                                 <tr>
                                     <td colspan="4">{{ item.name }} ({{ item.labels | join(', ') }})</td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td class="text-center">{{ item.price | decimal }}</td>
+                                    <td class="text-center">{{ item.unitPrice | decimal }}</td>
                                     <td class="text-center">{{ item.quantity | decimal }}</td>
                                     <td class="text-end">{{ item.amount | decimal }}</td>
                                 </tr>
@@ -162,12 +169,12 @@
                         <table class="table table-sm table-borderless">
                             <tr>
                                 <td class="text-start">ЗА УПЛАТУ:</td>
-                                <td class="text-end">{{ properties.getInvoice.amount | decimal }}</td>
+                                <td class="text-end">{{ properties.getRequest.amount | decimal }}</td>
                             </tr>
-                            {% for paymentType in properties.getInvoice.paymentTypes %}
+                            {% for payment in properties.getRequest.payments %}
                                 <tr>
-                                    <td class="text-start">{{ paymentType.name }}:</td>
-                                    <td class="text-end">{{ paymentType.amount | decimal }}</td>
+                                    <td class="text-start">{{ payment.name }}:</td>
+                                    <td class="text-end">{{ payment.amount | decimal }}</td>
                                 </tr>
                             {% endfor %}
                         </table>
@@ -194,12 +201,12 @@
                                 <td class="text-center">Стопа</td>
                                 <td class="text-end">Порез</td>
                             </tr>
-                            {% for taxItem in properties.getTaxItems %}
+                            {% for tax in properties.getTaxItems %}
                                 <tr>
-                                    <td class="text-start">{{ taxItem.label }}</td>
-                                    <td class="text-center">{{ taxItem.categoryName }}</td>
-                                    <td class="text-end">{{ taxItem.rate | decimal }} %</td>
-                                    <td class="text-end">{{ taxItem.amount | decimal }}</td>
+                                    <td class="text-start">{{ tax.label }}</td>
+                                    <td class="text-center">{{ tax.name }}</td>
+                                    <td class="text-end">{{ tax.rate | decimal }} %</td>
+                                    <td class="text-end">{{ tax.amount | decimal }}</td>
                                 </tr>
                             {% endfor %}
                             <tr class="bordered-top bordered-bottom">

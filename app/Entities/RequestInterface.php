@@ -5,7 +5,7 @@ namespace TaxCore\Entities;
 
 use DateTime;
 
-interface Invoice
+interface RequestInterface
 {
 
     /**
@@ -16,7 +16,7 @@ interface Invoice
     /**
      * @return string
      */
-    public function number(): string;
+    public function invoiceNumber(): string;
 
     /**
      * @return DateTime
@@ -34,9 +34,14 @@ interface Invoice
     public function referentDocumentDateTime(): ?DateTime;
 
     /**
-     * @return Buyer
+     * @return string|null
      */
-    public function buyer(): Buyer;
+    public function buyerId(): ?string;
+
+    /**
+     * @return string|null
+     */
+    public function buyerCostCenterId(): ?string;
 
     /**
      * @return Merchant
@@ -54,12 +59,12 @@ interface Invoice
     public function items(): array;
 
     /**
+     * @return Payment[]
+     */
+    public function payments(): array;
+
+    /**
      * @return float
      */
     public function amount(): float;
-
-    /**
-     * @return Payment[]
-     */
-    public function paymentTypes(): array;
 }
