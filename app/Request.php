@@ -83,9 +83,7 @@ abstract class Request
             'payment'                => $this->formatPayments($invoice->payments()),
             'invoiceNumber'          => $invoice->invoiceNumber(),
             'referentDocumentNumber' => $invoice->referentDocumentNumber(),
-            'referentDocumentDT'     => $invoice->referentDocumentDateTime() instanceof DateTime
-                ? $invoice->referentDocumentDateTime()->format(DATE_ISO8601)
-                : null,
+            'referentDocumentDT'     => $this->loadReferentDocumentDateTime($invoice->referentDocumentDateTime()),
             'options'                => $this->options(),
             'items'                  => $this->formatItems($invoice->items()),
         ];
@@ -103,6 +101,17 @@ abstract class Request
                 'paymentType' => $payment->type(),
             ];
         }, $payments);
+    }
+
+    /**
+     * @param DateTime|null $referentDocumentDateTime
+     * @return string|null
+     */
+    private function loadReferentDocumentDateTime(?DateTime $referentDocumentDateTime): ?string
+    {
+        return $referentDocumentDateTime instanceof DateTime
+            ? $referentDocumentDateTime->format(DATE_ISO8601)
+            : null;
     }
 
     /**
