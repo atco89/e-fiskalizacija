@@ -31,16 +31,6 @@ final class Document
     private Response $response;
 
     /**
-     * @var string
-     */
-    private string $documentTitle;
-
-    /**
-     * @var float
-     */
-    private float $taxAmount;
-
-    /**
      * @param Environment $environment
      * @param Request $request
      * @param Response $response
@@ -50,8 +40,6 @@ final class Document
         $this->environment = $environment;
         $this->request = $request;
         $this->response = $response;
-        $this->documentTitle = $this->title();
-        $this->taxAmount = $this->taxAmount();
     }
 
     /**
@@ -102,8 +90,10 @@ final class Document
     public function generate(): string
     {
         return $this->environment->render('./invoice/index.html.twig', [
-            'request'  => $this->request,
-            'response' => $this->response,
+            'request'       => $this->request,
+            'response'      => $this->response,
+            'documentTitle' => $this->title(),
+            'taxAmount'     => $this->taxAmount(),
         ]);
     }
 }
