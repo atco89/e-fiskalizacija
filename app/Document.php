@@ -44,6 +44,22 @@ final class Document
 
     /**
      * @return string
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function generate(): string
+    {
+        return $this->environment->render('./invoice/index.html.twig', [
+            'request'       => $this->request,
+            'response'      => $this->response,
+            'documentTitle' => $this->title(),
+            'taxAmount'     => $this->taxAmount(),
+        ]);
+    }
+
+    /**
+     * @return string
      */
     private function title(): string
     {
@@ -79,21 +95,5 @@ final class Document
             $carry += $tax->amount();
             return $carry;
         });
-    }
-
-    /**
-     * @return string
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
-     */
-    public function generate(): string
-    {
-        return $this->environment->render('./invoice/index.html.twig', [
-            'request'       => $this->request,
-            'response'      => $this->response,
-            'documentTitle' => $this->title(),
-            'taxAmount'     => $this->taxAmount(),
-        ]);
     }
 }

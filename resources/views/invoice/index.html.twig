@@ -1,259 +1,257 @@
 {% extends 'base.html.twig' %}
 
 {% block container %}
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
+    <div class="row">
+        <div class="col-12">
 
-                <!-- MERCHANT LOGO START -->
-                <div class="row">
-                    <div class="col-12 text-center">
-                        <img src="data:image/png;base64, {{ '' | merchant_log_path }}" alt="merchant-log-path"
-                             class="img-fluid w-50 px-4 py-2">
-                    </div>
+            <!-- MERCHANT LOGO START -->
+            <div class="row">
+                <div class="col-12 text-center">
+                    <img src="data:image/png;base64, {{ '' | merchant_log_path }}" alt="merchant-log-path"
+                         class="img-fluid w-50 px-4 py-2">
                 </div>
-                <!-- MERCHANT LOGO END -->
-
-                <!-- BORDERED CONTAINER START -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="bordered-top bordered-bottom text-center">
-                            <strong>Фискални рачун</strong>
-                        </div>
-                    </div>
-                </div>
-                <!-- BORDERED CONTAINER END -->
-
-                <!-- INVOICE INFO START -->
-                <div class="row">
-                    <div class="col-12">
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td class="align-middle text-start">ПИБ:</td>
-                                <td class="align-middle text-end">{{ request.merchant.tin }}</td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle text-start">Предузеће:</td>
-                                <td class="align-middle text-end">{{ request.merchant.name }}</td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle text-start">Име:</td>
-                                <td class="align-middle text-end">{{ request.merchant.branchName }}</td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle text-start">Адреса:</td>
-                                <td class="align-middle text-end">{{ request.merchant.address }}</td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle text-start">Место:</td>
-                                <td class="align-middle text-end">{{ request.merchant.district }}</td>
-                            </tr>
-
-                            <tr>
-                                <td class="align-middle text-start">Касир:</td>
-                                <td class="align-middle text-end">
-                                    {% if request.merchant.cashierDisplayType.value == 'IDENTIFIER' %}
-                                        {{ request.cashier.id }}
-                                    {% elseif request.merchant.cashierDisplayType.value == 'NAME' %}
-                                        {{ request.cashier.name }}
-                                    {% elseif request.merchant.cashierDisplayType.value == 'SURNAME' %}
-                                        {{ request.cashier.surname }}
-                                    {% elseif request.merchant.cashierDisplayType.value == 'NAME_SURNAME' %}
-                                        {{ request.cashier.name ~ ' ' ~ request.cashier.surname }}
-                                    {% elseif request.merchant.cashierDisplayType.value == 'FULL_NAME' %}
-                                        {{
-                                            request.cashier.id ~ ' - ' ~
-                                            request.cashier.name ~ ' ' ~
-                                            request.cashier.surname
-                                        }}
-                                    {% endif %}
-                                </td>
-                            </tr>
-
-                            {% if request.buyerId is not empty %}
-                                <tr>
-                                    <td class="align-middle text-start">ПИБ купца:</td>
-                                    <td class="align-middle text-end">{{ request.buyerId }}</td>
-                                </tr>
-                            {% endif %}
-
-                            {% if request.buyerCostCenterId is not empty %}
-                                <tr>
-                                    <td class="align-middle text-start">Податак купца:</td>
-                                    <td class="align-middle text-end">{{ request.buyerCostCenterId }}</td>
-                                </tr>
-                            {% endif %}
-
-                            <tr>
-                                <td class="align-middle text-start">ПОС број:</td>
-                                <td class="align-middle text-end">{{ request.invoiceNumber }}</td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle text-start">ПОС време:</td>
-                                <td class="align-middle text-end">{{ request.issueDateTime | date('d.m.Y H:i:s') }}</td>
-                            </tr>
-
-                            {% if request.referentDocumentNumber is not empty %}
-                                <tr>
-                                    <td class="align-middle text-start">Реф. број:</td>
-                                    <td class="align-middle text-end">{{ request.referentDocumentNumber }}</td>
-                                </tr>
-                            {% endif %}
-
-                            {% if request.referentDocumentDateTime is not empty %}
-                                <tr>
-                                    <td class="align-middle text-start">Реф. број:</td>
-                                    <td class="align-middle text-end">{{ request.referentDocumentDateTime }}</td>
-                                </tr>
-                            {% endif %}
-
-                        </table>
-                    </div>
-                </div>
-                <!-- INVOICE INFO END -->
-
-                <!-- BORDERED CONTAINER START -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="bordered-top bordered-bottom text-center">
-                            {{ documentTitle }}
-                        </div>
-                    </div>
-                </div>
-                <!-- BORDERED CONTAINER END -->
-
-                <!-- ITEMS START -->
-                <div class="row">
-                    <div class="col-12">
-                        <small class="ps-0">Артикли:</small>
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td class="text-start">Назив</td>
-                                <td class="text-center">Цена</td>
-                                <td class="text-center">Кол.</td>
-                                <td class="text-end">Укупно</td>
-                            </tr>
-                            {% for item in request.items %}
-                                <tr>
-                                    <td colspan="4">{{ item.name }} ({{ item.labels | join(', ') }})</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td class="text-center">{{ item.unitPrice | decimal }}</td>
-                                    <td class="text-center">{{ item.quantity | decimal }}</td>
-                                    <td class="text-end">{{ item.amount | decimal }}</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-                <!-- ITEMS END -->
-
-                <!-- BORDERED CONTAINER START -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="bordered-bottom">
-
-                        </div>
-                    </div>
-                </div>
-                <!-- BORDERED CONTAINER END -->
-
-                <!-- ITEMS SUMMARY START -->
-                <div class="row">
-                    <div class="col-12">
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td class="text-start">ЗА УПЛАТУ:</td>
-                                <td class="text-end">{{ request.amount | decimal }}</td>
-                            </tr>
-                            {% for payment in request.payments %}
-                                <tr>
-                                    <td class="text-start">{{ payment.name }}:</td>
-                                    <td class="text-end">{{ payment.amount | decimal }}</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-                <!-- ITEMS SUMMARY END -->
-
-                <!-- BORDERED CONTAINER START -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="bordered-bottom">
-
-                        </div>
-                    </div>
-                </div>
-                <!-- BORDERED CONTAINER END -->
-
-                <div class="row">
-                    <div class="col-12">
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td class="text-start">Ознака</td>
-                                <td class="text-center">Назив</td>
-                                <td class="text-center">Стопа</td>
-                                <td class="text-end">Порез</td>
-                            </tr>
-                            {% for taxItem in response.taxItems %}
-                                <tr>
-                                    <td class="text-start">{{ taxItem.label }}</td>
-                                    <td class="text-center">{{ taxItem.name }}</td>
-                                    <td class="text-end">{{ taxItem.rate | decimal }} %</td>
-                                    <td class="text-end">{{ taxItem.amount | decimal }}</td>
-                                </tr>
-                            {% endfor %}
-                            <tr class="bordered-top bordered-bottom">
-                                <td colspan="3">Укупно порез:</td>
-                                <td class="text-end">{{ taxAmount | decimal }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- TAX CORE INVOICE DETAILS START -->
-                <div class="row">
-                    <div class="col-12">
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td class="text-start">ПФР време:</td>
-                                <td class="text-end">{{ response.sdcDateTime | date('d.m.Y H:i:s') }}</td>
-                            </tr>
-                            <tr>
-                                <td class="text-start">ПФР бр. рачуна:</td>
-                                <td class="text-end">{{ response.invoiceNumber }}</td>
-                            </tr>
-                            <tr class="bordered-bottom">
-                                <td class="text-start">Бројач рачуна:</td>
-                                <td class="text-end">{{ response.invoiceCounter }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <!-- TAX CORE INVOICE DETAILS END -->
-
-                <!-- QR CODE CONTAINER START -->
-                <div class="row my-2">
-                    <div class="col-12 text-center">
-                        <img src="data:image/gif;base64, {{ response.verificationQRCode }}" alt="verification-qr-code"
-                             id="verification-qr-code" class="img-fluid"/>
-                    </div>
-                </div>
-                <!-- QR CODE CONTAINER END -->
-
-                <!-- BORDERED CONTAINER START -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="text-center">
-                            <strong>Крај фискалног рачуна</strong>
-                        </div>
-                    </div>
-                </div>
-                <!-- BORDERED CONTAINER END -->
-
             </div>
+            <!-- MERCHANT LOGO END -->
+
+            <!-- BORDERED CONTAINER START -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="bordered-top bordered-bottom text-center">
+                        <strong>Фискални рачун</strong>
+                    </div>
+                </div>
+            </div>
+            <!-- BORDERED CONTAINER END -->
+
+            <!-- INVOICE INFO START -->
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-sm table-borderless">
+                        <tr>
+                            <td class="align-middle text-start">ПИБ:</td>
+                            <td class="align-middle text-end">{{ request.merchant.tin }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-start">Предузеће:</td>
+                            <td class="align-middle text-end">{{ request.merchant.name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-start">Име:</td>
+                            <td class="align-middle text-end">{{ request.merchant.branchName }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-start">Адреса:</td>
+                            <td class="align-middle text-end">{{ request.merchant.address }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-start">Место:</td>
+                            <td class="align-middle text-end">{{ request.merchant.district }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="align-middle text-start">Касир:</td>
+                            <td class="align-middle text-end">
+                                {% if request.merchant.cashierDisplayType.value == 'IDENTIFIER' %}
+                                    {{ request.cashier.id }}
+                                {% elseif request.merchant.cashierDisplayType.value == 'NAME' %}
+                                    {{ request.cashier.name }}
+                                {% elseif request.merchant.cashierDisplayType.value == 'SURNAME' %}
+                                    {{ request.cashier.surname }}
+                                {% elseif request.merchant.cashierDisplayType.value == 'NAME_SURNAME' %}
+                                    {{ request.cashier.name ~ ' ' ~ request.cashier.surname }}
+                                {% elseif request.merchant.cashierDisplayType.value == 'FULL_NAME' %}
+                                    {{
+                                        request.cashier.id ~ ' - ' ~
+                                        request.cashier.name ~ ' ' ~
+                                        request.cashier.surname
+                                    }}
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        {% if request.buyerId is not empty %}
+                            <tr>
+                                <td class="align-middle text-start">ПИБ купца:</td>
+                                <td class="align-middle text-end">{{ request.buyerId }}</td>
+                            </tr>
+                        {% endif %}
+
+                        {% if request.buyerCostCenterId is not empty %}
+                            <tr>
+                                <td class="align-middle text-start">Податак купца:</td>
+                                <td class="align-middle text-end">{{ request.buyerCostCenterId }}</td>
+                            </tr>
+                        {% endif %}
+
+                        <tr>
+                            <td class="align-middle text-start">ПОС број:</td>
+                            <td class="align-middle text-end">{{ request.invoiceNumber }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-start">ПОС време:</td>
+                            <td class="align-middle text-end">{{ request.issueDateTime | date('d.m.Y H:i:s') }}</td>
+                        </tr>
+
+                        {% if request.referentDocumentNumber is not empty %}
+                            <tr>
+                                <td class="align-middle text-start">Реф. број:</td>
+                                <td class="align-middle text-end">{{ request.referentDocumentNumber }}</td>
+                            </tr>
+                        {% endif %}
+
+                        {% if request.referentDocumentDateTime is not empty %}
+                            <tr>
+                                <td class="align-middle text-start">Реф. број:</td>
+                                <td class="align-middle text-end">{{ request.referentDocumentDateTime }}</td>
+                            </tr>
+                        {% endif %}
+
+                    </table>
+                </div>
+            </div>
+            <!-- INVOICE INFO END -->
+
+            <!-- BORDERED CONTAINER START -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="bordered-top bordered-bottom text-center">
+                        {{ documentTitle }}
+                    </div>
+                </div>
+            </div>
+            <!-- BORDERED CONTAINER END -->
+
+            <!-- ITEMS START -->
+            <div class="row">
+                <div class="col-12">
+                    <small class="ps-0">Артикли:</small>
+                    <table class="table table-sm table-borderless">
+                        <tr>
+                            <td class="text-start">Назив</td>
+                            <td class="text-center">Цена</td>
+                            <td class="text-center">Кол.</td>
+                            <td class="text-end">Укупно</td>
+                        </tr>
+                        {% for item in request.items %}
+                            <tr>
+                                <td colspan="4">{{ item.name }} ({{ item.labels | join(', ') }})</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="text-center">{{ item.unitPrice | decimal }}</td>
+                                <td class="text-center">{{ item.quantity | decimal }}</td>
+                                <td class="text-end">{{ item.amount | decimal }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <!-- ITEMS END -->
+
+            <!-- BORDERED CONTAINER START -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="bordered-bottom">
+
+                    </div>
+                </div>
+            </div>
+            <!-- BORDERED CONTAINER END -->
+
+            <!-- ITEMS SUMMARY START -->
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-sm table-borderless">
+                        <tr>
+                            <td class="text-start">ЗА УПЛАТУ:</td>
+                            <td class="text-end">{{ request.amount | decimal }}</td>
+                        </tr>
+                        {% for payment in request.payments %}
+                            <tr>
+                                <td class="text-start">{{ payment.name }}:</td>
+                                <td class="text-end">{{ payment.amount | decimal }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <!-- ITEMS SUMMARY END -->
+
+            <!-- BORDERED CONTAINER START -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="bordered-bottom">
+
+                    </div>
+                </div>
+            </div>
+            <!-- BORDERED CONTAINER END -->
+
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-sm table-borderless">
+                        <tr>
+                            <td class="text-start">Ознака</td>
+                            <td class="text-center">Назив</td>
+                            <td class="text-center">Стопа</td>
+                            <td class="text-end">Порез</td>
+                        </tr>
+                        {% for taxItem in response.taxItems %}
+                            <tr>
+                                <td class="text-start">{{ taxItem.label }}</td>
+                                <td class="text-center">{{ taxItem.name }}</td>
+                                <td class="text-end">{{ taxItem.rate | decimal }} %</td>
+                                <td class="text-end">{{ taxItem.amount | decimal }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr class="bordered-top bordered-bottom">
+                            <td colspan="3">Укупно порез:</td>
+                            <td class="text-end">{{ taxAmount | decimal }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAX CORE INVOICE DETAILS START -->
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-sm table-borderless">
+                        <tr>
+                            <td class="text-start">ПФР време:</td>
+                            <td class="text-end">{{ response.sdcDateTime | date('d.m.Y H:i:s') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">ПФР бр. рачуна:</td>
+                            <td class="text-end">{{ response.invoiceNumber }}</td>
+                        </tr>
+                        <tr class="bordered-bottom">
+                            <td class="text-start">Бројач рачуна:</td>
+                            <td class="text-end">{{ response.invoiceCounter }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!-- TAX CORE INVOICE DETAILS END -->
+
+            <!-- QR CODE CONTAINER START -->
+            <div class="row my-2">
+                <div class="col-12 text-center">
+                    <img src="data:image/gif;base64, {{ response.verificationQRCode }}" alt="verification-qr-code"
+                         id="verification-qr-code" class="img-fluid"/>
+                </div>
+            </div>
+            <!-- QR CODE CONTAINER END -->
+
+            <!-- BORDERED CONTAINER START -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <strong>Крај фискалног рачуна</strong>
+                    </div>
+                </div>
+            </div>
+            <!-- BORDERED CONTAINER END -->
+
         </div>
     </div>
 {% endblock %}
