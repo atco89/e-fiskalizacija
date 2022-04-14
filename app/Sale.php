@@ -17,12 +17,18 @@ final class Sale extends Request
 {
 
     /**
+     * @var Twig
+     */
+    private Twig $twig;
+
+    /**
      * @param Merchant $merchant
      * @param Configuration $configuration
      */
     public function __construct(Merchant $merchant, Configuration $configuration)
     {
         parent::__construct($configuration);
+        $this->twig = new Twig($merchant);
     }
 
     /**
@@ -56,7 +62,7 @@ final class Sale extends Request
      */
     private function document(RequestInterface $request, Response $response): string
     {
-        $document = new Document($request, $response);
+        $document = new Document($this->twig->getEnvironment(), $request, $response);
         return $document->generate();
     }
 }
