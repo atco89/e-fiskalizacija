@@ -31,6 +31,16 @@ final class Document
     private Response $response;
 
     /**
+     * @var string
+     */
+    private string $documentTitle;
+
+    /**
+     * @var float
+     */
+    private float $taxAmount;
+
+    /**
      * @param Environment $environment
      * @param Request $request
      * @param Response $response
@@ -40,6 +50,8 @@ final class Document
         $this->environment = $environment;
         $this->request = $request;
         $this->response = $response;
+        $this->documentTitle = $this->title();
+        $this->taxAmount = $this->taxAmount();
     }
 
     /**
