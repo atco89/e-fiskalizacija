@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-use TaxCore\Entities\Enums\PaymentMethod;
+use TaxCore\Entities\Enums\PaymentType;
 
 interface Payment
 {
 
     /**
-     * @return PaymentMethod
+     * @return PaymentType
      */
-    public function type(): PaymentMethod;
+    public function type(): PaymentType;
 
     /**
      * @return string

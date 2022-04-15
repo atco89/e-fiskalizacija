@@ -3,57 +3,18 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-use DateTime;
-use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Entities\Enums\TransactionType;
-
 interface RequestInterface
 {
 
     /**
-     * @return InvoiceType
+     * @return Invoice
      */
-    public function invoiceType(): InvoiceType;
+    public function invoice(): Invoice;
 
     /**
-     * @return TransactionType
+     * @return Buyer|null
      */
-    public function transactionType(): TransactionType;
-
-    /**
-     * @return string
-     */
-    public function requestId(): string;
-
-    /**
-     * @return string
-     */
-    public function invoiceNumber(): string;
-
-    /**
-     * @return DateTime
-     */
-    public function issueDateTime(): DateTime;
-
-    /**
-     * @return string|null
-     */
-    public function referentDocumentNumber(): ?string;
-
-    /**
-     * @return DateTime|null
-     */
-    public function referentDocumentDateTime(): ?DateTime;
-
-    /**
-     * @return string|null
-     */
-    public function buyerId(): ?string;
-
-    /**
-     * @return string|null
-     */
-    public function buyerCostCenterId(): ?string;
+    public function buyer(): ?Buyer;
 
     /**
      * @return Merchant

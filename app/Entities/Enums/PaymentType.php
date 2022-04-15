@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities\Enums;
 
-enum PaymentMethod: int
+enum PaymentType: int
 {
 
     case OTHER = 0;

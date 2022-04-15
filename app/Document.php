@@ -6,7 +6,7 @@ namespace TaxCore;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\RequestInterface as Request;
-use TaxCore\Entities\Tax;
+use TaxCore\Entities\TaxItem;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -63,8 +63,8 @@ final class Document
      */
     private function title(): string
     {
-        $invoiceType = $this->request->invoiceType();
-        if ($this->request->transactionType() === TransactionType::SALE) {
+        $invoiceType = $this->request->invoice()->invoiceType();
+        if ($this->request->invoice()->transactionType() === TransactionType::SALE) {
             return match ($invoiceType) {
                 InvoiceType::NORMAL   => 'Продаја',
                 InvoiceType::PROFORMA => 'Проформа',
@@ -87,11 +87,7 @@ final class Document
      */
     private function taxAmount(): float
     {
-        if (empty($this->response->taxItems())) {
-            return 0.00;
-        }
-
-        return array_reduce($this->response->taxItems(), function (?float $carry, Tax $tax): float {
+        return array_reduce($this->response->taxItems(), function (?float $carry, TaxItem $tax): float {
             $carry += $tax->amount();
             return $carry;
         });

@@ -6,7 +6,7 @@ namespace TaxCore;
 use DateTime;
 use Exception;
 use stdClass;
-use TaxCore\Entities\Tax;
+use TaxCore\Entities\TaxItem;
 
 final class Response
 {
@@ -138,12 +138,12 @@ final class Response
     }
 
     /**
-     * @return Tax[]
+     * @return TaxItem[]
      */
     public function taxItems(): array
     {
-        return array_map(function (stdClass $item): Tax {
-            return new class($item) implements Tax {
+        return array_map(function (stdClass $item): TaxItem {
+            return new class($item) implements TaxItem {
 
                 private stdClass $item;
 

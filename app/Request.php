@@ -5,6 +5,7 @@ namespace TaxCore;
 
 use DateTime;
 use GuzzleHttp\RequestOptions;
+use TaxCore\Entities\Buyer;
 use TaxCore\Entities\Configuration;
 use TaxCore\Entities\Item;
 use TaxCore\Entities\Payment;
@@ -27,16 +28,16 @@ abstract class Request
     }
 
     /**
-     * @param RequestInterface $invoice
+     * @param RequestInterface $request
      * @return array
      * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
      */
-    protected function requestOptions(RequestInterface $invoice): array
+    protected function requestOptions(RequestInterface $request): array
     {
         return [
             RequestOptions::CERT    => $this->cert(),
-            RequestOptions::HEADERS => $this->headers($invoice->requestId()),
-            RequestOptions::JSON    => $this->requestBody($invoice),
+            RequestOptions::HEADERS => $this->headers($request->invoice()->requestId()),
+            RequestOptions::JSON    => $this->requestBody($request),
         ];
     }
 
@@ -68,25 +69,43 @@ abstract class Request
     }
 
     /**
-     * @param RequestInterface $invoice
+     * @param RequestInterface $request
      * @return array
      */
-    private function requestBody(RequestInterface $invoice): array
+    private function requestBody(RequestInterface $request): array
     {
         return [
-            'dateAndTimeOfIssue'     => $invoice->issueDateTime()->format(DATE_ISO8601),
-            'cashier'                => $invoice->cashier()->id(),
-            'buyerId'                => $invoice->buyerId(),
-            'buyerCostCenterId'      => $invoice->buyerCostCenterId(),
-            'invoiceType'            => $invoice->invoiceType()->value,
-            'transactionType'        => $invoice->transactionType()->value,
-            'payment'                => $this->formatPayments($invoice->payments()),
-            'invoiceNumber'          => $invoice->invoiceNumber(),
-            'referentDocumentNumber' => $invoice->referentDocumentNumber(),
-            'referentDocumentDT'     => $this->loadReferentDocumentDateTime($invoice->referentDocumentDateTime()),
+            'dateAndTimeOfIssue'     => $request->invoice()->issueDateTime()->format(DATE_ISO8601),
+            'cashier'                => $request->cashier()->id(),
+            'buyerId'                => $this->loadBuyerId($request->buyer()),
+            'buyerCostCenterId'      => $this->loadBuyerCostCenterId($request->buyer()),
+            'invoiceType'            => $request->invoice()->invoiceType()->value,
+            'transactionType'        => $request->invoice()->transactionType()->value,
+            'payment'                => $this->formatPayments($request->payments()),
+            'invoiceNumber'          => $request->invoice()->invoiceNumber(),
+            'referentDocumentNumber' => $request->invoice()->referentDocumentNumber(),
+            'referentDocumentDT'     => $this->loadReferentDocumentDateTime($request->invoice()->referentDocumentDateTime()),
             'options'                => $this->options(),
-            'items'                  => $this->formatItems($invoice->items()),
+            'items'                  => $this->formatItems($request->items()),
         ];
+    }
+
+    /**
+     * @param Buyer|null $buyer
+     * @return string|null
+     */
+    private function loadBuyerId(?Buyer $buyer): ?string
+    {
+        return $buyer instanceof Buyer ? $buyer->buyerId() : null;
+    }
+
+    /**
+     * @param Buyer|null $buyer
+     * @return string|null
+     */
+    private function loadBuyerCostCenterId(?Buyer $buyer): ?string
+    {
+        return $buyer instanceof Buyer ? $buyer->buyerCostCenterId() : null;
     }
 
     /**
