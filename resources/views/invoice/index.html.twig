@@ -103,7 +103,7 @@
                         {% if request.referentDocumentDateTime is not empty %}
                             <tr>
                                 <td class="align-middle text-start">Реф. број:</td>
-                                <td class="align-middle text-end">{{ request.referentDocumentDateTime }}</td>
+                                <td class="align-middle text-end">{{ request.referentDocumentDateTime | date('Y.m.d H:i:s') }}</td>
                             </tr>
                         {% endif %}
 
