@@ -92,4 +92,20 @@ final class Document
             return $carry;
         });
     }
+
+    /**
+     * @return Request
+     */
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getResponse(): Response
+    {
+        return $this->response;
+    }
 }

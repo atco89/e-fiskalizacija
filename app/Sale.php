@@ -9,9 +9,6 @@ use TaxCore\Entities\Configuration;
 use TaxCore\Entities\Merchant;
 use TaxCore\Entities\RequestInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 final class Sale extends Request
 {
@@ -33,14 +30,11 @@ final class Sale extends Request
 
     /**
      * @param RequestInterface $request
-     * @return string
+     * @return Document
      * @throws GuzzleException
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      * @throws TaxCoreRequestException
      */
-    public function run(RequestInterface $request): string
+    public function run(RequestInterface $request): Document
     {
         $httpClient = new Client();
         $response = $httpClient->post($this->configuration->apiUrl(), $this->requestOptions($request));
@@ -54,15 +48,11 @@ final class Sale extends Request
     /**
      * @param RequestInterface $request
      * @param Response $response
-     * @return string
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @noinspection PhpUnhandledExceptionInspection
+     * @return Document
+     * @noinspection PhpPureAttributeCanBeAddedInspection
      */
-    private function document(RequestInterface $request, Response $response): string
+    private function document(RequestInterface $request, Response $response): Document
     {
-        $document = new Document($this->twig->getEnvironment(), $request, $response);
-        return $document->generate();
+        return new Document($this->twig->getEnvironment(), $request, $response);
     }
 }
