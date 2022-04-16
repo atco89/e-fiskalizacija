@@ -69,41 +69,41 @@
                             </td>
                         </tr>
 
-                        {% if request.buyer is not empty %}
-                            {% if request.buyer.buyerId is not empty %}
+                        {% if rrequest.buyerId is not empty %}
+                            {% if request.buyerId is not empty %}
                                 <tr>
                                     <td class="align-middle text-start">ПИБ купца:</td>
-                                    <td class="align-middle text-end">{{ request.buyer.buyerId }}</td>
+                                    <td class="align-middle text-end">{{ request.buyerId }}</td>
                                 </tr>
                             {% endif %}
-                            {% if request.buyer.buyerCostCenterId is not empty %}
+                            {% if request.buyerCostCenterId is not empty %}
                                 <tr>
                                     <td class="align-middle text-start">Податак купца:</td>
-                                    <td class="align-middle text-end">{{ request.buyer.buyerCostCenterId }}</td>
+                                    <td class="align-middle text-end">{{ request.buyerCostCenterId }}</td>
                                 </tr>
                             {% endif %}
                         {% endif %}
 
                         <tr>
                             <td class="align-middle text-start">ПОС број:</td>
-                            <td class="align-middle text-end">{{ request.invoice.invoiceNumber }}</td>
+                            <td class="align-middle text-end">{{ request.invoiceNumber }}</td>
                         </tr>
                         <tr>
                             <td class="align-middle text-start">ПОС време:</td>
-                            <td class="align-middle text-end">{{ request.invoice.issueDateTime | date('d.m.Y H:i:s') }}</td>
+                            <td class="align-middle text-end">{{ request.issueDateTime | date('d.m.Y H:i:s') }}</td>
                         </tr>
 
-                        {% if request.invoice.referentDocumentNumber is not empty %}
+                        {% if request.referentDocumentNumber is not empty %}
                             <tr>
                                 <td class="align-middle text-start">Реф. број:</td>
-                                <td class="align-middle text-end">{{ request.invoice.referentDocumentNumber }}</td>
+                                <td class="align-middle text-end">{{ request.referentDocumentNumber }}</td>
                             </tr>
                         {% endif %}
 
-                        {% if request.invoice.referentDocumentDateTime is not empty %}
+                        {% if request.referentDocumentDateTime is not empty %}
                             <tr>
                                 <td class="align-middle text-start">Реф. број:</td>
-                                <td class="align-middle text-end">{{ request.invoice.referentDocumentDateTime }}</td>
+                                <td class="align-middle text-end">{{ request.referentDocumentDateTime }}</td>
                             </tr>
                         {% endif %}
 

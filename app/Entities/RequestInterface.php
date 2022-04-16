@@ -3,18 +3,8 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-interface RequestInterface
+interface RequestInterface extends Invoice, Buyer
 {
-
-    /**
-     * @return Invoice
-     */
-    public function invoice(): Invoice;
-
-    /**
-     * @return Buyer|null
-     */
-    public function buyer(): ?Buyer;
 
     /**
      * @return Merchant
