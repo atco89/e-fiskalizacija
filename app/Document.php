@@ -63,8 +63,8 @@ final class Document
      */
     private function title(): string
     {
-        $invoiceType = $this->request->invoice()->invoiceType();
-        if ($this->request->invoice()->transactionType() === TransactionType::SALE) {
+        $invoiceType = $this->request->invoiceType();
+        if ($this->request->transactionType() === TransactionType::SALE) {
             return match ($invoiceType) {
                 InvoiceType::NORMAL   => 'Продаја',
                 InvoiceType::PROFORMA => 'Проформа',
