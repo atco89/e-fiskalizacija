@@ -7,9 +7,9 @@ interface Item
 {
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function id(): int;
+    public function id(): ?int;
 
     /**
      * @return string|null
