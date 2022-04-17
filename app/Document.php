@@ -48,13 +48,13 @@ final class Document
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function generate(): string
+    public function receipt(): string
     {
-        return $this->environment->render('./invoice/index.html.twig', [
-            'request'       => $this->request,
-            'response'      => $this->response,
-            'documentTitle' => $this->title(),
-            'taxAmount'     => $this->taxAmount(),
+        return $this->environment->render('./receipt/index.html.twig', [
+            'request'   => $this->request,
+            'response'  => $this->response,
+            'title'     => $this->title(),
+            'taxAmount' => $this->taxAmount(),
         ]);
     }
 
@@ -74,11 +74,11 @@ final class Document
             };
         }
         return match ($invoiceType) {
-            InvoiceType::NORMAL   => 'Продаја - Повраћај',
-            InvoiceType::PROFORMA => 'Проформа - Повраћај',
-            InvoiceType::COPY     => 'Копија - Повраћај',
-            InvoiceType::TRAINING => 'Обука - Повраћај',
-            InvoiceType::ADVANCE  => 'Авансни рачун - Повраћај',
+            InvoiceType::NORMAL   => 'Продаја Рефундација',
+            InvoiceType::PROFORMA => 'Проформа Рефундација',
+            InvoiceType::COPY     => 'Копија Рефундација',
+            InvoiceType::TRAINING => 'Обука Рефундација',
+            InvoiceType::ADVANCE  => 'Аванс Рефундација',
         };
     }
 
