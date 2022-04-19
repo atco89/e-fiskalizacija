@@ -167,12 +167,12 @@
                         </tr>
                         {% if request.receivedAmount > 0 %}
                             <tr>
-                                <td class="text-start">Плаћено авансом:</td>
-                                <td class="text-end">{{ request.receivedAmount | decimal }}</td>
+                                <th class="text-start">Плаћено авансом:</th>
+                                <th class="text-end">{{ request.receivedAmount | decimal }}</th>
                             </tr>
                             <tr>
-                                <td class="text-start">ПДВ на аванс:</td>
-                                <td class="text-end">{{ request.receivedValueAddedTax | decimal }}</td>
+                                <th class="text-start">ПДВ на аванс:</th>
+                                <th class="text-end">{{ request.receivedValueAddedTax | decimal }}</th>
                             </tr>
                         {% endif %}
                         {% for payment in request.payments %}
@@ -183,8 +183,8 @@
                         {% endfor %}
                         {% if request.remainingAmount > 0 %}
                             <tr>
-                                <td class="text-start">Преостало за плаћање:</td>
-                                <td class="text-end">{{ request.remainingAmount | decimal }}</td>
+                                <th class="text-start">Преостало за плаћање:</th>
+                                <th class="text-end">{{ request.remainingAmount | decimal }}</th>
                             </tr>
                         {% endif %}
                     </table>
