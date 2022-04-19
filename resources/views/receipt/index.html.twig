@@ -165,7 +165,7 @@
                             <td class="text-start">Укупан износ:</td>
                             <td class="text-end">{{ request.amount | decimal }}</td>
                         </tr>
-                        {% if request.receivedAmount is not empty %}
+                        {% if request.receivedAmount > 0 %}
                             <tr>
                                 <td class="text-start">Плаћено авансом:</td>
                                 <td class="text-end">{{ request.receivedAmount | decimal }}</td>
@@ -181,7 +181,7 @@
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
-                        {% if request.remainingAmount is not empty %}
+                        {% if request.remainingAmount > 0 %}
                             <tr>
                                 <td class="text-start">Преостало за плаћање:</td>
                                 <td class="text-end">{{ request.remainingAmount | decimal }}</td>
