@@ -11,6 +11,16 @@ interface Invoice
 {
 
     /**
+     * @return InvoiceType
+     */
+    public function invoiceType(): InvoiceType;
+
+    /**
+     * @return TransactionType
+     */
+    public function transactionType(): TransactionType;
+
+    /**
      * @return DateTime
      */
     public function issueDateTime(): DateTime;
@@ -26,14 +36,14 @@ interface Invoice
     public function requestId(): string;
 
     /**
-     * @return InvoiceType
+     * @return string|null
      */
-    public function invoiceType(): InvoiceType;
+    public function buyerId(): ?string;
 
     /**
-     * @return TransactionType
+     * @return string|null
      */
-    public function transactionType(): TransactionType;
+    public function buyerCostCenterId(): ?string;
 
     /**
      * @return string|null

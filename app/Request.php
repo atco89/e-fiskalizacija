@@ -97,8 +97,8 @@ abstract class Request
     {
         return array_map(function (Payment $payment): array {
             return [
-                'amount'      => $payment->amount(),
                 'paymentType' => $payment->type(),
+                'amount'      => $payment->amount(),
             ];
         }, $payments);
     }
@@ -134,7 +134,7 @@ abstract class Request
     {
         return array_map(function (Item $item): array {
             return [
-                'gtin'        => $item->barcode(),
+                'gtin'        => $item->gtin(),
                 'name'        => $item->name(),
                 'quantity'    => $item->quantity(),
                 'unitPrice'   => $item->unitPrice(),

@@ -7,14 +7,9 @@ interface Item
 {
 
     /**
-     * @return int|null
-     */
-    public function id(): ?int;
-
-    /**
      * @return string|null
      */
-    public function barcode(): ?string;
+    public function gtin(): ?string;
 
     /**
      * @return string

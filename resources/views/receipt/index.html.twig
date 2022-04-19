@@ -60,11 +60,9 @@
                                 {% elseif request.merchant.cashierDisplayType.value == 'NAME_SURNAME' %}
                                     {{ request.cashier.name ~ ' ' ~ request.cashier.surname }}
                                 {% elseif request.merchant.cashierDisplayType.value == 'FULL_NAME' %}
-                                    {{
-                                        request.cashier.id ~ ' - ' ~
-                                        request.cashier.name ~ ' ' ~
-                                        request.cashier.surname
-                                    }}
+                                    {{ request.cashier.id ~ ' - ' ~
+                                    request.cashier.name ~ ' ' ~
+                                    request.cashier.surname }}
                                 {% endif %}
                             </td>
                         </tr>
@@ -72,13 +70,13 @@
                         {% if rrequest.buyerId is not empty %}
                             {% if request.buyerId is not empty %}
                                 <tr>
-                                    <td class="align-middle text-start">ПИБ купца:</td>
+                                    <td class="align-middle text-start">ИД купца:</td>
                                     <td class="align-middle text-end">{{ request.buyerId }}</td>
                                 </tr>
                             {% endif %}
                             {% if request.buyerCostCenterId is not empty %}
                                 <tr>
-                                    <td class="align-middle text-start">Податак купца:</td>
+                                    <td class="align-middle text-start">Опционо поље купца:</td>
                                     <td class="align-middle text-end">{{ request.buyerCostCenterId }}</td>
                                 </tr>
                             {% endif %}
@@ -164,7 +162,7 @@
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
                         <tr>
-                            <td class="text-start">ЗА УПЛАТУ:</td>
+                            <td class="text-start">Укупан износ:</td>
                             <td class="text-end">{{ request.amount | decimal }}</td>
                         </tr>
                         {% for payment in request.payments %}
@@ -193,7 +191,7 @@
                     <table class="table table-sm table-borderless">
                         <tr>
                             <td class="text-start">Ознака</td>
-                            <td class="text-center">Назив</td>
+                            <td class="text-center">Име</td>
                             <td class="text-center">Стопа</td>
                             <td class="text-end">Порез</td>
                         </tr>
@@ -206,7 +204,7 @@
                             </tr>
                         {% endfor %}
                         <tr class="bordered-top bordered-bottom">
-                            <td colspan="3">Укупно порез:</td>
+                            <td colspan="3">Укупно износ пореза:</td>
                             <td class="text-end">{{ taxAmount | decimal }}</td>
                         </tr>
                     </table>

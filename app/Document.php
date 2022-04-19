@@ -66,19 +66,19 @@ final class Document
         $invoiceType = $this->request->invoiceType();
         if ($this->request->transactionType() === TransactionType::SALE) {
             return match ($invoiceType) {
-                InvoiceType::NORMAL   => 'Продаја',
-                InvoiceType::PROFORMA => 'Проформа',
-                InvoiceType::COPY     => 'Копија',
-                InvoiceType::TRAINING => 'Обука',
-                InvoiceType::ADVANCE  => 'Авансни рачун',
+                InvoiceType::NORMAL   => 'Промет - продаја',
+                InvoiceType::PROFORMA => 'Предрачун - продаја',
+                InvoiceType::COPY     => 'Копија - продаја',
+                InvoiceType::TRAINING => 'Обука - продаја',
+                InvoiceType::ADVANCE  => 'Аванс - продаја',
             };
         }
         return match ($invoiceType) {
-            InvoiceType::NORMAL   => 'Продаја Рефундација',
-            InvoiceType::PROFORMA => 'Проформа Рефундација',
-            InvoiceType::COPY     => 'Копија Рефундација',
-            InvoiceType::TRAINING => 'Обука Рефундација',
-            InvoiceType::ADVANCE  => 'Аванс Рефундација',
+            InvoiceType::NORMAL   => 'Промет - рефундација',
+            InvoiceType::PROFORMA => 'Предрачун - рефундација',
+            InvoiceType::COPY     => 'Копија - рефундација',
+            InvoiceType::TRAINING => 'Обука - рефундација',
+            InvoiceType::ADVANCE  => 'Аванс - рефундација',
         };
     }
 
