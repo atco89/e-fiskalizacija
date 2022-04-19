@@ -5,7 +5,7 @@ namespace TaxCore;
 
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
-use TaxCore\Entities\RequestInterface as Request;
+use TaxCore\Entities\Request as RequestInterface;
 use TaxCore\Entities\TaxItem;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -21,9 +21,9 @@ final class Document
     private Environment $environment;
 
     /**
-     * @var Request
+     * @var RequestInterface
      */
-    private Request $request;
+    private RequestInterface $request;
 
     /**
      * @var Response
@@ -32,10 +32,10 @@ final class Document
 
     /**
      * @param Environment $environment
-     * @param Request $request
+     * @param RequestInterface $request
      * @param Response $response
      */
-    public function __construct(Environment $environment, Request $request, Response $response)
+    public function __construct(Environment $environment, RequestInterface $request, Response $response)
     {
         $this->environment = $environment;
         $this->request = $request;
@@ -94,9 +94,9 @@ final class Document
     }
 
     /**
-     * @return Request
+     * @return RequestInterface
      */
-    public function getRequest(): Request
+    public function getRequest(): RequestInterface
     {
         return $this->request;
     }

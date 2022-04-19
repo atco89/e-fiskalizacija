@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use TaxCore\Entities\Configuration;
 use TaxCore\Entities\Merchant;
-use TaxCore\Entities\RequestInterface;
+use TaxCore\Entities\Request as RequestInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
 
 final class Sale extends Request

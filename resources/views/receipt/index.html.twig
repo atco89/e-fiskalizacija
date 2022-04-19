@@ -165,12 +165,28 @@
                             <td class="text-start">Укупан износ:</td>
                             <td class="text-end">{{ request.amount | decimal }}</td>
                         </tr>
+                        {% if request.receivedAmount is not empty %}
+                            <tr>
+                                <td class="text-start">Плаћено авансом:</td>
+                                <td class="text-end">{{ request.receivedAmount | decimal }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">ПДВ на аванс:</td>
+                                <td class="text-end">{{ request.receivedValueAddedTax | decimal }}</td>
+                            </tr>
+                        {% endif %}
                         {% for payment in request.payments %}
                             <tr>
                                 <td class="text-start">{{ payment.name }}:</td>
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
+                        {% if request.remainingAmount is not empty %}
+                            <tr>
+                                <td class="text-start">Преостало за плаћање:</td>
+                                <td class="text-end">{{ request.remainingAmount | decimal }}</td>
+                            </tr>
+                        {% endif %}
                     </table>
                 </div>
             </div>
@@ -204,7 +220,7 @@
                             </tr>
                         {% endfor %}
                         <tr class="bordered-top bordered-bottom">
-                            <td colspan="3">Укупно износ пореза:</td>
+                            <td colspan="3">Укупно износ ПДВ-а:</td>
                             <td class="text-end">{{ taxAmount | decimal }}</td>
                         </tr>
                     </table>
@@ -240,6 +256,19 @@
                 </div>
             </div>
             <!-- QR CODE CONTAINER END -->
+
+            {% if request.invoiceType === 2 and request.transactionType === 1 %}
+                <!-- CUSTOMER SIGNATURE CONTAINER START -->
+                <div class="row mt-5 mb-2">
+                    <div class="col-6 text-center">
+                        Потпис купца:
+                    </div>
+                    <div class="col-6 text-center border-top-0 border-left-0 border-right-0">
+
+                    </div>
+                </div>
+                <!-- CUSTOMER SIGNATURE CONTAINER END -->
+            {% endif %}
 
             <!-- BORDERED CONTAINER START -->
             <div class="row">

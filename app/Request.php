@@ -8,7 +8,7 @@ use GuzzleHttp\RequestOptions;
 use TaxCore\Entities\Configuration;
 use TaxCore\Entities\Item;
 use TaxCore\Entities\Payment;
-use TaxCore\Entities\RequestInterface;
+use TaxCore\Entities\Request as RequestInterface;
 
 abstract class Request
 {

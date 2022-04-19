@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-interface RequestInterface extends Invoice
+interface Request extends Invoice
 {
 
     /**
@@ -22,12 +22,27 @@ interface RequestInterface extends Invoice
     public function items(): array;
 
     /**
-     * @return Payment[]
+     * @param Payment[]
      */
     public function payments(): array;
 
     /**
-     * @return Price
+     * @return float
      */
-    public function amount(): Price;
+    public function amount(): float;
+
+    /**
+     * @return float
+     */
+    public function receivedAmount(): float;
+
+    /**
+     * @return float
+     */
+    public function receivedValueAddedTax(): float;
+
+    /**
+     * @return float
+     */
+    public function remainingAmount(): float;
 }
