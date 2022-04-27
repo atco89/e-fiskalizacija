@@ -3,262 +3,120 @@ declare(strict_types=1);
 
 namespace TaxCore;
 
-use DateTime;
-use Exception;
-use stdClass;
-use TaxCore\Entities\TaxItem;
+use TaxCore\Entities\Enums\InvoiceType;
+use TaxCore\Entities\Enums\TransactionType;
+use TaxCore\Entities\RequestInterface;
+use TaxCore\Entities\ResponseBuilder;
+use TaxCore\Entities\TaxItemInterface;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 final class Response
 {
 
     /**
-     * @var stdClass
+     * @var Environment
      */
-    private stdClass $response;
+    private Environment $twig;
 
     /**
-     * @param stdClass $response
+     * @var RequestInterface
      */
-    public function __construct(stdClass $response)
+    private RequestInterface $request;
+
+    /**
+     * @var ResponseBuilder
+     */
+    private ResponseBuilder $response;
+
+    /**
+     * @var string
+     */
+    private string $receipt;
+
+    /**
+     * @param Environment $twig
+     * @param RequestInterface $request
+     * @param ResponseBuilder $response
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function __construct(Environment $twig, RequestInterface $request, ResponseBuilder $response)
     {
+        $this->twig = $twig;
+        $this->request = $request;
         $this->response = $response;
+        $this->receipt = $this->generateReceipt();
+    }
+
+    /**
+     * @return string
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    private function generateReceipt(): string
+    {
+        return $this->twig->render('./receipt/index.html.twig', [
+            'documentTitle' => $this->title(),
+            'request'       => $this->request,
+            'response'      => $this->response,
+            'totalTax'      => $this->totalTax(),
+        ]);
     }
 
     /**
      * @return string
      */
-    public function requestedBy(): string
+    private function title(): string
     {
-        return $this->response->requestedBy;
-    }
-
-    /**
-     * @return string
-     */
-    public function signedBy(): string
-    {
-        return $this->response->signedBy;
-    }
-
-    /**
-     * @return DateTime
-     * @throws Exception
-     */
-    public function sdcDateTime(): DateTime
-    {
-        return new DateTime($this->response->sdcDateTime);
-    }
-
-    /**
-     * @return string
-     */
-    public function invoiceCounter(): string
-    {
-        return $this->response->invoiceCounter;
-    }
-
-    /**
-     * @return string
-     */
-    public function invoiceCounterExtension(): string
-    {
-        return $this->response->invoiceCounterExtension;
-    }
-
-    /**
-     * @return string
-     */
-    public function invoiceNumber(): string
-    {
-        return $this->response->invoiceNumber;
-    }
-
-    /**
-     * @return string
-     */
-    public function verificationUrl(): string
-    {
-        return $this->response->verificationUrl;
-    }
-
-    /**
-     * @return string
-     */
-    public function verificationQRCode(): string
-    {
-        return $this->response->verificationQRCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function journal(): string
-    {
-        return $this->response->journal;
-    }
-
-    /**
-     * @return int
-     */
-    public function totalCounter(): int
-    {
-        return $this->response->totalCounter;
-    }
-
-    /**
-     * @return int
-     */
-    public function transactionTypeCounter(): int
-    {
-        return $this->response->transactionTypeCounter;
+        $invoiceType = $this->request->invoiceType();
+        $transactionType = $this->request->transactionType();
+        $type = $transactionType === TransactionType::SALE ? 'ПРОДАЈА' : 'РЕФУНДАЦИЈА';
+        return match ($invoiceType) {
+            InvoiceType::NORMAL   => "ПРОМЕТ - $type",
+            InvoiceType::PROFORMA => "ПРЕДРАЧУН - $type",
+            InvoiceType::COPY     => "КОПИЈА - $type",
+            InvoiceType::TRAINING => "ОБУКА - $type",
+            InvoiceType::ADVANCE  => "АВАНС - $type",
+        };
     }
 
     /**
      * @return float
      */
-    public function totalAmount(): float
+    private function totalTax(): float
     {
-        return $this->response->totalAmount;
+        return array_reduce($this->response->taxItems(), function (?float $carry, TaxItemInterface $tax): float {
+            $carry += $tax->amount();
+            return $carry;
+        });
+    }
+
+    /**
+     * @return RequestInterface
+     */
+    public function getRequest(): RequestInterface
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return ResponseBuilder
+     */
+    public function getResponse(): ResponseBuilder
+    {
+        return $this->response;
     }
 
     /**
      * @return string
      */
-    public function encryptedInternalData(): string
+    public function getReceipt(): string
     {
-        return $this->response->encryptedInternalData;
-    }
-
-    /**
-     * @return string
-     */
-    public function signature(): string
-    {
-        return $this->response->signature;
-    }
-
-    /**
-     * @return TaxItem[]
-     */
-    public function taxItems(): array
-    {
-        return array_map(function (stdClass $item): TaxItem {
-            return new class($item) implements TaxItem {
-
-                private stdClass $item;
-
-                /**
-                 * @param stdClass $item
-                 */
-                public function __construct(stdClass $item)
-                {
-                    $this->item = $item;
-                }
-
-                /**
-                 * @return string
-                 */
-                public function label(): string
-                {
-                    return $this->item->label;
-                }
-
-                /**
-                 * @return string
-                 */
-                public function name(): string
-                {
-                    return $this->item->categoryName;
-                }
-
-                /**
-                 * @return int
-                 */
-                public function type(): int
-                {
-                    return $this->item->categoryType;
-                }
-
-                /**
-                 * @return float
-                 */
-                public function rate(): float
-                {
-                    return $this->item->rate;
-                }
-
-                /**
-                 * @return float
-                 */
-                public function amount(): float
-                {
-                    return $this->item->amount;
-                }
-            };
-        }, $this->response->taxItems);
-    }
-
-    /**
-     * @return string
-     */
-    public function businessName(): string
-    {
-        return $this->response->businessName;
-    }
-
-    /**
-     * @return string
-     */
-    public function locationName(): string
-    {
-        return $this->response->locationName;
-    }
-
-    /**
-     * @return string
-     */
-    public function address(): string
-    {
-        return $this->response->address;
-    }
-
-    /**
-     * @return string
-     */
-    public function tin(): string
-    {
-        return $this->response->tin;
-    }
-
-    /**
-     * @return string
-     */
-    public function district(): string
-    {
-        return $this->response->district;
-    }
-
-    /**
-     * @return int
-     */
-    public function taxGroupRevision(): int
-    {
-        return $this->response->taxGroupRevision;
-    }
-
-    /**
-     * @return string
-     */
-    public function mrc(): string
-    {
-        return $this->response->mrc;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function messages(): ?string
-    {
-        return $this->response->messages;
+        return $this->receipt;
     }
 }

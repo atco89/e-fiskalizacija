@@ -3,28 +3,20 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-interface Request extends Invoice
+use TaxCore\Entities\Enums\PaymentType;
+
+interface PaymentInterface
 {
 
     /**
-     * @return Merchant
+     * @return PaymentType
      */
-    public function merchant(): Merchant;
+    public function type(): PaymentType;
 
     /**
-     * @return Cashier
+     * @return string
      */
-    public function cashier(): Cashier;
-
-    /**
-     * @return Item[]
-     */
-    public function items(): array;
-
-    /**
-     * @param Payment[]
-     */
-    public function payments(): array;
+    public function name(): string;
 
     /**
      * @return float
@@ -39,7 +31,7 @@ interface Request extends Invoice
     /**
      * @return float
      */
-    public function receivedValueAddedTax(): float;
+    public function receivedTax(): float;
 
     /**
      * @return float

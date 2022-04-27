@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-interface Configuration
+interface ConfigurationInterface
 {
 
     /**
      * @return string
      */
-    public function apiUrl(): string;
+    public function apiBaseUrl(): string;
 
     /**
      * @return string

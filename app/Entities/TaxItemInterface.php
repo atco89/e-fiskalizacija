@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-interface TaxItem
+interface TaxItemInterface
 {
 
     /**

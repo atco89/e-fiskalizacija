@@ -5,7 +5,7 @@ namespace TaxCore\Entities;
 
 use TaxCore\Entities\Enums\CashierDisplayType;
 
-interface Merchant
+interface MerchantInterface
 {
 
     /**

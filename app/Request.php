@@ -3,144 +3,66 @@ declare(strict_types=1);
 
 namespace TaxCore;
 
-use DateTime;
-use GuzzleHttp\RequestOptions;
-use TaxCore\Entities\Configuration;
-use TaxCore\Entities\Item;
-use TaxCore\Entities\Payment;
-use TaxCore\Entities\Request as RequestInterface;
+use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use TaxCore\Entities\ConfigurationInterface;
+use TaxCore\Entities\MerchantInterface;
+use TaxCore\Entities\RequestBuilder;
+use TaxCore\Entities\RequestInterface;
+use TaxCore\Entities\ResponseBuilder;
+use TaxCore\Exceptions\TaxCoreRequestException;
+use TaxCore\Twig\Twig;
+use Throwable;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
-abstract class Request
+final class Request extends RequestBuilder
 {
 
     /**
-     * @var Configuration
+     * @var Twig
      */
-    protected Configuration $configuration;
+    private Twig $twig;
 
     /**
-     * @param Configuration $configuration
+     * @param MerchantInterface $merchant
+     * @param ConfigurationInterface $configuration
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(MerchantInterface $merchant, ConfigurationInterface $configuration)
     {
-        $this->configuration = $configuration;
+        parent::__construct($configuration);
+        $this->twig = new Twig($merchant);
     }
 
     /**
      * @param RequestInterface $request
-     * @return array
-     * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
+     * @return Response
+     * @throws TaxCoreRequestException
      */
-    protected function requestOptions(RequestInterface $request): array
+    public function run(RequestInterface $request): Response
     {
-        return [
-            RequestOptions::CERT    => $this->cert(),
-            RequestOptions::HEADERS => $this->headers($request->requestId()),
-            RequestOptions::JSON    => $this->requestBody($request),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function cert(): array
-    {
-        return [
-            $this->configuration->certPath(),
-            $this->configuration->password(),
-        ];
-    }
-
-    /**
-     * @param string $requestId
-     * @return array
-     * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
-     */
-    private function headers(string $requestId): array
-    {
-        return [
-            'Accept'          => 'application/json',
-            'Content-Type'    => 'application/json',
-            'RequestId'       => $requestId,
-            'Accept-Language' => $this->configuration->language(),
-            'PAC'             => $this->configuration->pac(),
-        ];
+        try {
+            $httpClient = new Client();
+            $httpResponse = $httpClient->post($this->configuration->apiBaseUrl(), $this->requestOptions($request));
+            $response = new ResponseBuilder(json_decode($httpResponse->getBody()->getContents()));
+            return $this->document($request, $response);
+        } catch (LoaderError | RuntimeError | SyntaxError | GuzzleException | Exception | Throwable $e) {
+            throw new TaxCoreRequestException($e->getMessage());
+        }
     }
 
     /**
      * @param RequestInterface $request
-     * @return array
+     * @param ResponseBuilder $response
+     * @return Response
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    private function requestBody(RequestInterface $request): array
+    private function document(RequestInterface $request, ResponseBuilder $response): Response
     {
-        return [
-            'dateAndTimeOfIssue'     => $request->issueDateTime()->format(DATE_ISO8601),
-            'cashier'                => $request->cashier()->id(),
-            'buyerId'                => $request->buyerId(),
-            'buyerCostCenterId'      => $request->buyerCostCenterId(),
-            'invoiceType'            => $request->invoiceType()->value,
-            'transactionType'        => $request->transactionType()->value,
-            'payment'                => $this->formatPayments($request->payments()),
-            'invoiceNumber'          => $request->invoiceNumber(),
-            'referentDocumentNumber' => $request->referentDocumentNumber(),
-            'referentDocumentDT'     => $this->loadReferentDocumentDateTime($request->referentDocumentDateTime()),
-            'options'                => $this->options(),
-            'items'                  => $this->formatItems($request->items()),
-        ];
-    }
-
-    /**
-     * @param Payment[] $payments
-     * @return array
-     */
-    private function formatPayments(array $payments): array
-    {
-        return array_map(function (Payment $payment): array {
-            return [
-                'paymentType' => $payment->type(),
-                'amount'      => $payment->amount(),
-            ];
-        }, $payments);
-    }
-
-    /**
-     * @param DateTime|null $referentDocumentDateTime
-     * @return string|null
-     */
-    private function loadReferentDocumentDateTime(?DateTime $referentDocumentDateTime): ?string
-    {
-        return $referentDocumentDateTime instanceof DateTime
-            ? $referentDocumentDateTime->format(DATE_ISO8601)
-            : null;
-    }
-
-    /**
-     * @return int[]
-     * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
-     */
-    private function options(): array
-    {
-        return [
-            'OmitQRCodeGen'             => 0,
-            'OmitTextualRepresentation' => 1,
-        ];
-    }
-
-    /**
-     * @param Item[] $items
-     * @return array
-     */
-    private function formatItems(array $items): array
-    {
-        return array_map(function (Item $item): array {
-            return [
-                'gtin'        => $item->gtin(),
-                'name'        => $item->name(),
-                'quantity'    => $item->quantity(),
-                'unitPrice'   => $item->unitPrice(),
-                'labels'      => $item->labels(),
-                'totalAmount' => $item->amount(),
-            ];
-        }, $items);
+        return new Response($this->twig->getEnvironment(), $request, $response);
     }
 }

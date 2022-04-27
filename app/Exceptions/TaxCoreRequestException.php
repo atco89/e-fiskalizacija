@@ -9,10 +9,10 @@ final class TaxCoreRequestException extends Exception
 {
 
     /**
-     * @noinspection PhpPureAttributeCanBeAddedInspection
+     * @param string $message
      */
-    public function __construct()
+    public function __construct(string $message)
     {
-        parent::__construct('Tax core returns response status code different then 200.');
+        parent::__construct($message);
     }
 }

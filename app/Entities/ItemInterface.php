@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-interface Item
+interface ItemInterface
 {
 
     /**
      * @return string|null
      */
-    public function gtin(): ?string;
+    public function gtin(): string|null;
 
     /**
      * @return string
@@ -27,7 +27,7 @@ interface Item
     public function unitPrice(): float;
 
     /**
-     * @return string[]
+     * @return array
      */
     public function labels(): array;
 
