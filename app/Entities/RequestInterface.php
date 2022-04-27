@@ -71,7 +71,7 @@ interface RequestInterface
     public function items(): array;
 
     /**
-     * @return PaymentInterface[]
+     * @return PaymentTypeInterface[]
      */
     public function payments(): array;
 

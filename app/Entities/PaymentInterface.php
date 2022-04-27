@@ -3,20 +3,13 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-use TaxCore\Entities\Enums\PaymentType;
-
 interface PaymentInterface
 {
 
     /**
-     * @return PaymentType
+     * @return PaymentTypeInterface[]
      */
-    public function type(): PaymentType;
-
-    /**
-     * @return string
-     */
-    public function name(): string;
+    public function all(): array;
 
     /**
      * @return float
@@ -24,14 +17,29 @@ interface PaymentInterface
     public function amount(): float;
 
     /**
-     * @return float
+     * @return float|null
      */
-    public function receivedAmount(): float;
+    public function discount(): float|null;
+
+    /**
+     * @return float|null
+     */
+    public function amountWithDiscount(): float|null;
+
+    /**
+     * @return float|null
+     */
+    public function deposit(): float|null;
+
+    /**
+     * @return float|null
+     */
+    public function depositValueAddedTax(): float|null;
 
     /**
      * @return float
      */
-    public function receivedTax(): float;
+    public function receivedAmount(): float;
 
     /**
      * @return float

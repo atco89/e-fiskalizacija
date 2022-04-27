@@ -89,7 +89,7 @@ abstract class RequestBuilder
      */
     private function formatPayments(array $payments): array
     {
-        return array_map(function (PaymentInterface $payment): array {
+        return array_map(function (PaymentTypeInterface $payment): array {
             return [
                 'paymentType' => $payment->type(),
                 'amount'      => $payment->amount(),

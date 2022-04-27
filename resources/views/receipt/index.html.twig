@@ -60,26 +60,26 @@
                                 {% elseif request.merchant.cashierDisplayType.value == 'NAME_SURNAME' %}
                                     {{ request.cashier.name ~ ' ' ~ request.cashier.surname }}
                                 {% elseif request.merchant.cashierDisplayType.value == 'FULL_NAME' %}
-                                    {{ request.cashier.id ~ ' - ' ~
-                                    request.cashier.name ~ ' ' ~
-                                    request.cashier.surname }}
+                                    {{
+                                        request.cashier.id ~ ' - ' ~
+                                        request.cashier.name ~ ' ' ~
+                                        request.cashier.surname
+                                    }}
                                 {% endif %}
                             </td>
                         </tr>
 
-                        {% if rrequest.buyerId is not empty %}
-                            {% if request.buyerId is not empty %}
-                                <tr>
-                                    <td class="align-middle text-start">ИД купца:</td>
-                                    <td class="align-middle text-end">{{ request.buyerId }}</td>
-                                </tr>
-                            {% endif %}
-                            {% if request.buyerCostCenterId is not empty %}
-                                <tr>
-                                    <td class="align-middle text-start">Опционо поље купца:</td>
-                                    <td class="align-middle text-end">{{ request.buyerCostCenterId }}</td>
-                                </tr>
-                            {% endif %}
+                        {% if request.buyerId is not empty %}
+                            <tr>
+                                <td class="align-middle text-start">ИД купца:</td>
+                                <td class="align-middle text-end">{{ request.buyerId }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if request.buyerCostCenterId is not empty %}
+                            <tr>
+                                <td class="align-middle text-start">Опционо поље купца:</td>
+                                <td class="align-middle text-end">{{ request.buyerCostCenterId }}</td>
+                            </tr>
                         {% endif %}
 
                         <tr>
@@ -167,14 +167,16 @@
                             <td class="text-start">Укупан износ:</td>
                             <td class="text-end">{{ request.amount | decimal }}</td>
                         </tr>
-                        {% if request.receivedAmount > 0 %}
+                        {% if request.payments.deposit is not empty %}
                             <tr>
                                 <th class="text-start">Плаћено авансом:</th>
-                                <th class="text-end">{{ request.receivedAmount | decimal }}</th>
+                                <th class="text-end">{{ request.payments.deposit | decimal }}</th>
                             </tr>
+                        {% endif %}
+                        {% if request.payments.depositValueAddedTax is not empty %}
                             <tr>
                                 <th class="text-start">ПДВ на аванс:</th>
-                                <th class="text-end">{{ request.receivedTax | decimal }}</th>
+                                <th class="text-end">{{ request.payments.depositValueAddedTax | decimal }}</th>
                             </tr>
                         {% endif %}
                         {% for payment in request.payments %}
@@ -183,10 +185,10 @@
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
-                        {% if request.remainingAmount > 0 %}
+                        {% if request.payments.remainingAmount is not null %}
                             <tr>
                                 <th class="text-start">Преостало за плаћање:</th>
-                                <th class="text-end">{{ request.remainingAmount | decimal }}</th>
+                                <th class="text-end">{{ request.payments.remainingAmount | decimal }}</th>
                             </tr>
                         {% endif %}
                     </table>
