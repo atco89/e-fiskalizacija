@@ -165,7 +165,7 @@
                     <table class="table table-sm table-borderless">
                         <tr>
                             <td class="text-start">Укупан износ:</td>
-                            <td class="text-end">{{ request.items.amount | decimal }}</td>
+                            <td class="text-end">{{ request.amount | decimal }}</td>
                         </tr>
                         {% if request.payments.remainingAmount is not empty %}
                             <tr>
