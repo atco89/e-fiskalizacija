@@ -133,7 +133,7 @@
                             <td class="text-center">Кол.</td>
                             <td class="text-end">Укупно</td>
                         </tr>
-                        {% for item in request.items %}
+                        {% for item in request.items.all %}
                             <tr>
                                 <td colspan="4">{{ item.name }} ({{ item.labels | join(', ') }})</td>
                             </tr>
