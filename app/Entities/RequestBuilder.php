@@ -74,12 +74,12 @@ abstract class RequestBuilder
             'buyerCostCenterId'      => $request->buyerCostCenterId(),
             'invoiceType'            => $request->invoiceType()->value,
             'transactionType'        => $request->transactionType()->value,
-            'payment'                => $this->formatPayments($request->payments()),
+            'payment'                => $this->formatPayments($request->payments()->all()),
             'invoiceNumber'          => $request->invoiceNumber(),
             'referentDocumentNumber' => $request->referentDocumentNumber(),
             'referentDocumentDT'     => $this->buildReferentDocumentDateTime($request->referentDocumentDateTime()),
             'options'                => $this->options($request),
-            'items'                  => $this->formatItems($request->items()),
+            'items'                  => $this->formatItems($request->items()->all()),
         ];
     }
 
