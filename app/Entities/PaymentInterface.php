@@ -7,24 +7,19 @@ interface PaymentInterface
 {
 
     /**
-     * @return array
+     * @return PaymentTypeInterface[]
      */
     public function all(): array;
 
     /**
      * @return float
      */
-    public function amount(): float;
+    public function receivedAmount(): float;
 
     /**
      * @return float
      */
-    public function deposit(): float;
-
-    /**
-     * @return float
-     */
-    public function taxOnDeposit(): float;
+    public function receivedTax(): float;
 
     /**
      * @return float

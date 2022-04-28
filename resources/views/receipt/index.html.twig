@@ -165,18 +165,16 @@
                     <table class="table table-sm table-borderless">
                         <tr>
                             <td class="text-start">Укупан износ:</td>
-                            <td class="text-end">{{ request.amount | decimal }}</td>
+                            <td class="text-end">{{ request.items.amount | decimal }}</td>
                         </tr>
-                        {% if request.payments.deposit is not empty %}
+                        {% if request.payments.remainingAmount is not empty %}
                             <tr>
                                 <th class="text-start">Плаћено авансом:</th>
-                                <th class="text-end">{{ request.payments.deposit | decimal }}</th>
+                                <th class="text-end">{{ request.payments.receivedAmount | decimal }}</th>
                             </tr>
-                        {% endif %}
-                        {% if request.payments.taxOnDeposit is not empty %}
                             <tr>
                                 <th class="text-start">ПДВ на аванс:</th>
-                                <th class="text-end">{{ request.payments.taxOnDeposit | decimal }}</th>
+                                <th class="text-end">{{ request.payments.receivedTax | decimal }}</th>
                             </tr>
                         {% endif %}
                         {% for payment in request.payments %}
