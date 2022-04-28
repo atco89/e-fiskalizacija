@@ -66,14 +66,14 @@ interface RequestInterface
     public function referentDocumentDateTime(): DateTime|null;
 
     /**
-     * @return ItemInterface[]
+     * @return ItemsInterface
      */
-    public function items(): array;
+    public function items(): ItemsInterface;
 
     /**
-     * @return PaymentTypeInterface[]
+     * @return PaymentInterface
      */
-    public function payments(): array;
+    public function payments(): PaymentInterface;
 
     /**
      * @return float
