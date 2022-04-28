@@ -22,10 +22,8 @@ final class Twig
     public function __construct(MerchantInterface $merchant)
     {
         $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../../resources/views'));
-        $this->environment->addFilter(new TwigFilter('merchant_log_path', function () use ($merchant): string {
-            return base64_encode(file_get_contents($merchant->logoPath()));
-        }));
-        $this->environment->addFilter(new TwigFilter('decimal', function (?string $number, int $precision = 2) {
+        $this->environment->addGlobal('merchantLogPath', base64_encode(file_get_contents($merchant->logoPath())));
+        $this->environment->addFilter(new TwigFilter('decimal', function (string|null $number, int $precision = 2) {
             $formattedNumber = empty($number) ? 0.00 : floatval($number);
             return number_format($formattedNumber, $precision, ',', '.');
         }));

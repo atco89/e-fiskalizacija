@@ -7,7 +7,7 @@ interface PaymentInterface
 {
 
     /**
-     * @return PaymentTypeInterface[]
+     * @return array
      */
     public function all(): array;
 
@@ -17,29 +17,14 @@ interface PaymentInterface
     public function amount(): float;
 
     /**
-     * @return float|null
+     * @return float
      */
-    public function discount(): float|null;
-
-    /**
-     * @return float|null
-     */
-    public function amountWithDiscount(): float|null;
-
-    /**
-     * @return float|null
-     */
-    public function deposit(): float|null;
-
-    /**
-     * @return float|null
-     */
-    public function depositValueAddedTax(): float|null;
+    public function deposit(): float;
 
     /**
      * @return float
      */
-    public function receivedAmount(): float;
+    public function taxOnDeposit(): float;
 
     /**
      * @return float

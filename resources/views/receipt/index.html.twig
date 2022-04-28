@@ -7,7 +7,7 @@
             <!-- MERCHANT LOGO START -->
             <div class="row">
                 <div class="col-12 text-center">
-                    <img src="data:image/png;base64, {{ '' | merchant_log_path }}" alt="merchant-log-path"
+                    <img src="data:image/png;base64, {{ merchantLogPath }}" alt="merchant-log-path"
                          class="img-fluid w-50 px-4 py-2">
                 </div>
             </div>
@@ -173,10 +173,10 @@
                                 <th class="text-end">{{ request.payments.deposit | decimal }}</th>
                             </tr>
                         {% endif %}
-                        {% if request.payments.depositValueAddedTax is not empty %}
+                        {% if request.payments.taxOnDeposit is not empty %}
                             <tr>
                                 <th class="text-start">ПДВ на аванс:</th>
-                                <th class="text-end">{{ request.payments.depositValueAddedTax | decimal }}</th>
+                                <th class="text-end">{{ request.payments.taxOnDeposit | decimal }}</th>
                             </tr>
                         {% endif %}
                         {% for payment in request.payments %}
@@ -185,7 +185,7 @@
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
-                        {% if request.payments.remainingAmount is not null %}
+                        {% if request.payments.remainingAmount is not empty %}
                             <tr>
                                 <th class="text-start">Преостало за плаћање:</th>
                                 <th class="text-end">{{ request.payments.remainingAmount | decimal }}</th>
@@ -224,7 +224,7 @@
                             </tr>
                         {% endfor %}
                         <tr class="bordered-top bordered-bottom">
-                            <td colspan="3">Укупно износ ПДВ-а:</td>
+                            <td colspan="3">Укупан износ ПДВ-а:</td>
                             <td class="text-end">{{ totalTax | decimal }}</td>
                         </tr>
                     </table>
