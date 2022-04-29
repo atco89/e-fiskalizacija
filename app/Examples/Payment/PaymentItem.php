@@ -40,7 +40,7 @@ final class PaymentItem implements PaymentTypeInterface
      */
     public function type(): PaymentType
     {
-        return PaymentType::from(intval($this->item['type']));
+        return $this->item['type'];
     }
 
     /**

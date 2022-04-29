@@ -5,11 +5,12 @@ use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\PaymentType;
 use TaxCore\Entities\Enums\TransactionType;
 
+$sampleFileName = basename(__FILE__, '.php');
 return [
     'invoiceType'              => InvoiceType::NORMAL,
     'transactionType'          => TransactionType::SALE,
-    'buyerId'                  => '10:111092688',
-    'buyerCostCenterId'        => null,
+    'buyerId'                  => '30:РР3456789',
+    'buyerCostCenterId'        => '10:099999999',
     'referentDocumentNumber'   => null,
     'referentDocumentDateTime' => null,
     'items'                    => [
@@ -35,6 +36,7 @@ return [
             'labels'    => 'Ж',
         ],
     ],
+    'advanceAccount'           => null,
     'payment'                  => [
         [
             'type'   => PaymentType::CASH,

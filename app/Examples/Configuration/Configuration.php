@@ -5,7 +5,7 @@ namespace TaxCore\Examples\Configuration;
 
 use TaxCore\Entities\ConfigurationInterface;
 
-final class Config implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
 
     /**
@@ -37,7 +37,7 @@ final class Config implements ConfigurationInterface
      */
     public function certPath(): string
     {
-        return __DIR__ . '/../../../resources/certs/cert.pfx';
+        return __DIR__ . '/../../../resources/cert/cert.pfx';
     }
 
     /**

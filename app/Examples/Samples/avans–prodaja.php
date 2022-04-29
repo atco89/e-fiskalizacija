@@ -5,9 +5,8 @@ use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\PaymentType;
 use TaxCore\Entities\Enums\TransactionType;
 
-$sampleFileName = basename(__FILE__, '.php');
 return [
-    'invoiceType'              => InvoiceType::NORMAL,
+    'invoiceType'              => InvoiceType::ADVANCE,
     'transactionType'          => TransactionType::SALE,
     'buyerId'                  => null,
     'buyerCostCenterId'        => null,
@@ -41,10 +40,6 @@ return [
         [
             'type'   => PaymentType::CASH,
             'amount' => 500.00,
-        ],
-        [
-            'type'   => PaymentType::CARD,
-            'amount' => 568.88,
         ],
     ],
 ];

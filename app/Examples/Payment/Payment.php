@@ -17,17 +17,24 @@ final class Payment implements PaymentInterface
     private array $types;
 
     /**
+     * @var array|null
+     */
+    private array|null $advanceAccount;
+
+    /**
      * @var ItemsInterface
      */
     private ItemsInterface $items;
 
     /**
      * @param array $types
+     * @param array|null $advanceAccount
      * @param ItemsInterface $items
      */
-    public function __construct(array $types, ItemsInterface $items)
+    public function __construct(array $types, array|null $advanceAccount, ItemsInterface $items)
     {
         $this->types = $types;
+        $this->advanceAccount = $advanceAccount;
         $this->items = $items;
     }
 
@@ -36,13 +43,15 @@ final class Payment implements PaymentInterface
      */
     public function advancePayment(): AdvancePaymentInterface|null
     {
-        $advanceAccount = $this->types['advanceAccount'];
-        if (empty($advanceAccount)) {
+        if (empty($this->advanceAccount)) {
             return null;
         }
 
-        return new class($advanceAccount) implements AdvancePaymentInterface {
+        return new class($this->advanceAccount) implements AdvancePaymentInterface {
 
+            /**
+             * @var array
+             */
             private array $item;
 
             /**

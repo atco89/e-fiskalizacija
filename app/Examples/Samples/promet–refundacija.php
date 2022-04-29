@@ -5,14 +5,13 @@ use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\PaymentType;
 use TaxCore\Entities\Enums\TransactionType;
 
-$sampleFileName = basename(__FILE__, '.php');
 return [
     'invoiceType'              => InvoiceType::NORMAL,
-    'transactionType'          => TransactionType::SALE,
+    'transactionType'          => TransactionType::REFUND,
     'buyerId'                  => null,
     'buyerCostCenterId'        => null,
-    'referentDocumentNumber'   => null,
-    'referentDocumentDateTime' => null,
+    'referentDocumentNumber'   => $_SESSION['promet–prodaja']['refDocumentNumber'],
+    'referentDocumentDateTime' => unserialize($_SESSION['promet–prodaja']['refDocumentDateTime']),
     'items'                    => [
         [
             'gtin'      => '9002490100070',

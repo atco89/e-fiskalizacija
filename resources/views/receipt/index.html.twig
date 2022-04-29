@@ -167,35 +167,12 @@
                             <td class="text-start">Укупан износ:</td>
                             <td class="text-end">{{ request.items.amount | decimal }}</td>
                         </tr>
-                        {% set advancePayment = request.payments.advancePayment %}
-                        {% if advancePayment is not null %}
-                            <tr>
-                                <th class="text-start">Плаћено авансом:</th>
-                                <th class="text-end">
-                                    {{ advancePayment.receivedAmount | decimal }}
-                                </th>
-                            </tr>
-                            <tr>
-                                <th class="text-start">ПДВ на аванс:</th>
-                                <th class="text-end">
-                                    {{ advancePayment.receivedTax | decimal }}
-                                </th>
-                            </tr>
-                        {% endif %}
                         {% for payment in request.payments.all %}
                             <tr>
                                 <td class="text-start">{{ payment.name }}:</td>
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
-                        {% if request.payments.remainingAmount > 0 %}
-                            <tr>
-                                <th class="text-start">Преостало за плаћање:</th>
-                                <th class="text-end">
-                                    {{ request.payments.remainingAmount | decimal }}
-                                </th>
-                            </tr>
-                        {% endif %}
                     </table>
                 </div>
             </div>
@@ -282,7 +259,7 @@
             <!-- BORDERED CONTAINER START -->
             <div class="row">
                 <div class="col-12">
-                    <div class="text-center">
+                    <div class="bordered-top bordered-bottom text-center">
                         <strong>Крај фискалног рачуна</strong>
                     </div>
                 </div>

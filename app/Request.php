@@ -7,7 +7,6 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use TaxCore\Entities\ConfigurationInterface;
-use TaxCore\Entities\MerchantInterface;
 use TaxCore\Entities\RequestBuilder;
 use TaxCore\Entities\RequestInterface;
 use TaxCore\Entities\ResponseBuilder;
@@ -27,10 +26,9 @@ final class Request extends RequestBuilder
     private Twig $twig;
 
     /**
-     * @param MerchantInterface $merchant
      * @param ConfigurationInterface $configuration
      */
-    public function __construct(MerchantInterface $merchant, ConfigurationInterface $configuration)
+    public function __construct(ConfigurationInterface $configuration)
     {
         parent::__construct($configuration);
         $this->twig = new Twig();

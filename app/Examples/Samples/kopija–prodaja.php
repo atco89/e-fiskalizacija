@@ -7,12 +7,12 @@ use TaxCore\Entities\Enums\TransactionType;
 
 $sampleFileName = basename(__FILE__, '.php');
 return [
-    'invoiceType'              => InvoiceType::NORMAL,
+    'invoiceType'              => InvoiceType::COPY,
     'transactionType'          => TransactionType::SALE,
     'buyerId'                  => null,
     'buyerCostCenterId'        => null,
-    'referentDocumentNumber'   => null,
-    'referentDocumentDateTime' => null,
+    'referentDocumentNumber'   => $_SESSION['promet–prodaja']['refDocumentNumber'],
+    'referentDocumentDateTime' => unserialize($_SESSION['promet–prodaja']['refDocumentDateTime']),
     'items'                    => [
         [
             'gtin'      => '9002490100070',

@@ -77,11 +77,12 @@ final class RequestBuilder implements RequestInterface
     }
 
     /**
-     * @return DateTime
+     * @return string
      */
-    public function issueDateTime(): DateTime
+    public function invoiceNumber(): string
     {
-        return $this->issueDateTime;
+        $invoiceNumber = new InvoiceNumber($this->invoiceType(), $this->transactionType(), $this->issueDateTime());
+        return $invoiceNumber->get();
     }
 
     /**
@@ -101,12 +102,11 @@ final class RequestBuilder implements RequestInterface
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
-    public function invoiceNumber(): string
+    public function issueDateTime(): DateTime
     {
-        $invoiceNumber = new InvoiceNumber($this->invoiceType(), $this->transactionType(), $this->issueDateTime());
-        return $invoiceNumber->get();
+        return $this->issueDateTime;
     }
 
     /**
@@ -147,7 +147,9 @@ final class RequestBuilder implements RequestInterface
      */
     public function referentDocumentDateTime(): DateTime|null
     {
-        return new DateTime($this->request['referentDocumentDateTime']);
+        return empty($this->request['referentDocumentDateTime'])
+            ? null
+            : $this->request['referentDocumentDateTime'];
     }
 
     /**
@@ -155,7 +157,7 @@ final class RequestBuilder implements RequestInterface
      */
     public function payments(): PaymentInterface
     {
-        return new Payment($this->request['payment'], $this->items());
+        return new Payment($this->request['payment'], $this->request['advanceAccount'], $this->items());
     }
 
     /**
