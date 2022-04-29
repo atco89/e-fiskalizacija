@@ -172,9 +172,11 @@
                                 <th class="text-start">Плаћено авансом:</th>
                                 <th class="text-end">{{ request.payments.receivedAmount | decimal }}</th>
                             </tr>
+                        {% endif %}
+                        {% if request.payments.receivedTax is not empty %}
                             <tr>
                                 <th class="text-start">ПДВ на аванс:</th>
-                                <th class="text-end">{{ request.payments.receivedTax | default('0.00') | decimal }}</th>
+                                <th class="text-end">{{ request.payments.receivedTax | decimal }}</th>
                             </tr>
                         {% endif %}
                         {% for payment in request.payments.all %}
