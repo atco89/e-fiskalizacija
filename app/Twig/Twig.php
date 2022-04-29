@@ -21,9 +21,13 @@ final class Twig
     public function __construct()
     {
         $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../../resources/views'));
+        $this->environment->addFilter(new TwigFilter('base64_encode',
+            function (string|null $image): string {
+                return base64_encode($image);
+            }
+        ));
         $this->environment->addFilter(new TwigFilter('image64',
-            function (string|null $image, bool $encode, string $type): string {
-                $encodedImage = $encode ? base64_encode($image) : $image;
+            function (string|null $encodedImage, string $type): string {
                 return implode(', ', ["data:image/$type;base64", $encodedImage]);
             }
         ));
