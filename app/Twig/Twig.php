@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace TaxCore\Twig;
 
-use TaxCore\Entities\MerchantInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
@@ -17,16 +16,23 @@ final class Twig
     private Environment $environment;
 
     /**
-     * @param MerchantInterface $merchant
+     * @construct
      */
-    public function __construct(MerchantInterface $merchant)
+    public function __construct()
     {
         $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../../resources/views'));
-        $this->environment->addGlobal('merchantLogPath', base64_encode(file_get_contents($merchant->logoPath())));
-        $this->environment->addFilter(new TwigFilter('decimal', function (string|null $number, int $precision = 2) {
-            $formattedNumber = empty($number) ? 0.00 : floatval($number);
-            return number_format($formattedNumber, $precision, ',', '.');
-        }));
+        $this->environment->addFilter(new TwigFilter('image64',
+            function (string|null $image, bool $encode, string $type): string {
+                $encodedImage = $encode ? base64_encode($image) : $image;
+                return implode(', ', ["data:image/$type;base64", $encodedImage]);
+            }
+        ));
+        $this->environment->addFilter(new TwigFilter('decimal',
+            function (string|null $number, int $precision = 2): string {
+                $formattedNumber = empty($number) ? 0.00 : floatval($number);
+                return number_format($formattedNumber, $precision, ',', '.');
+            }
+        ));
     }
 
     /**

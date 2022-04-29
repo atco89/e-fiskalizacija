@@ -33,7 +33,7 @@ final class Request extends RequestBuilder
     public function __construct(MerchantInterface $merchant, ConfigurationInterface $configuration)
     {
         parent::__construct($configuration);
-        $this->twig = new Twig($merchant);
+        $this->twig = new Twig();
     }
 
     /**

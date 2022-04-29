@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-12 text-center">
                     <img alt="merchant-log-path" class="img-fluid w-50 px-4 py-2"
-                         src="data:image/png;base64,{{ merchantLogPath }}" />
+                         src="{{ merchantLogPath|image64(true, 'png') }}" />
                 </div>
             </div>
             <!-- MERCHANT LOGO END -->
@@ -262,7 +262,7 @@
             <div class="row my-2">
                 <div class="col-12 text-center">
                     <img alt="verification-qr-code" id="verification-qr-code" class="img-fluid"
-                         src="data:image/gif;base64,{{ response.verificationQRCode }}" />
+                         src="{{ response.verificationQRCode|image64(false, 'gif') }}" />
                 </div>
             </div>
             <!-- QR CODE CONTAINER END -->
