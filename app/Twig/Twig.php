@@ -22,13 +22,13 @@ final class Twig
     {
         $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../../resources/views'));
         $this->environment->addFilter(new TwigFilter('base64_encode',
-            function (string|null $image): string {
-                return base64_encode($image);
+            function (string|null $imagePath): string {
+                return base64_encode(file_get_contents($imagePath));
             }
         ));
         $this->environment->addFilter(new TwigFilter('image64',
             function (string|null $encodedImage, string $type): string {
-                return implode(', ', ["data:image/$type;base64", $encodedImage]);
+                return implode(',', ["data:image/$type;base64", $encodedImage]);
             }
         ));
         $this->environment->addFilter(new TwigFilter('decimal',
