@@ -169,7 +169,6 @@
                         </tr>
                         {% set advancePayment = request.payments.advancePayment %}
                         {% if advancePayment is not null %}
-                            {% set advancePayment = request.payments.advancePayment %}
                             <tr>
                                 <th class="text-start">Плаћено авансом:</th>
                                 <th class="text-end">
@@ -189,11 +188,11 @@
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
-                        {% if advancePayment is not null %}
+                        {% if request.payments.remainingAmount > 0 %}
                             <tr>
                                 <th class="text-start">Преостало за плаћање:</th>
                                 <th class="text-end">
-                                    {{ advancePayment.remainingAmount | decimal }}
+                                    {{ request.payments.remainingAmount | decimal }}
                                 </th>
                             </tr>
                         {% endif %}

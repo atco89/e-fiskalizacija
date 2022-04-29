@@ -25,6 +25,7 @@ abstract class RequestBuilder
     /**
      * @param RequestInterface $request
      * @return array
+     * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
      */
     protected function requestOptions(RequestInterface $request): array
     {
@@ -109,6 +110,7 @@ abstract class RequestBuilder
     /**
      * @param RequestInterface $request
      * @return array
+     * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
      */
     private function options(RequestInterface $request): array
     {

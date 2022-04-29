@@ -15,9 +15,4 @@ interface AdvancePaymentInterface
      * @return float
      */
     public function receivedTax(): float;
-
-    /**
-     * @return float
-     */
-    public function remainingAmount(): float;
 }

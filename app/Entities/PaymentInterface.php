@@ -15,4 +15,9 @@ interface PaymentInterface
      * @return AdvancePaymentInterface|null
      */
     public function advancePayment(): AdvancePaymentInterface|null;
+
+    /**
+     * @return float
+     */
+    public function remainingAmount(): float;
 }
