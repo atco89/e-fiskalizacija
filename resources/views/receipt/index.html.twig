@@ -167,7 +167,8 @@
                             <td class="text-start">Укупан износ:</td>
                             <td class="text-end">{{ request.items.amount | decimal }}</td>
                         </tr>
-                        {% if request.payments.advancePayment is not null %}
+                        {% set advancePayment = request.payments.advancePayment %}
+                        {% if advancePayment is not null %}
                             {% set advancePayment = request.payments.advancePayment %}
                             <tr>
                                 <th class="text-start">Плаћено авансом:</th>
@@ -181,12 +182,7 @@
                                     {{ advancePayment.receivedTax | decimal }}
                                 </th>
                             </tr>
-                            <tr>
-                                <th class="text-start">Преостало за плаћање:</th>
-                                <th class="text-end">
-                                    {{ advancePayment.remainingAmount | decimal }}
-                                </th>
-                            </tr>
+
                         {% endif %}
                         {% for payment in request.payments.all %}
                             <tr>
@@ -194,6 +190,14 @@
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
+                        {% if advancePayment is not null %}
+                            <tr>
+                                <th class="text-start">Преостало за плаћање:</th>
+                                <th class="text-end">
+                                    {{ advancePayment.remainingAmount | decimal }}
+                                </th>
+                            </tr>
+                        {% endif %}
                     </table>
                 </div>
             </div>
