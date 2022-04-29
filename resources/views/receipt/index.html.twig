@@ -60,11 +60,9 @@
                                 {% elseif request.merchant.cashierDisplayType.value == 'NAME_SURNAME' %}
                                     {{ request.cashier.name ~ ' ' ~ request.cashier.surname }}
                                 {% elseif request.merchant.cashierDisplayType.value == 'FULL_NAME' %}
-                                    {{
-                                        request.cashier.id ~ ' - ' ~
-                                        request.cashier.name ~ ' ' ~
-                                        request.cashier.surname
-                                    }}
+                                    {{ request.cashier.id ~ ' - ' ~
+                                    request.cashier.name ~ ' ' ~
+                                    request.cashier.surname }}
                                 {% endif %}
                             </td>
                         </tr>
@@ -101,9 +99,7 @@
                         {% if request.referentDocumentDateTime is not empty %}
                             <tr>
                                 <td class="align-middle text-start">Реф. време:</td>
-                                <td class="align-middle text-end">{{
-                                    request.referentDocumentDateTime | date('d.m.Y H:i:s')
-                                }}</td>
+                                <td class="align-middle text-end">{{ request.referentDocumentDateTime | date('d.m.Y H:i:s') }}</td>
                             </tr>
                         {% endif %}
 
@@ -167,13 +163,13 @@
                             <td class="text-start">Укупан износ:</td>
                             <td class="text-end">{{ request.items.amount | decimal }}</td>
                         </tr>
-                        {% if request.payments.remainingAmount is not empty %}
+                        {% if request.payments.remainingAmount > 0 %}
                             <tr>
                                 <th class="text-start">Плаћено авансом:</th>
                                 <th class="text-end">{{ request.payments.receivedAmount | decimal }}</th>
                             </tr>
                         {% endif %}
-                        {% if request.payments.receivedTax is not empty %}
+                        {% if request.payments.receivedTax > 0 %}
                             <tr>
                                 <th class="text-start">ПДВ на аванс:</th>
                                 <th class="text-end">{{ request.payments.receivedTax | decimal }}</th>
@@ -185,7 +181,7 @@
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
-                        {% if request.payments.remainingAmount is not empty %}
+                        {% if request.payments.remainingAmount > 0 %}
                             <tr>
                                 <th class="text-start">Преостало за плаћање:</th>
                                 <th class="text-end">{{ request.payments.remainingAmount | decimal }}</th>
