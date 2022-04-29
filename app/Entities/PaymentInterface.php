@@ -12,17 +12,7 @@ interface PaymentInterface
     public function all(): array;
 
     /**
-     * @return float
+     * @return AdvancePaymentInterface|null
      */
-    public function receivedAmount(): float;
-
-    /**
-     * @return float
-     */
-    public function receivedTax(): float;
-
-    /**
-     * @return float
-     */
-    public function remainingAmount(): float;
+    public function advancePayment(): AdvancePaymentInterface|null;
 }
