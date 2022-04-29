@@ -7,8 +7,8 @@
             <!-- MERCHANT LOGO START -->
             <div class="row">
                 <div class="col-12 text-center">
-                    <img src="data:image/png;base64, {{ merchantLogPath }}" alt="merchant-log-path"
-                         class="img-fluid w-50 px-4 py-2">
+                    <img alt="merchant-log-path" class="img-fluid w-50 px-4 py-2"
+                         src="data:image/png;base64, {{ merchantLogPath }}" />
                 </div>
             </div>
             <!-- MERCHANT LOGO END -->
@@ -182,7 +182,6 @@
                                     {{ advancePayment.receivedTax | decimal }}
                                 </th>
                             </tr>
-
                         {% endif %}
                         {% for payment in request.payments.all %}
                             <tr>
@@ -262,8 +261,8 @@
             <!-- QR CODE CONTAINER START -->
             <div class="row my-2">
                 <div class="col-12 text-center">
-                    <img src="data:image/gif;base64, {{ response.verificationQRCode }}" alt="verification-qr-code"
-                         id="verification-qr-code" class="img-fluid"/>
+                    <img alt="verification-qr-code" id="verification-qr-code" class="img-fluid"
+                         src="data:image/gif;base64, {{ response.verificationQRCode }}" />
                 </div>
             </div>
             <!-- QR CODE CONTAINER END -->
