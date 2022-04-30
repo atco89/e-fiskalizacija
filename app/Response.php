@@ -73,16 +73,15 @@ final class Response
      */
     private function title(): string
     {
-        $invoiceType = $this->request->invoiceType();
-        $transactionType = $this->request->transactionType();
-        $type = $transactionType === TransactionType::SALE ? 'ПРОДАЈА' : 'РЕФУНДАЦИЈА';
-        return match ($invoiceType) {
-            InvoiceType::NORMAL   => "ПРОМЕТ - $type",
-            InvoiceType::PROFORMA => "ПРЕДРАЧУН - $type",
-            InvoiceType::COPY     => "КОПИЈА - $type",
-            InvoiceType::TRAINING => "ОБУКА - $type",
-            InvoiceType::ADVANCE  => "АВАНС - $type",
+        $invoiceType = match ($this->request->invoiceType()) {
+            InvoiceType::NORMAL   => 'ПРОМЕТ',
+            InvoiceType::PROFORMA => 'ПРЕДРАЧУН',
+            InvoiceType::COPY     => 'КОПИЈА',
+            InvoiceType::TRAINING => 'ОБУКА',
+            InvoiceType::ADVANCE  => 'АВАНС',
         };
+        $transactionType = $this->request->transactionType() === TransactionType::SALE ? 'ПРОДАЈА' : 'РЕФУНДАЦИЈА';
+        return implode(' - ', [$invoiceType, $transactionType]);
     }
 
     /**

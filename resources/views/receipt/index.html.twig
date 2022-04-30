@@ -15,10 +15,8 @@
 
             <!-- BORDERED CONTAINER START -->
             <div class="row">
-                <div class="col-12">
-                    <div class="bordered-top bordered-bottom text-center">
-                        <strong>Фискални рачун</strong>
-                    </div>
+                <div class="col-12 text-center">
+                    ============ <strong>Фискални рачун</strong> ============
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -83,11 +81,11 @@
                         {% endif %}
 
                         <tr>
-                            <td class="align-middle text-start">ПОС број:</td>
+                            <td class="align-middle text-start">ЕСИР број:</td>
                             <td class="align-middle text-end">{{ request.invoiceNumber }}</td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-start">ПОС време:</td>
+                            <td class="align-middle text-start">ЕСИР време:</td>
                             <td class="align-middle text-end">{{ request.issueDateTime | date('d.m.Y H:i:s') }}</td>
                         </tr>
 
@@ -113,11 +111,25 @@
             <!-- INVOICE INFO END -->
 
             <!-- BORDERED CONTAINER START -->
-            <div class="row">
+            <div class="row lh-1">
                 <div class="col-12">
-                    <div class="bordered-top bordered-bottom text-center">
-                        {{ documentTitle }}
-                    </div>
+                    =========================================
+                </div>
+            </div>
+            <!-- BORDERED CONTAINER END -->
+
+            <!-- DOCUMENT TITLE CONTAINER START -->
+            <div class="row lh-1">
+                <div class="col-12 text-center">
+                    {{ documentTitle }}
+                </div>
+            </div>
+            <!-- DOCUMENT TITLE CONTAINER END -->
+
+            <!-- BORDERED CONTAINER START -->
+            <div class="row lh-1">
+                <div class="col-12">
+                    =========================================
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -150,11 +162,9 @@
             <!-- ITEMS END -->
 
             <!-- BORDERED CONTAINER START -->
-            <div class="row">
+            <div class="row lh-1">
                 <div class="col-12">
-                    <div class="bordered-bottom">
-
-                    </div>
+                    =========================================
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -179,15 +189,14 @@
             <!-- ITEMS SUMMARY END -->
 
             <!-- BORDERED CONTAINER START -->
-            <div class="row">
+            <div class="row lh-1">
                 <div class="col-12">
-                    <div class="bordered-bottom">
-
-                    </div>
+                    =========================================
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
 
+            <!-- TAX DETAILS START -->
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
@@ -205,13 +214,24 @@
                                 <td class="text-end">{{ taxItem.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
-                        <tr class="bordered-top bordered-bottom">
+                        <tr>
+                            <td colspan="4 lh-1">
+                                =========================================
+                            </td>
+                        </tr>
+                        <tr>
                             <td colspan="3">Укупан износ ПДВ-а:</td>
                             <td class="text-end">{{ totalTax | decimal }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4 lh-1">
+                                =========================================
+                            </td>
                         </tr>
                     </table>
                 </div>
             </div>
+            <!-- TAX DETAILS END -->
 
             <!-- TAX CORE INVOICE DETAILS START -->
             <div class="row">
@@ -225,7 +245,7 @@
                             <td class="text-start">ПФР бр. рачуна:</td>
                             <td class="text-end">{{ response.invoiceNumber }}</td>
                         </tr>
-                        <tr class="bordered-bottom">
+                        <tr>
                             <td class="text-start">Бројач рачуна:</td>
                             <td class="text-end">{{ response.invoiceCounter }}</td>
                         </tr>
@@ -234,8 +254,16 @@
             </div>
             <!-- TAX CORE INVOICE DETAILS END -->
 
+            <!-- BORDERED CONTAINER START -->
+            <div class="row lh-1">
+                <div class="col-12">
+                    =========================================
+                </div>
+            </div>
+            <!-- BORDERED CONTAINER END -->
+
             <!-- QR CODE CONTAINER START -->
-            <div class="row my-2">
+            <div class="row my-1">
                 <div class="col-12 text-center">
                     <img src="{{ response.verificationQRCode | image64('gif') }}" alt="verification-qr-code"
                          id="verification-qr-code" class="img-fluid"/>
@@ -257,11 +285,9 @@
             {% endif %}
 
             <!-- BORDERED CONTAINER START -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="bordered-top bordered-bottom text-center">
-                        <strong>Крај фискалног рачуна</strong>
-                    </div>
+            <div class="row lh-1">
+                <div class="col-12 text-center">
+                    ========= <strong>Крај фискалног рачуна</strong> =========
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->

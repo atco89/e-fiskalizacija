@@ -81,8 +81,7 @@ final class RequestBuilder implements RequestInterface
      */
     public function invoiceNumber(): string
     {
-        $invoiceNumber = new InvoiceNumber($this->invoiceType(), $this->transactionType(), $this->issueDateTime());
-        return $invoiceNumber->get();
+        return '923/1.0';
     }
 
     /**
