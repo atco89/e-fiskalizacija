@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Entities;
+namespace TaxCore\Response;
 
 use DateTime;
 use Exception;
 use stdClass;
+use TaxCore\Entities\TaxItemInterface;
 
 final class ResponseBuilder
 {

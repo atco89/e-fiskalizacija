@@ -9,7 +9,12 @@ interface ConfigurationInterface
     /**
      * @return string
      */
-    public function apiBaseUrl(): string;
+    public function logoPath(): string;
+
+    /**
+     * @return string
+     */
+    public function apiUrl(): string;
 
     /**
      * @return string
@@ -30,4 +35,9 @@ interface ConfigurationInterface
      * @return string
      */
     public function password(): string;
+
+    /**
+     * @return string
+     */
+    public function externalSalesDataControllerNumber(): string;
 }

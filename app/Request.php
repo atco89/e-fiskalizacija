@@ -7,10 +7,10 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use TaxCore\Entities\ConfigurationInterface;
-use TaxCore\Entities\RequestBuilder;
 use TaxCore\Entities\RequestInterface;
-use TaxCore\Entities\ResponseBuilder;
 use TaxCore\Exceptions\TaxCoreRequestException;
+use TaxCore\Request\RequestBuilder;
+use TaxCore\Response\ResponseBuilder;
 use TaxCore\Twig\Twig;
 use Throwable;
 use Twig\Error\LoaderError;
@@ -43,7 +43,7 @@ final class Request extends RequestBuilder
     {
         try {
             $httpClient = new Client();
-            $httpResponse = $httpClient->post($this->configuration->apiBaseUrl(), $this->requestOptions($request));
+            $httpResponse = $httpClient->post($this->configuration->apiUrl(), $this->requestOptions($request));
             $response = new ResponseBuilder(json_decode($httpResponse->getBody()->getContents()));
             return $this->document($request, $response);
         } catch (LoaderError | RuntimeError | SyntaxError | GuzzleException | Exception | Throwable $e) {
@@ -61,6 +61,8 @@ final class Request extends RequestBuilder
      */
     private function document(RequestInterface $request, ResponseBuilder $response): Response
     {
-        return new Response($this->twig->getEnvironment(), $request, $response);
+        $configuration = $this->configuration;
+        $environment = $this->twig->getEnvironment();
+        return new Response($configuration, $environment, $request, $response);
     }
 }

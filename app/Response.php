@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace TaxCore;
 
+use TaxCore\Entities\ConfigurationInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\RequestInterface;
-use TaxCore\Entities\ResponseBuilder;
 use TaxCore\Entities\TaxItemInterface;
+use TaxCore\Response\ResponseBuilder;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -15,6 +16,11 @@ use Twig\Error\SyntaxError;
 
 final class Response
 {
+
+    /**
+     * @var ConfigurationInterface
+     */
+    private ConfigurationInterface $configuration;
 
     /**
      * @var Environment
@@ -37,6 +43,7 @@ final class Response
     private string $receipt;
 
     /**
+     * @param ConfigurationInterface $configuration
      * @param Environment $twig
      * @param RequestInterface $request
      * @param ResponseBuilder $response
@@ -44,8 +51,14 @@ final class Response
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function __construct(Environment $twig, RequestInterface $request, ResponseBuilder $response)
+    public function __construct(
+        ConfigurationInterface $configuration,
+        Environment            $twig,
+        RequestInterface       $request,
+        ResponseBuilder        $response
+    )
     {
+        $this->configuration = $configuration;
         $this->twig = $twig;
         $this->request = $request;
         $this->response = $response;
@@ -61,7 +74,8 @@ final class Response
     private function generateReceipt(): string
     {
         return $this->twig->render('./receipt/index.html.twig', [
-            'documentTitle' => $this->title(),
+            'configuration' => $this->configuration,
+            'title'         => $this->title(),
             'request'       => $this->request,
             'response'      => $this->response,
             'totalTax'      => $this->totalTax(),

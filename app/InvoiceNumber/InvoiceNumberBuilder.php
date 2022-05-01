@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Examples;
+namespace TaxCore\InvoiceNumber;
 
 use DateTime;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
 
-final class InvoiceNumber
+final class InvoiceNumberBuilder
 {
 
     /**

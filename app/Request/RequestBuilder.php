@@ -1,10 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Entities;
+namespace TaxCore\Request;
 
-use DateTime;
 use GuzzleHttp\RequestOptions;
+use TaxCore\Entities\BuyerInterface;
+use TaxCore\Entities\ConfigurationInterface;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
+use TaxCore\Entities\ReferentDocumentInterface;
+use TaxCore\Entities\RequestInterface;
 
 abstract class RequestBuilder
 {
@@ -43,13 +48,14 @@ abstract class RequestBuilder
     {
         return [
             $this->configuration->certPath(),
-            $this->configuration->password(),
+            $this->configuration->externalSalesDataControllerNumber(),
         ];
     }
 
     /**
      * @param string $requestId
      * @return array
+     * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
      */
     private function headers(string $requestId): array
     {
@@ -70,25 +76,43 @@ abstract class RequestBuilder
     {
         return [
             'dateAndTimeOfIssue'     => $request->issueDateTime()->format(DATE_ISO8601),
-            'cashier'                => $request->cashier()->id(),
-            'buyerId'                => $request->buyerId(),
-            'buyerCostCenterId'      => $request->buyerCostCenterId(),
+            'cashier'                => $request->cashier(),
+            'buyerId'                => $this->loadBuyerId($request),
+            'buyerCostCenterId'      => $this->loadBuyerCostCenterId($request),
             'invoiceType'            => $request->invoiceType()->value,
             'transactionType'        => $request->transactionType()->value,
-            'payment'                => $this->formatPayments($request->payments()->all()),
+            'payment'                => $this->buildPaymentTypes($request->payments()),
             'invoiceNumber'          => $request->invoiceNumber(),
-            'referentDocumentNumber' => $request->referentDocumentNumber(),
-            'referentDocumentDT'     => $this->buildReferentDocumentDateTime($request->referentDocumentDateTime()),
-            'options'                => $this->options($request),
-            'items'                  => $this->formatItems($request->items()->all()),
+            'referentDocumentNumber' => $this->loadReferentDocumentNumber($request),
+            'referentDocumentDT'     => $this->loadReferentDocumentDateTime($request),
+            'options'                => $this->buildOptions(),
+            'items'                  => $this->buildItems($request->items()),
         ];
     }
 
     /**
-     * @param array $payments
+     * @param RequestInterface $request
+     * @return string|null
+     */
+    private function loadBuyerId(RequestInterface $request): string|null
+    {
+        return $request instanceof BuyerInterface ? $request->buyerId() : null;
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @return string|null
+     */
+    private function loadBuyerCostCenterId(RequestInterface $request): string|null
+    {
+        return $request instanceof BuyerInterface ? $request->buyerCostCenterId() : null;
+    }
+
+    /**
+     * @param PaymentTypeInterface[] $payments
      * @return array
      */
-    private function formatPayments(array $payments): array
+    private function buildPaymentTypes(array $payments): array
     {
         return array_map(function (PaymentTypeInterface $payment): array {
             return [
@@ -99,24 +123,34 @@ abstract class RequestBuilder
     }
 
     /**
-     * @param DateTime|null $refDocumentDateTime
+     * @param RequestInterface $request
      * @return string|null
      */
-    private function buildReferentDocumentDateTime(?DateTime $refDocumentDateTime): ?string
+    private function loadReferentDocumentNumber(RequestInterface $request): string|null
     {
-        return $refDocumentDateTime instanceof DateTime ? $refDocumentDateTime->format(DATE_ISO8601) : null;
+        return $request instanceof ReferentDocumentInterface ? $request->referentDocumentNumber() : null;
     }
 
     /**
      * @param RequestInterface $request
+     * @return string|null
+     */
+    private function loadReferentDocumentDateTime(RequestInterface $request): string|null
+    {
+        return $request instanceof ReferentDocumentInterface
+            ? $request->referentDocumentDateTime()->format(DATE_ISO8601)
+            : null;
+    }
+
+    /**
      * @return array
      * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
      */
-    private function options(RequestInterface $request): array
+    private function buildOptions(): array
     {
         return [
-            'OmitQRCodeGen'             => intval($request->omitQRCodeGen()),
-            'OmitTextualRepresentation' => intval($request->omitTextualRepresentation()),
+            'OmitQRCodeGen'             => 0,
+            'OmitTextualRepresentation' => 1,
         ];
     }
 
@@ -124,7 +158,7 @@ abstract class RequestBuilder
      * @param array $items
      * @return array
      */
-    private function formatItems(array $items): array
+    private function buildItems(array $items): array
     {
         return array_map(function (ItemInterface $item): array {
             return [

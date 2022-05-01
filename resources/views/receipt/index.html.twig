@@ -7,7 +7,7 @@
             <!-- MERCHANT LOGO START -->
             <div class="row">
                 <div class="col-12 text-center">
-                    <img src="{{ request.merchant.logoPath | base64_encode | image64('png') }}" alt="merchant-log-path"
+                    <img src="{{ configuration.logoPath | base64_encode | image64('png') }}" alt="merchant-log-path"
                          class="img-fluid w-50 px-4 py-2"/>
                 </div>
             </div>
@@ -27,44 +27,28 @@
                     <table class="table table-sm table-borderless">
                         <tr>
                             <td class="align-middle text-start">ПИБ:</td>
-                            <td class="align-middle text-end">{{ request.merchant.tin }}</td>
+                            <td class="align-middle text-end">{{ response.tin }}</td>
                         </tr>
                         <tr>
                             <td class="align-middle text-start">Предузеће:</td>
-                            <td class="align-middle text-end">{{ request.merchant.name }}</td>
+                            <td class="align-middle text-end">{{ response.businessName }}</td>
                         </tr>
                         <tr>
                             <td class="align-middle text-start">Име:</td>
-                            <td class="align-middle text-end">{{ request.merchant.branchName }}</td>
+                            <td class="align-middle text-end">{{ response.locationName }}</td>
                         </tr>
                         <tr>
                             <td class="align-middle text-start">Адреса:</td>
-                            <td class="align-middle text-end">{{ request.merchant.address }}</td>
+                            <td class="align-middle text-end">{{ response.address }}</td>
                         </tr>
                         <tr>
                             <td class="align-middle text-start">Место:</td>
-                            <td class="align-middle text-end">{{ request.merchant.district }}</td>
+                            <td class="align-middle text-end">{{ response.district }}</td>
                         </tr>
 
                         <tr>
                             <td class="align-middle text-start">Касир:</td>
-                            <td class="align-middle text-end">
-                                {% if request.merchant.cashierDisplayType.value == 'IDENTIFIER' %}
-                                    {{ request.cashier.id }}
-                                {% elseif request.merchant.cashierDisplayType.value == 'NAME' %}
-                                    {{ request.cashier.name }}
-                                {% elseif request.merchant.cashierDisplayType.value == 'SURNAME' %}
-                                    {{ request.cashier.surname }}
-                                {% elseif request.merchant.cashierDisplayType.value == 'NAME_SURNAME' %}
-                                    {{ request.cashier.name ~ ' ' ~ request.cashier.surname }}
-                                {% elseif request.merchant.cashierDisplayType.value == 'FULL_NAME' %}
-                                    {{
-                                        request.cashier.id ~ ' - ' ~
-                                        request.cashier.name ~ ' ' ~
-                                        request.cashier.surname
-                                    }}
-                                {% endif %}
-                            </td>
+                            <td class="align-middle text-end">{{ request.cashier }}</td>
                         </tr>
 
                         {% if request.buyerId is not empty %}
@@ -73,6 +57,7 @@
                                 <td class="align-middle text-end">{{ request.buyerId }}</td>
                             </tr>
                         {% endif %}
+
                         {% if request.buyerCostCenterId is not empty %}
                             <tr>
                                 <td class="align-middle text-start">Опционо поље купца:</td>
@@ -82,12 +67,15 @@
 
                         <tr>
                             <td class="align-middle text-start">ЕСИР број:</td>
-                            <td class="align-middle text-end">{{ request.invoiceNumber }}</td>
+                            <td class="align-middle text-end">{{ configuration.externalSalesDataControllerNumber }}</td>
                         </tr>
-                        <tr>
-                            <td class="align-middle text-start">ЕСИР време:</td>
-                            <td class="align-middle text-end">{{ request.issueDateTime | date('d.m.Y H:i:s') }}</td>
-                        </tr>
+
+                        {% if request.invoiceType.value == 4 and request.transactionType.value == 0  %}
+                            <tr>
+                                <td class="align-middle text-start">ЕСИР време:</td>
+                                <td class="align-middle text-end">{{ request.issueDateTime | date('d.m.Y H:i:s') }}</td>
+                            </tr>
+                        {% endif %}
 
                         {% if request.referentDocumentNumber is not empty %}
                             <tr>
@@ -121,7 +109,7 @@
             <!-- DOCUMENT TITLE CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12 text-center">
-                    {{ documentTitle }}
+                    {{ title }}
                 </div>
             </div>
             <!-- DOCUMENT TITLE CONTAINER END -->
@@ -145,7 +133,7 @@
                             <td class="text-center">Кол.</td>
                             <td class="text-end">Укупно</td>
                         </tr>
-                        {% for item in request.items.all %}
+                        {% for item in request.items %}
                             <tr>
                                 <td colspan="4">{{ item.name }} ({{ item.labels | join(', ') }})</td>
                             </tr>
@@ -175,9 +163,9 @@
                     <table class="table table-sm table-borderless">
                         <tr>
                             <td class="text-start">Укупан износ:</td>
-                            <td class="text-end">{{ request.items.amount | decimal }}</td>
+                            <td class="text-end">{{ request.amount | decimal }}</td>
                         </tr>
-                        {% for payment in request.payments.all %}
+                        {% for payment in request.payments %}
                             <tr>
                                 <td class="text-start">{{ payment.name }}:</td>
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
