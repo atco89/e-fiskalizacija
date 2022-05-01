@@ -41,7 +41,7 @@ try {
         $_SESSION[$sample]['referentDocumentNumber'] = $response->invoiceNumber();
         $_SESSION[$sample]['referentDocumentDateTime'] = $response->sdcDateTime()->format(DATE_ISO8601);
 
-        $file = fopen(__DIR__ . "/../resources/output/$_SESSION[$sample]['referentDocumentNumber'].html", 'w');
+        $file = fopen(__DIR__ . "/../resources/output/{$_SESSION[$sample]['referentDocumentNumber']}.html", 'w');
         fwrite($file, $responseBuilder->getReceipt());
         fclose($file);
 

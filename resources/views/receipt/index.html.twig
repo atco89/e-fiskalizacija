@@ -259,14 +259,14 @@
             </div>
             <!-- QR CODE CONTAINER END -->
 
-            {% if request.invoiceType == 2 and request.transactionType == 1 %}
+            {% if request.invoiceType.value == 2 and request.transactionType.value == 1 %}
                 <!-- CUSTOMER SIGNATURE CONTAINER START -->
-                <div class="row mt-5 mb-2">
-                    <div class="col-6 text-center">
+                <div class="row mt-5 mb-3">
+                    <div class="col-4">
                         Потпис купца:
                     </div>
-                    <div class="col-6 text-center border-top-0 border-left-0 border-right-0">
-
+                    <div class="col-8">
+                        <div class="border-top-0 border-left-0 border-right-0 bordered-bottom h-100"></div>
                     </div>
                 </div>
                 <!-- CUSTOMER SIGNATURE CONTAINER END -->
