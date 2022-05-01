@@ -7,14 +7,47 @@ use TaxCore\Request;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+session_start();
+
+$samples = [
+    'promet–prodaja.php',
+    'promet–prodaja-sa-identifikacijom.php',
+
+    'avans–prodaja.php',
+    'avans–prodaja-sa-identifikacijom.php',
+
+    'kopija–prodaja.php',
+    'kopija–prodaja-sa-identifikacijom.php',
+
+    'avans–refundacija.php',
+    'avans–refundacija-sa-identifikacijom.php',
+
+    'kopija–refundacija.php',
+    'kopija–refundacija-sa-identifikacijom.php',
+
+    'promet–refundacija.php',
+    'promet–refundacija-sa-identifikacijom.php',
+];
+
 $configuration = new Configuration();
 try {
-    $requestBuilder = include __DIR__ . '/../app/Examples/Samples/avans–prodaja-sa-identifikacijom.php';
-
     $request = new Request($configuration);
-    $responseBuilder = $request->run($requestBuilder);
+    foreach ($samples as $sample) {
+        /** @noinspection PhpIncludeInspection */
+        $requestBuilder = include __DIR__ . "/../app/Examples/Samples/$sample";
+        $responseBuilder = $request->run($requestBuilder);
 
-    die($responseBuilder->getReceipt());
+        $response = $responseBuilder->getResponse();
+        $_SESSION[$sample]['referentDocumentNumber'] = $response->invoiceNumber();
+        $_SESSION[$sample]['referentDocumentDateTime'] = $response->sdcDateTime()->format(DATE_ISO8601);
+
+        $file = fopen(__DIR__ . "/../resources/output/$_SESSION[$sample]['referentDocumentNumber'].html", 'w');
+        fwrite($file, $responseBuilder->getReceipt());
+        fclose($file);
+
+        sleep(30);
+    }
+    session_destroy();
 } catch (TaxCoreRequestException | Error | Exception $e) {
     die($e->getMessage());
 }
