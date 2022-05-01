@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Request;
+namespace TaxCore\Request\Copy;
 
 use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Entities\Enums\TransactionType;
+use TaxCore\Request\Sale;
 
-final class AdvanceSale extends CommonRequest
+final class CopySale extends Sale
 {
 
     /**
@@ -24,14 +24,6 @@ final class AdvanceSale extends CommonRequest
      */
     public function invoiceType(): InvoiceType
     {
-        return InvoiceType::ADVANCE;
-    }
-
-    /**
-     * @return TransactionType
-     */
-    public function transactionType(): TransactionType
-    {
-        return TransactionType::SALE;
+        return InvoiceType::COPY;
     }
 }

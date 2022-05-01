@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Request;
+namespace TaxCore\Request\Copy;
 
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Entities\Enums\TransactionType;
+use TaxCore\Request\Sale;
 
-final class AdvanceSaleCustomerIdentified extends CommonRequest implements BuyerInterface
+final class CopySaleCustomer extends Sale implements BuyerInterface
 {
 
     /**
@@ -28,22 +28,6 @@ final class AdvanceSaleCustomerIdentified extends CommonRequest implements Buyer
     }
 
     /**
-     * @return InvoiceType
-     */
-    public function invoiceType(): InvoiceType
-    {
-        return InvoiceType::ADVANCE;
-    }
-
-    /**
-     * @return TransactionType
-     */
-    public function transactionType(): TransactionType
-    {
-        return TransactionType::SALE;
-    }
-
-    /**
      * @return string
      */
     public function buyerId(): string
@@ -57,5 +41,13 @@ final class AdvanceSaleCustomerIdentified extends CommonRequest implements Buyer
     public function buyerCostCenterId(): string|null
     {
         return $this->buyer['buyerCostCenterId'];
+    }
+
+    /**
+     * @return InvoiceType
+     */
+    public function invoiceType(): InvoiceType
+    {
+        return InvoiceType::COPY;
     }
 }

@@ -26,7 +26,7 @@ abstract class CommonRequest implements RequestInterface
     /**
      * @var PaymentTypeInterface[]
      */
-    private array $payments;
+    private array $payment;
 
     /**
      * @var DateTime
@@ -47,7 +47,7 @@ abstract class CommonRequest implements RequestInterface
     {
         $this->cashier = $cashier;
         $this->items = $items;
-        $this->payments = $payment;
+        $this->payment = $payment;
         $this->issueDateTime = new DateTime();
         $this->requestId = Uuid::uuid4()->toString();
     }
@@ -94,7 +94,7 @@ abstract class CommonRequest implements RequestInterface
      */
     final public function payments(): array
     {
-        return $this->payments;
+        return $this->payment;
     }
 
     /**

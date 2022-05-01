@@ -1,12 +1,10 @@
 <?php
-declare(strict_types=1);
 
 namespace TaxCore\Request;
 
-use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
 
-final class NormalSale extends CommonRequest
+abstract class Sale extends CommonRequest
 {
 
     /**
@@ -17,14 +15,6 @@ final class NormalSale extends CommonRequest
     public function __construct(string $cashier, array $items, array $payment)
     {
         parent::__construct($cashier, $items, $payment);
-    }
-
-    /**
-     * @return InvoiceType
-     */
-    public function invoiceType(): InvoiceType
-    {
-        return InvoiceType::NORMAL;
     }
 
     /**
