@@ -19,14 +19,14 @@ $samples = [
     'kopija–prodaja.php',
     'kopija–prodaja-sa-identifikacijom.php',
 
+    'promet–refundacija.php',
+    'promet–refundacija-sa-identifikacijom.php',
+
     'avans–refundacija.php',
     'avans–refundacija-sa-identifikacijom.php',
 
     'kopija–refundacija.php',
     'kopija–refundacija-sa-identifikacijom.php',
-
-    'promet–refundacija.php',
-    'promet–refundacija-sa-identifikacijom.php',
 ];
 
 $configuration = new Configuration();
