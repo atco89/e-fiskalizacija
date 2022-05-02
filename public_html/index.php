@@ -10,7 +10,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $configuration = new Configuration();
 try {
     $request = new Request($configuration);
-    $requestBuilder = include __DIR__ . "/../app/Examples/Samples/promet–prodaja.php";
+    $requestBuilder = include __DIR__ . "/../app/Examples/Samples/avans–prodaja-sa-identifikacijom.php";
     $responseBuilder = $request->run($requestBuilder);
     die($responseBuilder->getReceipt());
 } catch (TaxCoreRequestException | Error | Exception $e) {
