@@ -23,7 +23,7 @@ final class Twig
     {
         $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../../resources/views'));
 
-        $this->environment->addFilter(new TwigFilter('base64_encode',
+        $this->environment->addFilter(new TwigFilter('base64Encode',
             function (string|null $imagePath): string {
                 return base64_encode(file_get_contents($imagePath));
             }
@@ -54,7 +54,7 @@ final class Twig
             }
         ));
 
-        $this->environment->addFilter(new TwigFilter('sumTax',
+        $this->environment->addFilter(new TwigFilter('sumValueAddedTaxAmount',
             function (array $items): float {
                 return array_reduce($items, function (float|null $carry, TaxItemInterface $item): float {
                     $carry += $item->amount();

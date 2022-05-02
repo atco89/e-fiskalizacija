@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace TaxCore;
 
 use TaxCore\Entities\ConfigurationInterface;
+use TaxCore\Entities\CustomerSignatureInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\RequestInterface;
@@ -73,10 +74,11 @@ final class Response
     private function generateReceipt(): string
     {
         return $this->twig->render('./receipt/index.html.twig', [
-            'configuration' => $this->configuration,
-            'title'         => $this->title(),
-            'request'       => $this->request,
-            'response'      => $this->response,
+            'configuration'               => $this->configuration,
+            'title'                       => $this->title(),
+            'request'                     => $this->request,
+            'response'                    => $this->response,
+            'instanceOfCustomerSignature' => $this->request instanceof CustomerSignatureInterface,
         ]);
     }
 
