@@ -1,16 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace TaxCore\Request;
 
 use TaxCore\Entities\Enums\TransactionType;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 
-abstract class Sale extends CommonRequest
+abstract class Sale extends RequestInterfaceImpl
 {
 
     /**
      * @param string $cashier
-     * @param array $items
-     * @param array $payment
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      */
     public function __construct(string $cashier, array $items, array $payment)
     {

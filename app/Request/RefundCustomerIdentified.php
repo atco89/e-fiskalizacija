@@ -1,17 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Request\AdvanceSale;
+namespace TaxCore\Request;
 
 use TaxCore\Entities\BuyerInterface;
-use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
-use TaxCore\Request\RefundCustomerIdentified;
 
-final class AdvanceSaleCustomerRefund extends RefundCustomerIdentified
+abstract class RefundCustomerIdentified extends Refund implements BuyerInterface
 {
+
+    /**
+     * @var BuyerInterface
+     */
+    protected BuyerInterface $buyer;
 
     /**
      * @param string $cashier
@@ -28,14 +31,23 @@ final class AdvanceSaleCustomerRefund extends RefundCustomerIdentified
         BuyerInterface            $buyer
     )
     {
-        parent::__construct($cashier, $items, $payment, $document, $buyer);
+        parent::__construct($cashier, $items, $payment, $document);
+        $this->buyer = $buyer;
     }
 
     /**
-     * @return InvoiceType
+     * @return string
      */
-    public function invoiceType(): InvoiceType
+    final public function buyerId(): string
     {
-        return InvoiceType::ADVANCE;
+        return $this->buyer->buyerId();
+    }
+
+    /**
+     * @return string|null
+     */
+    final public function buyerCostCenterId(): string|null
+    {
+        return $this->buyer->buyerCostCenterId();
     }
 }

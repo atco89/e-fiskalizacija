@@ -5,43 +5,30 @@ namespace TaxCore\Request\Copy;
 
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Request\Refund;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
+use TaxCore\Entities\ReferentDocumentInterface;
+use TaxCore\Request\RefundCustomerIdentified;
 
-final class CopyRefundCustomer extends Refund implements BuyerInterface
+final class CopyRefundCustomer extends RefundCustomerIdentified
 {
 
     /**
-     * @var array
-     */
-    private array $buyer;
-
-    /**
      * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param array $referentDocument
-     * @param array $buyer
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
+     * @param ReferentDocumentInterface $document
+     * @param BuyerInterface $buyer
      */
-    public function __construct(string $cashier, array $items, array $payment, array $referentDocument, array $buyer)
+    public function __construct(
+        string                    $cashier,
+        array                     $items,
+        array                     $payment,
+        ReferentDocumentInterface $document,
+        BuyerInterface            $buyer
+    )
     {
-        parent::__construct($cashier, $items, $payment, $referentDocument);
-        $this->buyer = $buyer;
-    }
-
-    /**
-     * @return string
-     */
-    public function buyerId(): string
-    {
-        return $this->buyer['buyerId'];
-    }
-
-    /**
-     * @return string|null
-     */
-    public function buyerCostCenterId(): string|null
-    {
-        return $this->buyer['buyerCostCenterId'];
+        parent::__construct($cashier, $items, $payment, $document, $buyer);
     }
 
     /**

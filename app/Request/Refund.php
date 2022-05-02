@@ -3,46 +3,30 @@ declare(strict_types=1);
 
 namespace TaxCore\Request;
 
-use DateTime;
-use Exception;
+use DateTimeInterface;
 use TaxCore\Entities\Enums\TransactionType;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
 
-abstract class Refund extends CommonRequest implements ReferentDocumentInterface
+abstract class Refund extends RequestInterfaceImpl implements ReferentDocumentInterface
 {
 
     /**
-     * @var array
+     * @var ReferentDocumentInterface
      */
-    protected array $referentDocument;
+    protected ReferentDocumentInterface $document;
 
     /**
      * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param array $referentDocument
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
+     * @param ReferentDocumentInterface $document
      */
-    public function __construct(string $cashier, array $items, array $payment, array $referentDocument)
+    public function __construct(string $cashier, array $items, array $payment, ReferentDocumentInterface $document)
     {
         parent::__construct($cashier, $items, $payment);
-        $this->referentDocument = $referentDocument;
-    }
-
-    /**
-     * @return string
-     */
-    final public function referentDocumentNumber(): string
-    {
-        return $this->referentDocument['referentDocumentNumber'];
-    }
-
-    /**
-     * @return DateTime
-     * @throws Exception
-     */
-    final public function referentDocumentDateTime(): DateTime
-    {
-        return new DateTime($this->referentDocument['referentDocumentDateTime']);
+        $this->document = $document;
     }
 
     /**
@@ -51,5 +35,21 @@ abstract class Refund extends CommonRequest implements ReferentDocumentInterface
     final public function transactionType(): TransactionType
     {
         return TransactionType::REFUND;
+    }
+
+    /**
+     * @return string
+     */
+    final public function referentDocumentNumber(): string
+    {
+        return $this->document->referentDocumentNumber();
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    final public function referentDocumentDateTime(): DateTimeInterface
+    {
+        return $this->document->referentDocumentDateTime();
     }
 }

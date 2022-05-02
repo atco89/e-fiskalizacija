@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace TaxCore\Request;
 
 use DateTime;
+use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\RequestInterface;
 use TaxCore\InvoiceNumber\InvoiceNumberBuilder;
 
-abstract class CommonRequest implements RequestInterface
+abstract class RequestInterfaceImpl implements RequestInterface
 {
 
     /**
@@ -29,9 +30,9 @@ abstract class CommonRequest implements RequestInterface
     private array $payment;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
-    private DateTime $issueDateTime;
+    private DateTimeInterface $issueDateTime;
 
     /**
      * @var string
@@ -48,8 +49,24 @@ abstract class CommonRequest implements RequestInterface
         $this->cashier = $cashier;
         $this->items = $items;
         $this->payment = $payment;
-        $this->issueDateTime = new DateTime();
-        $this->requestId = Uuid::uuid4()->toString();
+        $this->issueDateTime = $this->generateIssueDateTime();
+        $this->requestId = $this->generateRequestId();
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    private function generateIssueDateTime(): DateTimeInterface
+    {
+        return new DateTime();
+    }
+
+    /**
+     * @return string
+     */
+    private function generateRequestId(): string
+    {
+        return Uuid::uuid4()->toString();
     }
 
     /**
@@ -66,9 +83,9 @@ abstract class CommonRequest implements RequestInterface
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
-    final public function issueDateTime(): DateTime
+    final public function issueDateTime(): DateTimeInterface
     {
         return $this->issueDateTime;
     }

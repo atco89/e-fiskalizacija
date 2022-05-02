@@ -9,7 +9,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use TaxCore\Entities\ConfigurationInterface;
 use TaxCore\Entities\RequestInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
-use TaxCore\Request\RequestBuilder;
 use TaxCore\Response\ResponseBuilder;
 use TaxCore\Twig\Twig;
 use Throwable;

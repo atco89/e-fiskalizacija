@@ -5,42 +5,22 @@ namespace TaxCore\Request\AdvanceSale;
 
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Request\Sale;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
+use TaxCore\Request\SaleCustomerIdentified;
 
-final class AdvanceSaleCustomer extends Sale implements BuyerInterface
+final class AdvanceSaleCustomer extends SaleCustomerIdentified
 {
 
     /**
-     * @var array
-     */
-    private array $buyer;
-
-    /**
      * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param array $buyer
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
+     * @param BuyerInterface $buyer
      */
-    public function __construct(string $cashier, array $items, array $payment, array $buyer)
+    public function __construct(string $cashier, array $items, array $payment, BuyerInterface $buyer)
     {
-        parent::__construct($cashier, $items, $payment);
-        $this->buyer = $buyer;
-    }
-
-    /**
-     * @return string
-     */
-    public function buyerId(): string
-    {
-        return $this->buyer['buyerId'];
-    }
-
-    /**
-     * @return string|null
-     */
-    public function buyerCostCenterId(): string|null
-    {
-        return $this->buyer['buyerCostCenterId'];
+        parent::__construct($cashier, $items, $payment, $buyer);
     }
 
     /**

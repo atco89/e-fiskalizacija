@@ -3,54 +3,55 @@ declare(strict_types=1);
 
 namespace TaxCore\Request\Copy;
 
-use DateTime;
-use Exception;
+use DateTimeInterface;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Enums\InvoiceType;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
-use TaxCore\Request\Sale;
+use TaxCore\Request\SaleCustomerIdentified;
 
-final class CopySaleCustomer extends Sale implements BuyerInterface, ReferentDocumentInterface
+final class CopySaleCustomer extends SaleCustomerIdentified implements ReferentDocumentInterface
 {
 
     /**
      * @var array
      */
-    private array $buyer;
-
-    /**
-     * @var array
-     */
-    private array $referentDocument;
+    private ReferentDocumentInterface $referentDocument;
 
     /**
      * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param array $buyer
-     * @param array $referentDocument
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
+     * @param BuyerInterface $buyer
+     * @param ReferentDocumentInterface $referentDocument
      */
-    public function __construct(string $cashier, array $items, array $payment, array $buyer, array $referentDocument)
+    public function __construct(
+        string                    $cashier,
+        array                     $items,
+        array                     $payment,
+        BuyerInterface            $buyer,
+        ReferentDocumentInterface $referentDocument
+    )
     {
-        parent::__construct($cashier, $items, $payment);
-        $this->buyer = $buyer;
+        parent::__construct($cashier, $items, $payment, $buyer);
         $this->referentDocument = $referentDocument;
     }
 
     /**
      * @return string
      */
-    public function buyerId(): string
+    public function referentDocumentNumber(): string
     {
-        return $this->buyer['buyerId'];
+        return $this->referentDocument->referentDocumentNumber();
     }
 
     /**
-     * @return string|null
+     * @return DateTimeInterface
      */
-    public function buyerCostCenterId(): string|null
+    public function referentDocumentDateTime(): DateTimeInterface
     {
-        return $this->buyer['buyerCostCenterId'];
+        return $this->referentDocument->referentDocumentDateTime();
     }
 
     /**
@@ -59,22 +60,5 @@ final class CopySaleCustomer extends Sale implements BuyerInterface, ReferentDoc
     public function invoiceType(): InvoiceType
     {
         return InvoiceType::COPY;
-    }
-
-    /**
-     * @return string
-     */
-    public function referentDocumentNumber(): string
-    {
-        return $this->referentDocument['referentDocumentNumber'];
-    }
-
-    /**
-     * @return DateTime
-     * @throws Exception
-     */
-    public function referentDocumentDateTime(): DateTime
-    {
-        return new DateTime($this->referentDocument['referentDocumentDateTime']);
     }
 }

@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Request;
+namespace TaxCore;
 
+use DateTimeInterface;
 use GuzzleHttp\RequestOptions;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\ConfigurationInterface;
@@ -13,6 +14,11 @@ use TaxCore\Entities\RequestInterface;
 
 abstract class RequestBuilder
 {
+
+    /**
+     * @const string
+     */
+    const DATE_TIME_FORMAT = DateTimeInterface::ISO8601;
 
     /**
      * @var ConfigurationInterface
@@ -75,16 +81,16 @@ abstract class RequestBuilder
     private function requestBody(RequestInterface $request): array
     {
         return [
-            'dateAndTimeOfIssue'     => $request->issueDateTime()->format(DATE_ISO8601),
+            'dateAndTimeOfIssue'     => $request->issueDateTime()->format(self::DATE_TIME_FORMAT),
+            'invoiceType'            => $request->invoiceType()->value,
+            'transactionType'        => $request->transactionType()->value,
+            'invoiceNumber'          => $request->invoiceNumber(),
             'cashier'                => $request->cashier(),
             'buyerId'                => $this->loadBuyerId($request),
             'buyerCostCenterId'      => $this->loadBuyerCostCenterId($request),
-            'invoiceType'            => $request->invoiceType()->value,
-            'transactionType'        => $request->transactionType()->value,
-            'payment'                => $this->buildPaymentTypes($request->payments()),
-            'invoiceNumber'          => $request->invoiceNumber(),
             'referentDocumentNumber' => $this->loadReferentDocumentNumber($request),
             'referentDocumentDT'     => $this->loadReferentDocumentDateTime($request),
+            'payment'                => $this->buildPayment($request->payments()),
             'options'                => $this->buildOptions(),
             'items'                  => $this->buildItems($request->items()),
         ];
@@ -109,20 +115,6 @@ abstract class RequestBuilder
     }
 
     /**
-     * @param PaymentTypeInterface[] $payments
-     * @return array
-     */
-    private function buildPaymentTypes(array $payments): array
-    {
-        return array_map(function (PaymentTypeInterface $payment): array {
-            return [
-                'paymentType' => $payment->type(),
-                'amount'      => $payment->amount(),
-            ];
-        }, $payments);
-    }
-
-    /**
      * @param RequestInterface $request
      * @return string|null
      */
@@ -138,8 +130,22 @@ abstract class RequestBuilder
     private function loadReferentDocumentDateTime(RequestInterface $request): string|null
     {
         return $request instanceof ReferentDocumentInterface
-            ? $request->referentDocumentDateTime()->format(DATE_ISO8601)
+            ? $request->referentDocumentDateTime()->format(self::DATE_TIME_FORMAT)
             : null;
+    }
+
+    /**
+     * @param PaymentTypeInterface[] $payments
+     * @return array
+     */
+    private function buildPayment(array $payments): array
+    {
+        return array_map(function (PaymentTypeInterface $payment): array {
+            return [
+                'paymentType' => $payment->type(),
+                'amount'      => $payment->amount(),
+            ];
+        }, $payments);
     }
 
     /**

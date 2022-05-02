@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-use DateTime;
+use DateTimeInterface;
 
 interface ReferentDocumentInterface
 {
@@ -14,7 +14,7 @@ interface ReferentDocumentInterface
     public function referentDocumentNumber(): string;
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
-    public function referentDocumentDateTime(): DateTime;
+    public function referentDocumentDateTime(): DateTimeInterface;
 }

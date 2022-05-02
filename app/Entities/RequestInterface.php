@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-use DateTime;
+use DateTimeInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
 
@@ -26,9 +26,9 @@ interface RequestInterface
     public function transactionType(): TransactionType;
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
-    public function issueDateTime(): DateTime;
+    public function issueDateTime(): DateTimeInterface;
 
     /**
      * @return string

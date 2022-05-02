@@ -9,5 +9,10 @@ interface PrintInterface
     /**
      * @return string
      */
-    public function get(): string;
+    public function title(): string;
+
+    /**
+     * @return string
+     */
+    public function receipt(): string;
 }

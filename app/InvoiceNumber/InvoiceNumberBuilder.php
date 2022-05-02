@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\InvoiceNumber;
 
-use DateTime;
+use DateTimeInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
 
@@ -26,16 +26,20 @@ final class InvoiceNumberBuilder
     private TransactionType $transactionType;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
-    private DateTime $issueDateTime;
+    private DateTimeInterface $issueDateTime;
 
     /**
      * @param InvoiceType $invoiceType
      * @param TransactionType $transactionType
-     * @param DateTime $issueDateTime
+     * @param DateTimeInterface $issueDateTime
      */
-    public function __construct(InvoiceType $invoiceType, TransactionType $transactionType, DateTime $issueDateTime)
+    public function __construct(
+        InvoiceType       $invoiceType,
+        TransactionType   $transactionType,
+        DateTimeInterface $issueDateTime
+    )
     {
         $this->invoiceType = $invoiceType;
         $this->transactionType = $transactionType;

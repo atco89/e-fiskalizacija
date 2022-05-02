@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace TaxCore\Response;
 
 use DateTime;
+use DateTimeInterface;
 use Exception;
 use stdClass;
 use TaxCore\Entities\TaxItemInterface;
@@ -41,10 +42,10 @@ final class ResponseBuilder
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      * @throws Exception
      */
-    public function sdcDateTime(): DateTime
+    public function sdcDateTime(): DateTimeInterface
     {
         return new DateTime($this->response->sdcDateTime);
     }
@@ -257,7 +258,7 @@ final class ResponseBuilder
     /**
      * @return string|null
      */
-    public function messages(): ?string
+    public function messages(): string|null
     {
         return $this->response->messages;
     }
