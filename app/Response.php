@@ -7,7 +7,6 @@ use TaxCore\Entities\ConfigurationInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\RequestInterface;
-use TaxCore\Entities\TaxItemInterface;
 use TaxCore\Response\ResponseBuilder;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -78,7 +77,6 @@ final class Response
             'title'         => $this->title(),
             'request'       => $this->request,
             'response'      => $this->response,
-            'totalTax'      => $this->totalTax(),
         ]);
     }
 
@@ -96,17 +94,6 @@ final class Response
         };
         $transactionType = $this->request->transactionType() === TransactionType::SALE ? 'ПРОДАЈА' : 'РЕФУНДАЦИЈА';
         return implode(' - ', [$invoiceType, $transactionType]);
-    }
-
-    /**
-     * @return float
-     */
-    private function totalTax(): float
-    {
-        return array_reduce($this->response->taxItems(), function (?float $carry, TaxItemInterface $tax): float {
-            $carry += $tax->amount();
-            return $carry;
-        });
     }
 
     /**

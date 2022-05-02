@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Twig;
 
+use TaxCore\Entities\TaxItemInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
@@ -50,6 +51,15 @@ final class Twig
             function (string|null $number, int $precision = 2): string {
                 $formattedNumber = empty($number) ? 0.00 : floatval($number);
                 return number_format($formattedNumber, $precision, ',', '.');
+            }
+        ));
+
+        $this->environment->addFilter(new TwigFilter('sumTax',
+            function (array $items): float {
+                return array_reduce($items, function (float|null $carry, TaxItemInterface $item): float {
+                    $carry += $item->amount();
+                    return $carry;
+                });
             }
         ));
     }
