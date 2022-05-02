@@ -8,8 +8,8 @@ $items = include __DIR__ . '/data/items.php';
 $payment = include __DIR__ . '/data/payment.php';
 $buyer = include __DIR__ . '/data/buyer.php';
 $referentDocument = [
-    'referentDocumentNumber'   => $_SESSION['promet–prodaja.php']['referentDocumentNumber'],
-    'referentDocumentDateTime' => $_SESSION['promet–prodaja.php']['referentDocumentDateTime']
+    'referentDocumentNumber'   => $_SESSION['promet–prodaja-sa-identifikacijom.php']['referentDocumentNumber'],
+    'referentDocumentDateTime' => $_SESSION['promet–prodaja-sa-identifikacijom.php']['referentDocumentDateTime']
 ];
 
 return new CopySaleCustomer($cashier, $items, $payment, $buyer, $referentDocument);
