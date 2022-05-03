@@ -12,13 +12,20 @@ final class AdvanceSaleRefund extends Refund
 
     /**
      * @param string $cashier
+     * @param string $invoiceNumber
      * @param array $items
      * @param array $payment
-     * @param ReferentDocumentInterface $document
+     * @param ReferentDocumentInterface $referentDocument
      */
-    public function __construct(string $cashier, array $items, array $payment, ReferentDocumentInterface $document)
+    public function __construct(
+        string                    $cashier,
+        string                    $invoiceNumber,
+        array                     $items,
+        array                     $payment,
+        ReferentDocumentInterface $referentDocument
+    )
     {
-        parent::__construct($cashier, $items, $payment, $document);
+        parent::__construct($cashier, $invoiceNumber, $items, $payment, $referentDocument);
     }
 
     /**

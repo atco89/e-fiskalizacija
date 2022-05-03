@@ -1,34 +1,34 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Request\Copy;
+namespace TaxCore\Request\AdvanceSale;
 
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Entities\ItemInterface;
-use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
 use TaxCore\Request\RefundCustomerIdentified;
 
-final class CopyRefundCustomer extends RefundCustomerIdentified
+final class AdvanceSaleRefundCustomerIdentified extends RefundCustomerIdentified
 {
 
     /**
      * @param string $cashier
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
-     * @param ReferentDocumentInterface $document
+     * @param string $invoiceNumber
+     * @param array $items
+     * @param array $payment
+     * @param ReferentDocumentInterface $referentDocument
      * @param BuyerInterface $buyer
      */
     public function __construct(
         string                    $cashier,
+        string                    $invoiceNumber,
         array                     $items,
         array                     $payment,
-        ReferentDocumentInterface $document,
+        ReferentDocumentInterface $referentDocument,
         BuyerInterface            $buyer
     )
     {
-        parent::__construct($cashier, $items, $payment, $document, $buyer);
+        parent::__construct($cashier, $invoiceNumber, $items, $payment, $referentDocument, $buyer);
     }
 
     /**
@@ -36,6 +36,6 @@ final class CopyRefundCustomer extends RefundCustomerIdentified
      */
     public function invoiceType(): InvoiceType
     {
-        return InvoiceType::COPY;
+        return InvoiceType::ADVANCE;
     }
 }

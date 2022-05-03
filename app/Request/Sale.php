@@ -7,23 +7,24 @@ use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
 
-abstract class Sale extends RequestInterfaceImpl
+abstract class Sale extends RequestBase
 {
 
     /**
      * @param string $cashier
+     * @param string $invoiceNumber
      * @param ItemInterface[] $items
      * @param PaymentTypeInterface[] $payment
      */
-    public function __construct(string $cashier, array $items, array $payment)
+    public function __construct(string $cashier, string $invoiceNumber, array $items, array $payment)
     {
-        parent::__construct($cashier, $items, $payment);
+        parent::__construct($cashier, $invoiceNumber, $items, $payment);
     }
 
     /**
      * @return TransactionType
      */
-    public function transactionType(): TransactionType
+    final public function transactionType(): TransactionType
     {
         return TransactionType::SALE;
     }

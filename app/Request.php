@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use TaxCore\Entities\ConfigurationInterface;
 use TaxCore\Entities\RequestInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
+use TaxCore\Response\Response;
 use TaxCore\Response\ResponseBuilder;
 use TaxCore\Twig\Twig;
 use Throwable;
@@ -35,16 +36,16 @@ final class Request extends RequestBuilder
 
     /**
      * @param RequestInterface $request
-     * @return Response
+     * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function run(RequestInterface $request): Response
+    public function run(RequestInterface $request): ResponseBuilder
     {
         try {
-            $httpClient = new Client();
-            $httpResponse = $httpClient->post($this->configuration->apiUrl(), $this->requestOptions($request));
-            $response = new ResponseBuilder(json_decode($httpResponse->getBody()->getContents()));
-            return $this->document($request, $response);
+            $client = new Client();
+            $clientResponse = $client->post($this->configuration->apiUrl(), $this->requestOptions($request));
+            $response = new Response(json_decode($clientResponse->getBody()->getContents()));
+            return $this->buildResponse($request, $response);
         } catch (LoaderError | RuntimeError | SyntaxError | GuzzleException | Exception | Throwable $e) {
             throw new TaxCoreRequestException($e->getMessage());
         }
@@ -52,16 +53,16 @@ final class Request extends RequestBuilder
 
     /**
      * @param RequestInterface $request
-     * @param ResponseBuilder $response
-     * @return Response
+     * @param Response $response
+     * @return ResponseBuilder
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    private function document(RequestInterface $request, ResponseBuilder $response): Response
+    private function buildResponse(RequestInterface $request, Response $response): ResponseBuilder
     {
         $configuration = $this->configuration;
         $environment = $this->twig->getEnvironment();
-        return new Response($configuration, $environment, $request, $response);
+        return new ResponseBuilder($configuration, $environment, $request, $response);
     }
 }

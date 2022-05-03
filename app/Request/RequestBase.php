@@ -9,15 +9,19 @@ use Ramsey\Uuid\Uuid;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\RequestInterface;
-use TaxCore\InvoiceNumber\InvoiceNumberBuilder;
 
-abstract class RequestInterfaceImpl implements RequestInterface
+abstract class RequestBase implements RequestInterface
 {
 
     /**
      * @var string
      */
     private string $cashier;
+
+    /**
+     * @var string
+     */
+    private string $invoiceNumber;
 
     /**
      * @var ItemInterface[]
@@ -41,12 +45,14 @@ abstract class RequestInterfaceImpl implements RequestInterface
 
     /**
      * @param string $cashier
+     * @param string $invoiceNumber
      * @param ItemInterface[] $items
      * @param PaymentTypeInterface[] $payment
      */
-    public function __construct(string $cashier, array $items, array $payment)
+    public function __construct(string $cashier, string $invoiceNumber, array $items, array $payment)
     {
         $this->cashier = $cashier;
+        $this->invoiceNumber = $invoiceNumber;
         $this->items = $items;
         $this->payment = $payment;
         $this->issueDateTime = $this->generateIssueDateTime();
@@ -74,12 +80,7 @@ abstract class RequestInterfaceImpl implements RequestInterface
      */
     final public function invoiceNumber(): string
     {
-        $invoiceNumberBuilder = new InvoiceNumberBuilder(
-            $this->invoiceType(),
-            $this->transactionType(),
-            $this->issueDateTime()
-        );
-        return $invoiceNumberBuilder->get();
+        return $this->invoiceNumber;
     }
 
     /**

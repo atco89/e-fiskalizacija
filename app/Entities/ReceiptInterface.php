@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-interface PrintInterface
+interface ReceiptInterface
 {
 
     /**

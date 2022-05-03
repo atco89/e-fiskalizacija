@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace TaxCore\Request\AdvanceSale;
 
 use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Entities\ItemInterface;
-use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Request\Sale;
 
 final class AdvanceSale extends Sale
@@ -13,12 +11,13 @@ final class AdvanceSale extends Sale
 
     /**
      * @param string $cashier
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
+     * @param string $invoiceNumber
+     * @param array $items
+     * @param array $payment
      */
-    public function __construct(string $cashier, array $items, array $payment)
+    public function __construct(string $cashier, string $invoiceNumber, array $items, array $payment)
     {
-        parent::__construct($cashier, $items, $payment);
+        parent::__construct($cashier, $invoiceNumber, $items, $payment);
     }
 
     /**
