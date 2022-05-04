@@ -209,7 +209,7 @@
                         </tr>
                         <tr>
                             <td colspan="3">Укупан износ ПДВ-а:</td>
-                            <td class="text-end">{{ response.taxItems | sumValueAddedTaxAmount | decimal }}</td>
+                            <td class="text-end">{{ response.taxItems | taxAmount | decimal }}</td>
                         </tr>
                         <tr>
                             <td colspan="4 lh-1">

@@ -54,7 +54,7 @@ final class Twig
             }
         ));
 
-        $this->environment->addFilter(new TwigFilter('sumValueAddedTaxAmount',
+        $this->environment->addFilter(new TwigFilter('taxAmount',
             function (array $items): float {
                 return array_reduce($items, function (float|null $carry, TaxItemInterface $item): float {
                     $carry += $item->amount();

@@ -6,9 +6,17 @@ namespace TaxCore;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\ConfigurationInterface;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
+use TaxCore\Entities\ReferentDocumentInterface;
 use TaxCore\Entities\RequestInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
+use TaxCore\Request\NormalSale\NormalSale;
+use TaxCore\Request\NormalSale\NormalSaleCustomerIdentified;
+use TaxCore\Request\NormalSale\NormalSaleRefund;
+use TaxCore\Request\NormalSale\NormalSaleRefundCustomerIdentified;
 use TaxCore\Response\Response;
 use TaxCore\Response\ResponseBuilder;
 use TaxCore\Twig\Twig;
@@ -35,11 +43,24 @@ final class Request extends RequestBuilder
     }
 
     /**
+     * @param string $cashier
+     * @param string $invoiceNumber
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSale(string $cashier, string $invoiceNumber, array $items, array $payment): ResponseBuilder
+    {
+        return $this->run(new NormalSale($cashier, $invoiceNumber, $items, $payment));
+    }
+
+    /**
      * @param RequestInterface $request
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function run(RequestInterface $request): ResponseBuilder
+    private function run(RequestInterface $request): ResponseBuilder
     {
         try {
             $client = new Client();
@@ -64,5 +85,80 @@ final class Request extends RequestBuilder
         $configuration = $this->configuration;
         $environment = $this->twig->getEnvironment();
         return new ResponseBuilder($configuration, $environment, $request, $response);
+    }
+
+    /**
+     * @param string $cashier
+     * @param string $invoiceNumber
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
+     * @param BuyerInterface $buyer
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSaleCustomerIdentified(
+        string         $cashier,
+        string         $invoiceNumber,
+        array          $items,
+        array          $payment,
+        BuyerInterface $buyer
+    ): ResponseBuilder
+    {
+        return $this->run(new NormalSaleCustomerIdentified(
+            $cashier,
+            $invoiceNumber,
+            $items,
+            $payment,
+            $buyer
+        ));
+    }
+
+    /**
+     * @param string $cashier
+     * @param string $invoiceNumber
+     * @param array $items
+     * @param array $payment
+     * @param ReferentDocumentInterface $referentDocument
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSaleRefund(
+        string                    $cashier,
+        string                    $invoiceNumber,
+        array                     $items,
+        array                     $payment,
+        ReferentDocumentInterface $referentDocument
+    ): ResponseBuilder
+    {
+        return $this->run(new NormalSaleRefund($cashier, $invoiceNumber, $items, $payment, $referentDocument));
+    }
+
+    /**
+     * @param string $cashier
+     * @param string $invoiceNumber
+     * @param array $items
+     * @param array $payment
+     * @param ReferentDocumentInterface $referentDocument
+     * @param BuyerInterface $buyer
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSaleRegund(
+        string                    $cashier,
+        string                    $invoiceNumber,
+        array                     $items,
+        array                     $payment,
+        ReferentDocumentInterface $referentDocument,
+        BuyerInterface            $buyer
+    ): ResponseBuilder
+    {
+        return $this->run(new NormalSaleRefundCustomerIdentified(
+            $cashier,
+            $invoiceNumber,
+            $items,
+            $payment,
+            $referentDocument,
+            $buyer
+        ));
     }
 }
