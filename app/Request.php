@@ -143,7 +143,7 @@ final class Request extends RequestBuilder
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function normalSaleRegund(
+    public function normalSaleRefundCustomerIdentified(
         string                    $cashier,
         string                    $invoiceNumber,
         array                     $items,
