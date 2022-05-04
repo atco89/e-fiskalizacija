@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-use DateTime;
+use DateTimeInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
 
@@ -11,14 +11,9 @@ interface RequestInterface
 {
 
     /**
-     * @return MerchantInterface
+     * @return string
      */
-    public function merchant(): MerchantInterface;
-
-    /**
-     * @return CashierInterface
-     */
-    public function cashier(): CashierInterface;
+    public function cashier(): string;
 
     /**
      * @return InvoiceType
@@ -31,9 +26,9 @@ interface RequestInterface
     public function transactionType(): TransactionType;
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
-    public function issueDateTime(): DateTime;
+    public function issueDateTime(): DateTimeInterface;
 
     /**
      * @return string
@@ -46,47 +41,17 @@ interface RequestInterface
     public function requestId(): string;
 
     /**
-     * @return string|null
+     * @return ItemInterface[]
      */
-    public function buyerId(): string|null;
+    public function items(): array;
 
     /**
-     * @return string|null
+     * @return PaymentTypeInterface[]
      */
-    public function buyerCostCenterId(): string|null;
-
-    /**
-     * @return string|null
-     */
-    public function referentDocumentNumber(): string|null;
-
-    /**
-     * @return DateTime|null
-     */
-    public function referentDocumentDateTime(): DateTime|null;
-
-    /**
-     * @return ItemsInterface
-     */
-    public function items(): ItemsInterface;
-
-    /**
-     * @return PaymentInterface
-     */
-    public function payments(): PaymentInterface;
+    public function payments(): array;
 
     /**
      * @return float
      */
     public function amount(): float;
-
-    /**
-     * @return bool
-     */
-    public function omitQRCodeGen(): bool;
-
-    /**
-     * @return bool
-     */
-    public function omitTextualRepresentation(): bool;
 }

@@ -7,18 +7,16 @@
             <!-- MERCHANT LOGO START -->
             <div class="row">
                 <div class="col-12 text-center">
-                    <img src="{{ request.merchant.logoPath | base64_encode | image64('png') }}" alt="merchant-log-path"
+                    <img src="{{ configuration.logoPath | base64Encode | image64('png') }}" alt="merchant-log-path"
                          class="img-fluid w-50 px-4 py-2"/>
                 </div>
             </div>
             <!-- MERCHANT LOGO END -->
 
             <!-- BORDERED CONTAINER START -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="bordered-top bordered-bottom text-center">
-                        <strong>Фискални рачун</strong>
-                    </div>
+            <div class="row lh-1">
+                <div class="col-12 text-center">
+                    {{ 'Фискални рачун' | delimiter | raw }}
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -29,44 +27,28 @@
                     <table class="table table-sm table-borderless">
                         <tr>
                             <td class="align-middle text-start">ПИБ:</td>
-                            <td class="align-middle text-end">{{ request.merchant.tin }}</td>
+                            <td class="align-middle text-end">{{ response.tin }}</td>
                         </tr>
                         <tr>
                             <td class="align-middle text-start">Предузеће:</td>
-                            <td class="align-middle text-end">{{ request.merchant.name }}</td>
+                            <td class="align-middle text-end">{{ response.businessName }}</td>
                         </tr>
                         <tr>
                             <td class="align-middle text-start">Име:</td>
-                            <td class="align-middle text-end">{{ request.merchant.branchName }}</td>
+                            <td class="align-middle text-end">{{ response.locationName }}</td>
                         </tr>
                         <tr>
                             <td class="align-middle text-start">Адреса:</td>
-                            <td class="align-middle text-end">{{ request.merchant.address }}</td>
+                            <td class="align-middle text-end">{{ response.address }}</td>
                         </tr>
                         <tr>
                             <td class="align-middle text-start">Место:</td>
-                            <td class="align-middle text-end">{{ request.merchant.district }}</td>
+                            <td class="align-middle text-end">{{ response.district }}</td>
                         </tr>
 
                         <tr>
                             <td class="align-middle text-start">Касир:</td>
-                            <td class="align-middle text-end">
-                                {% if request.merchant.cashierDisplayType.value == 'IDENTIFIER' %}
-                                    {{ request.cashier.id }}
-                                {% elseif request.merchant.cashierDisplayType.value == 'NAME' %}
-                                    {{ request.cashier.name }}
-                                {% elseif request.merchant.cashierDisplayType.value == 'SURNAME' %}
-                                    {{ request.cashier.surname }}
-                                {% elseif request.merchant.cashierDisplayType.value == 'NAME_SURNAME' %}
-                                    {{ request.cashier.name ~ ' ' ~ request.cashier.surname }}
-                                {% elseif request.merchant.cashierDisplayType.value == 'FULL_NAME' %}
-                                    {{
-                                        request.cashier.id ~ ' - ' ~
-                                        request.cashier.name ~ ' ' ~
-                                        request.cashier.surname
-                                    }}
-                                {% endif %}
-                            </td>
+                            <td class="align-middle text-end">{{ request.cashier }}</td>
                         </tr>
 
                         {% if request.buyerId is not empty %}
@@ -75,6 +57,7 @@
                                 <td class="align-middle text-end">{{ request.buyerId }}</td>
                             </tr>
                         {% endif %}
+
                         {% if request.buyerCostCenterId is not empty %}
                             <tr>
                                 <td class="align-middle text-start">Опционо поље купца:</td>
@@ -83,13 +66,16 @@
                         {% endif %}
 
                         <tr>
-                            <td class="align-middle text-start">ПОС број:</td>
-                            <td class="align-middle text-end">{{ request.invoiceNumber }}</td>
+                            <td class="align-middle text-start">ЕСИР број:</td>
+                            <td class="align-middle text-end">{{ configuration.externalSalesDataControllerNumber }}</td>
                         </tr>
-                        <tr>
-                            <td class="align-middle text-start">ПОС време:</td>
-                            <td class="align-middle text-end">{{ request.issueDateTime | date('d.m.Y H:i:s') }}</td>
-                        </tr>
+
+                        {% if request.invoiceType.value == 4 and request.transactionType.value == 0  %}
+                            <tr>
+                                <td class="align-middle text-start">ЕСИР време:</td>
+                                <td class="align-middle text-end">{{ request.issueDateTime | date('d.m.Y H:i:s') }}</td>
+                            </tr>
+                        {% endif %}
 
                         {% if request.referentDocumentNumber is not empty %}
                             <tr>
@@ -113,11 +99,25 @@
             <!-- INVOICE INFO END -->
 
             <!-- BORDERED CONTAINER START -->
-            <div class="row">
+            <div class="row lh-1">
                 <div class="col-12">
-                    <div class="bordered-top bordered-bottom text-center">
-                        {{ documentTitle }}
-                    </div>
+                    {{ '' | delimiter }}
+                </div>
+            </div>
+            <!-- BORDERED CONTAINER END -->
+
+            <!-- DOCUMENT TITLE CONTAINER START -->
+            <div class="row lh-1">
+                <div class="col-12 text-center">
+                    {{ title }}
+                </div>
+            </div>
+            <!-- DOCUMENT TITLE CONTAINER END -->
+
+            <!-- BORDERED CONTAINER START -->
+            <div class="row lh-1">
+                <div class="col-12">
+                    {{ '' | delimiter }}
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -133,7 +133,7 @@
                             <td class="text-center">Кол.</td>
                             <td class="text-end">Укупно</td>
                         </tr>
-                        {% for item in request.items.all %}
+                        {% for item in request.items %}
                             <tr>
                                 <td colspan="4">{{ item.name }} ({{ item.labels | join(', ') }})</td>
                             </tr>
@@ -150,11 +150,9 @@
             <!-- ITEMS END -->
 
             <!-- BORDERED CONTAINER START -->
-            <div class="row">
+            <div class="row lh-1">
                 <div class="col-12">
-                    <div class="bordered-bottom">
-
-                    </div>
+                    {{ '' | delimiter }}
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -165,52 +163,28 @@
                     <table class="table table-sm table-borderless">
                         <tr>
                             <td class="text-start">Укупан износ:</td>
-                            <td class="text-end">{{ request.items.amount | decimal }}</td>
+                            <td class="text-end">{{ request.amount | decimal }}</td>
                         </tr>
-                        {% set advancePayment = request.payments.advancePayment %}
-                        {% if advancePayment is not null %}
-                            <tr>
-                                <th class="text-start">Плаћено авансом:</th>
-                                <th class="text-end">
-                                    {{ advancePayment.receivedAmount | decimal }}
-                                </th>
-                            </tr>
-                            <tr>
-                                <th class="text-start">ПДВ на аванс:</th>
-                                <th class="text-end">
-                                    {{ advancePayment.receivedTax | decimal }}
-                                </th>
-                            </tr>
-                        {% endif %}
-                        {% for payment in request.payments.all %}
+                        {% for payment in request.payments %}
                             <tr>
                                 <td class="text-start">{{ payment.name }}:</td>
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
-                        {% if request.payments.remainingAmount > 0 %}
-                            <tr>
-                                <th class="text-start">Преостало за плаћање:</th>
-                                <th class="text-end">
-                                    {{ request.payments.remainingAmount | decimal }}
-                                </th>
-                            </tr>
-                        {% endif %}
                     </table>
                 </div>
             </div>
             <!-- ITEMS SUMMARY END -->
 
             <!-- BORDERED CONTAINER START -->
-            <div class="row">
+            <div class="row lh-1">
                 <div class="col-12">
-                    <div class="bordered-bottom">
-
-                    </div>
+                    {{ '' | delimiter }}
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
 
+            <!-- TAX DETAILS START -->
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
@@ -228,13 +202,24 @@
                                 <td class="text-end">{{ taxItem.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
-                        <tr class="bordered-top bordered-bottom">
+                        <tr>
+                            <td colspan="4 lh-1">
+                                {{ '' | delimiter }}
+                            </td>
+                        </tr>
+                        <tr>
                             <td colspan="3">Укупан износ ПДВ-а:</td>
-                            <td class="text-end">{{ totalTax | decimal }}</td>
+                            <td class="text-end">{{ response.taxItems | taxAmount | decimal }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4 lh-1">
+                                {{ '' | delimiter }}
+                            </td>
                         </tr>
                     </table>
                 </div>
             </div>
+            <!-- TAX DETAILS END -->
 
             <!-- TAX CORE INVOICE DETAILS START -->
             <div class="row">
@@ -248,7 +233,7 @@
                             <td class="text-start">ПФР бр. рачуна:</td>
                             <td class="text-end">{{ response.invoiceNumber }}</td>
                         </tr>
-                        <tr class="bordered-bottom">
+                        <tr>
                             <td class="text-start">Бројач рачуна:</td>
                             <td class="text-end">{{ response.invoiceCounter }}</td>
                         </tr>
@@ -257,8 +242,16 @@
             </div>
             <!-- TAX CORE INVOICE DETAILS END -->
 
+            <!-- BORDERED CONTAINER START -->
+            <div class="row lh-1">
+                <div class="col-12">
+                    {{ '' | delimiter }}
+                </div>
+            </div>
+            <!-- BORDERED CONTAINER END -->
+
             <!-- QR CODE CONTAINER START -->
-            <div class="row my-2">
+            <div class="row my-1">
                 <div class="col-12 text-center">
                     <img src="{{ response.verificationQRCode | image64('gif') }}" alt="verification-qr-code"
                          id="verification-qr-code" class="img-fluid"/>
@@ -266,25 +259,23 @@
             </div>
             <!-- QR CODE CONTAINER END -->
 
-            {% if request.invoiceType == 2 and request.transactionType == 1 %}
+            {% if instanceOfCustomerSignature %}
                 <!-- CUSTOMER SIGNATURE CONTAINER START -->
-                <div class="row mt-5 mb-2">
-                    <div class="col-6 text-center">
+                <div class="row mt-5 mb-3">
+                    <div class="col-4">
                         Потпис купца:
                     </div>
-                    <div class="col-6 text-center border-top-0 border-left-0 border-right-0">
-
+                    <div class="col-8">
+                        <div class="border-top-0 border-left-0 border-right-0 bordered-bottom h-100"></div>
                     </div>
                 </div>
                 <!-- CUSTOMER SIGNATURE CONTAINER END -->
             {% endif %}
 
             <!-- BORDERED CONTAINER START -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="text-center">
-                        <strong>Крај фискалног рачуна</strong>
-                    </div>
+            <div class="row lh-1">
+                <div class="col-12 text-center">
+                    {{ 'Крај фискалног рачуна' | delimiter | raw }}
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
