@@ -15,8 +15,28 @@
 
             <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
+                <div class="col-12">
+                    {{ '' | delimiter }}
+                </div>
+            </div>
+            <!-- BORDERED CONTAINER END -->
+
+            <!-- DOCUMENT TITLE CONTAINER START -->
+            <div class="row lh-1">
                 <div class="col-12 text-center">
-                    {{ 'Фискални рачун' | delimiter | raw }}
+                    {% if request.invoiceType.value == 2 %}
+                        <strong class="text-uppercase">Ово није фискални рачун</strong>
+                    {% else %}
+                        <strong class="text-uppercase">Фискални рачун</strong>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- DOCUMENT TITLE CONTAINER END -->
+
+            <!-- BORDERED CONTAINER START -->
+            <div class="row lh-1">
+                <div class="col-12">
+                    {{ '' | delimiter }}
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -139,9 +159,13 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td class="text-center">{{ item.unitPrice | decimal }}</td>
+                                <td class="text-center">
+                                   {{ item.unitPrice | decimal }}
+                                </td>
                                 <td class="text-center">{{ item.quantity | decimal }}</td>
-                                <td class="text-end">{{ item.amount | decimal }}</td>
+                                <td class="text-end">
+                                    {{ request.transactionType.value == 1 ? '-' : '' }} {{ item.amount | decimal }}
+                                </td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -165,6 +189,23 @@
                             <td class="text-start">Укупан износ:</td>
                             <td class="text-end">{{ request.amount | decimal }}</td>
                         </tr>
+
+                        {% set advanceSaleAmountInterface = request.advanceSaleAmountInterface %}
+                        {% if advanceSaleAmountInterface instanceof AdvanceSaleAmountInterface %}
+                            <tr>
+                                <td class="text-start">Плаћено авансом:</td>
+                                <td class="text-end">{{ advanceSaleAmountInterface.receivedAmount | decimal }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">ПДВ на аванс:</td>
+                                <td class="text-end">{{ advanceSaleAmountInterface.receivedTax | decimal }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">Преостало за плаћање:</td>
+                                <td class="text-end">{{ advanceSaleAmountInterface.remainingAmount | decimal }}</td>
+                            </tr>
+                        {% endif %}
+
                         {% for payment in request.payments %}
                             <tr>
                                 <td class="text-start">{{ payment.name }}:</td>
@@ -275,7 +316,7 @@
             <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12 text-center">
-                    {{ 'Крај фискалног рачуна' | delimiter | raw }}
+                    ========= <strong>Крај фискалног рачуна</strong> =========
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->

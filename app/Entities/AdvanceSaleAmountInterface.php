@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities;
 
-interface RefundAmountInterface
+interface AdvanceSaleAmountInterface
 {
 
     /**
@@ -15,4 +15,9 @@ interface RefundAmountInterface
      * @return float
      */
     public function receivedTax(): float;
+
+    /**
+     * @return float
+     */
+    public function remainingAmount(): float;
 }

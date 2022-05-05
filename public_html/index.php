@@ -15,6 +15,7 @@ $payment = include __DIR__ . '/../app/Examples/data/payment.php';
 $refundPayment = include __DIR__ . '/../app/Examples/data/payment-refund.php';
 $advancePayment = include __DIR__ . '/../app/Examples/data/advance-payment.php';
 $buyer = include __DIR__ . '/../app/Examples/data/buyer.php';
+$buyerCostCenter = include __DIR__ . '/../app/Examples/data/buyer-cost-center.php';
 $referentDocument = include __DIR__ . '/../app/Examples/data/referent-document.php';
 
 try {
@@ -25,7 +26,13 @@ try {
     save($normalSale->getResponse()->invoiceNumber(), $normalSale->getReceipt()->receipt());
 
     /** NORMAL SALE CUSTOMER IDENTIFIED */
-    $normalSaleCustomerIdentified = $request->normalSaleCustomerIdentified($cashier, $items, $payment, $buyer);
+    $normalSaleCustomerIdentified = $request->normalSaleCustomerIdentified(
+        $cashier,
+        $items,
+        $payment,
+        $buyer,
+        $buyerCostCenter
+    );
     save(
         $normalSaleCustomerIdentified->getResponse()->invoiceNumber(),
         $normalSaleCustomerIdentified->getReceipt()->receipt()
@@ -54,11 +61,11 @@ try {
     );
 
     /** ADVANCE SALE */
-    $advanceSale = $request->advanceSale($cashier, $items, $payment);
+    $advanceSale = $request->advanceSale($cashier, $items, $advancePayment);
     save($advanceSale->getResponse()->invoiceNumber(), $advanceSale->getReceipt()->receipt());
 
     /** ADVANCE SALE CUSTOMER IDENTIFIED */
-    $advanceSaleCustomerIdentified = $request->advanceSaleCustomerIdentified($cashier, $items, $payment, $buyer);
+    $advanceSaleCustomerIdentified = $request->advanceSaleCustomerIdentified($cashier, $items, $advancePayment, $buyer);
     save(
         $advanceSaleCustomerIdentified->getResponse()->invoiceNumber(),
         $advanceSaleCustomerIdentified->getReceipt()->receipt()
@@ -68,7 +75,7 @@ try {
     $advanceSaleRefund = $request->advanceSaleRefund(
         $cashier,
         $items,
-        $refundPayment,
+        $advancePayment,
         referentDocument($advanceSale->getResponse())
     );
     save(
@@ -80,7 +87,7 @@ try {
     $advanceSaleRefundCustomerIdentified = $request->advanceSaleRefundCustomerIdentified(
         $cashier,
         $items,
-        $refundPayment,
+        $advancePayment,
         referentDocument($advanceSaleCustomerIdentified->getResponse()),
         $buyer
     );

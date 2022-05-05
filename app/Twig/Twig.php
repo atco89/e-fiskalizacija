@@ -23,6 +23,8 @@ final class Twig
     {
         $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../../resources/views'));
 
+        $this->environment->addExtension(new InstanceOfExtension());
+
         $this->environment->addFilter(new TwigFilter('base64Encode',
             function (string|null $imagePath): string {
                 return base64_encode(file_get_contents($imagePath));
@@ -35,7 +37,7 @@ final class Twig
                 $length = $size - mb_strlen($string, mb_detect_encoding($string));
                 $spaces = empty($string) ? 0 : 1;
                 $left = intval(ceil($length / 2) - $spaces);
-                $showString = empty($string) ? $string : "<strong> $string </strong>";
+                $showString = empty($string) ? $string : " $string ";
                 $right = intval($length - $left - $spaces);
                 return implode('', [str_repeat('=', $left), $showString, str_repeat('=', $right)]);
             }
@@ -43,7 +45,7 @@ final class Twig
 
         $this->environment->addFilter(new TwigFilter('image64',
             function (string|null $encodedImage, string $type): string {
-                return implode(', ', ["data:image/$type;base64", $encodedImage]) . PHP_EOL;
+                return implode(', ', ["data:image/$type;base64", $encodedImage]);
             }
         ));
 

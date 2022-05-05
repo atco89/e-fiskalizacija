@@ -6,6 +6,7 @@ namespace TaxCore\Request;
 use DateTime;
 use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
+use TaxCore\Entities\AdvanceSaleAmountInterface;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\RequestInterface;
@@ -125,5 +126,13 @@ abstract class RequestBase implements RequestInterface
             $carry += $item->amount();
             return $carry;
         });
+    }
+
+    /**
+     * @return AdvanceSaleAmountInterface|null
+     */
+    public function advanceSaleAmountInterface(): AdvanceSaleAmountInterface|null
+    {
+        return null;
     }
 }

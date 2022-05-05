@@ -70,15 +70,24 @@ abstract class AdvanceSale extends Sale
             private float $amount;
 
             /**
-             * @param int $id
              * @param string $label
              * @param float $amount
              */
-            public function __construct(int $id, string $label, float $amount)
+            public function __construct(string $label, float $amount)
             {
-                $this->id = $id;
+                $this->id = $this->loadId($label);
                 $this->label = $label;
                 $this->amount = $amount;
+            }
+
+            /**
+             * @param string $label
+             * @return int
+             */
+            private function loadId(string $label): int
+            {
+                $labels = [TaxLabel::T0->value => 10, TaxLabel::T1->value => 11, TaxLabel::T2->value => 12];
+                return $labels[$label];
             }
 
             /**

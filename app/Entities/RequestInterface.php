@@ -54,4 +54,9 @@ interface RequestInterface
      * @return AdvertisementItemInterface[]|null
      */
     public function advertisementItems(): array|null;
+
+    /**
+     * @return AdvanceSaleAmountInterface|null
+     */
+    public function advanceSaleAmountInterface(): AdvanceSaleAmountInterface|null;
 }

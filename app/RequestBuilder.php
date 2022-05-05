@@ -5,6 +5,7 @@ namespace TaxCore;
 
 use DateTimeInterface;
 use GuzzleHttp\RequestOptions;
+use TaxCore\Entities\BuyerCostCenterInterface;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\ConfigurationInterface;
 use TaxCore\Entities\Enums\InvoiceType;
@@ -101,7 +102,10 @@ abstract class RequestBuilder
         }
 
         if ($request instanceof BuyerInterface) {
-            $props['buyerId'] = $request->buyerId();
+            $props['buyerId'] = $this->loadBuyerId($request);
+        }
+
+        if ($request instanceof BuyerCostCenterInterface) {
             $buyerCostCenterId = $this->loadBuyerCostCenterId($request);
             if (!empty($buyerCostCenterId)) {
                 $props['buyerCostCenterId'] = $this->loadBuyerCostCenterId($request);
@@ -179,17 +183,17 @@ abstract class RequestBuilder
      * @param RequestInterface $request
      * @return string|null
      */
-    private function loadBuyerCostCenterId(RequestInterface $request): string|null
+    private function loadBuyerId(RequestInterface $request): string|null
     {
-        return $request instanceof BuyerInterface ? $request->buyerCostCenterId() : null;
+        return $request instanceof BuyerInterface ? $request->buyerId() : null;
     }
 
     /**
      * @param RequestInterface $request
      * @return string|null
      */
-    private function loadBuyerId(RequestInterface $request): string|null
+    private function loadBuyerCostCenterId(RequestInterface $request): string|null
     {
-        return $request instanceof BuyerInterface ? $request->buyerId() : null;
+        return $request instanceof BuyerCostCenterInterface ? $request->buyerCostCenterId() : null;
     }
 }
