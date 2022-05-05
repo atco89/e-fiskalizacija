@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Examples\Item;
 
