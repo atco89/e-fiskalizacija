@@ -7,6 +7,8 @@ use DateTimeInterface;
 use GuzzleHttp\RequestOptions;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\ConfigurationInterface;
+use TaxCore\Entities\Enums\InvoiceType;
+use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
@@ -54,7 +56,7 @@ abstract class RequestBuilder
     {
         return [
             $this->configuration->certPath(),
-            $this->configuration->externalSalesDataControllerNumber(),
+            $this->configuration->password(),
         ];
     }
 
@@ -80,38 +82,33 @@ abstract class RequestBuilder
      */
     private function requestBody(RequestInterface $request): array
     {
-        return [
-            'dateAndTimeOfIssue'     => $request->issueDateTime()->format(self::DATE_TIME_FORMAT),
+        $props = [
             'invoiceType'            => $request->invoiceType()->value,
             'transactionType'        => $request->transactionType()->value,
-            'invoiceNumber'          => $request->invoiceNumber(),
+            'invoiceNumber'          => $this->configuration->esdcNumber(), // ESIR broj
             'cashier'                => $request->cashier(),
-            'buyerId'                => $this->loadBuyerId($request),
-            'buyerCostCenterId'      => $this->loadBuyerCostCenterId($request),
             'referentDocumentNumber' => $this->loadReferentDocumentNumber($request),
             'referentDocumentDT'     => $this->loadReferentDocumentDateTime($request),
+            'items'                  => $this->buildItems($request->items()),
             'payment'                => $this->buildPayment($request->payments()),
             'options'                => $this->buildOptions(),
-            'items'                  => $this->buildItems($request->items()),
         ];
-    }
 
-    /**
-     * @param RequestInterface $request
-     * @return string|null
-     */
-    private function loadBuyerId(RequestInterface $request): string|null
-    {
-        return $request instanceof BuyerInterface ? $request->buyerId() : null;
-    }
+        $invoiceType = $request->invoiceType();
+        $transactionType = $request->transactionType();
+        if ($invoiceType === InvoiceType::ADVANCE && $transactionType === TransactionType::SALE) {
+            $props['dateAndTimeOfIssue'] = $request->issueDateTime()->format(self::DATE_TIME_FORMAT);
+        }
 
-    /**
-     * @param RequestInterface $request
-     * @return string|null
-     */
-    private function loadBuyerCostCenterId(RequestInterface $request): string|null
-    {
-        return $request instanceof BuyerInterface ? $request->buyerCostCenterId() : null;
+        if ($request instanceof BuyerInterface) {
+            $props['buyerId'] = $request->buyerId();
+            $buyerCostCenterId = $this->loadBuyerCostCenterId($request);
+            if (!empty($buyerCostCenterId)) {
+                $props['buyerCostCenterId'] = $this->loadBuyerCostCenterId($request);
+            }
+        }
+
+        return $props;
     }
 
     /**
@@ -132,6 +129,24 @@ abstract class RequestBuilder
         return $request instanceof ReferentDocumentInterface
             ? $request->referentDocumentDateTime()->format(self::DATE_TIME_FORMAT)
             : null;
+    }
+
+    /**
+     * @param array $items
+     * @return array
+     */
+    private function buildItems(array $items): array
+    {
+        return array_map(function (ItemInterface $item): array {
+            return [
+                'gtin'        => $item->gtin(),
+                'name'        => $item->name(),
+                'quantity'    => $item->quantity(),
+                'unitPrice'   => $item->unitPrice(),
+                'labels'      => $item->labels(),
+                'totalAmount' => $item->amount(),
+            ];
+        }, $items);
     }
 
     /**
@@ -161,20 +176,20 @@ abstract class RequestBuilder
     }
 
     /**
-     * @param array $items
-     * @return array
+     * @param RequestInterface $request
+     * @return string|null
      */
-    private function buildItems(array $items): array
+    private function loadBuyerCostCenterId(RequestInterface $request): string|null
     {
-        return array_map(function (ItemInterface $item): array {
-            return [
-                'gtin'        => $item->gtin(),
-                'name'        => $item->name(),
-                'quantity'    => $item->quantity(),
-                'unitPrice'   => $item->unitPrice(),
-                'labels'      => $item->labels(),
-                'totalAmount' => $item->amount(),
-            ];
-        }, $items);
+        return $request instanceof BuyerInterface ? $request->buyerCostCenterId() : null;
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @return string|null
+     */
+    private function loadBuyerId(RequestInterface $request): string|null
+    {
+        return $request instanceof BuyerInterface ? $request->buyerId() : null;
     }
 }

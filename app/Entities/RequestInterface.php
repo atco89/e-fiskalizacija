@@ -33,11 +33,6 @@ interface RequestInterface
     /**
      * @return string
      */
-    public function invoiceNumber(): string;
-
-    /**
-     * @return string
-     */
     public function requestId(): string;
 
     /**
@@ -54,4 +49,9 @@ interface RequestInterface
      * @return float
      */
     public function amount(): float;
+
+    /**
+     * @return AdvertisementItemInterface[]|null
+     */
+    public function advertisementItems(): array|null;
 }

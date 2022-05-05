@@ -1,15 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Request\CopySale;
+namespace TaxCore\Request\NormalSale;
 
 use DateTimeInterface;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\ReferentDocumentInterface;
+use TaxCore\Request\NormalSale\AdvertisementItem\NormalSaleAdvertisementItem;
 use TaxCore\Request\SaleCustomerIdentified;
 
-final class CopySaleCustomerIdentified extends SaleCustomerIdentified implements ReferentDocumentInterface
+final class NormalSaleCloseAdvanceSaleCustomerIdentified extends SaleCustomerIdentified implements ReferentDocumentInterface
 {
 
     /**
@@ -22,7 +23,7 @@ final class CopySaleCustomerIdentified extends SaleCustomerIdentified implements
      * @param array $items
      * @param array $payment
      * @param BuyerInterface $buyer
-     * @param ReferentDocumentInterface $referentDocument
+     * @param ReferentDocumentInterface $buyer
      */
     public function __construct(
         string                    $cashier,
@@ -33,15 +34,7 @@ final class CopySaleCustomerIdentified extends SaleCustomerIdentified implements
     )
     {
         parent::__construct($cashier, $items, $payment, $buyer);
-        $this->referentDocument = $referentDocument;
-    }
-
-    /**
-     * @return InvoiceType
-     */
-    public function invoiceType(): InvoiceType
-    {
-        return InvoiceType::COPY;
+        $this->referentDocument = $buyer;
     }
 
     /**
@@ -58,5 +51,22 @@ final class CopySaleCustomerIdentified extends SaleCustomerIdentified implements
     public function referentDocumentDateTime(): DateTimeInterface
     {
         return $this->referentDocument->referentDocumentDateTime();
+    }
+
+    /**
+     * @return InvoiceType
+     */
+    public function invoiceType(): InvoiceType
+    {
+        return InvoiceType::NORMAL;
+    }
+
+    /**
+     * @return array|null
+     * @noinspection PhpPureAttributeCanBeAddedInspection
+     */
+    public function advertisementItems(): array|null
+    {
+        return [new NormalSaleAdvertisementItem($this->referentDocument)];
     }
 }

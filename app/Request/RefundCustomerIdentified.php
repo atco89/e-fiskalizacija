@@ -16,7 +16,6 @@ abstract class RefundCustomerIdentified extends Refund implements BuyerInterface
 
     /**
      * @param string $cashier
-     * @param string $invoiceNumber
      * @param array $items
      * @param array $payment
      * @param ReferentDocumentInterface $referentDocument
@@ -24,14 +23,13 @@ abstract class RefundCustomerIdentified extends Refund implements BuyerInterface
      */
     public function __construct(
         string                    $cashier,
-        string                    $invoiceNumber,
         array                     $items,
         array                     $payment,
         ReferentDocumentInterface $referentDocument,
         BuyerInterface            $buyer
     )
     {
-        parent::__construct($cashier, $invoiceNumber, $items, $payment, $referentDocument);
+        parent::__construct($cashier, $items, $payment, $referentDocument);
         $this->buyer = $buyer;
     }
 

@@ -17,21 +17,19 @@ abstract class Refund extends RequestBase implements ReferentDocumentInterface
 
     /**
      * @param string $cashier
-     * @param string $invoiceNumber
      * @param array $items
      * @param array $payment
-     * @param ReferentDocumentInterface $referentDocument
+     * @param ReferentDocumentInterface $buyer
      */
     public function __construct(
         string                    $cashier,
-        string                    $invoiceNumber,
         array                     $items,
         array                     $payment,
-        ReferentDocumentInterface $referentDocument
+        ReferentDocumentInterface $buyer
     )
     {
-        parent::__construct($cashier, $invoiceNumber, $items, $payment);
-        $this->referentDocument = $referentDocument;
+        parent::__construct($cashier, $items, $payment);
+        $this->referentDocument = $buyer;
     }
 
     /**

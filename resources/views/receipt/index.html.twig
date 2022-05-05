@@ -67,7 +67,7 @@
 
                         <tr>
                             <td class="align-middle text-start">ЕСИР број:</td>
-                            <td class="align-middle text-end">{{ configuration.externalSalesDataControllerNumber }}</td>
+                            <td class="align-middle text-end">{{ configuration.esdcNumber }}</td>
                         </tr>
 
                         {% if request.invoiceType.value == 4 and request.transactionType.value == 0  %}
@@ -279,6 +279,30 @@
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
+
+            {% if request.advertisementItems is not empty %}
+                <!-- ADVERTISEMENT ITEMS START -->
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <table class="table table-sm table-borderless">
+                            {% for advertisementItem in request.advertisementItems %}
+                                {% if advertisementItem.amount is not null %}
+                                    <tr>
+                                        <td class="text-start">* {{ advertisementItem.name  }}</td>
+                                        <td class="text-end">{{ advertisementItem.amount | decimal }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td class="text-start">* Последњи авансни рачун</td>
+                                        <td class="text-end">{{ advertisementItem.name  }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                <!-- ADVERTISEMENT ITEMS END -->
+            {% endif %}
 
         </div>
     </div>

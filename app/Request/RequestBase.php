@@ -16,43 +16,36 @@ abstract class RequestBase implements RequestInterface
     /**
      * @var string
      */
-    private string $cashier;
-
-    /**
-     * @var string
-     */
-    private string $invoiceNumber;
+    protected string $cashier;
 
     /**
      * @var ItemInterface[]
      */
-    private array $items;
+    protected array $items;
 
     /**
      * @var PaymentTypeInterface[]
      */
-    private array $payment;
+    protected array $payment;
 
     /**
      * @var DateTimeInterface
      */
-    private DateTimeInterface $issueDateTime;
+    protected DateTimeInterface $issueDateTime;
 
     /**
      * @var string
      */
-    private string $requestId;
+    protected string $requestId;
 
     /**
      * @param string $cashier
-     * @param string $invoiceNumber
      * @param ItemInterface[] $items
      * @param PaymentTypeInterface[] $payment
      */
-    public function __construct(string $cashier, string $invoiceNumber, array $items, array $payment)
+    public function __construct(string $cashier, array $items, array $payment)
     {
         $this->cashier = $cashier;
-        $this->invoiceNumber = $invoiceNumber;
         $this->items = $items;
         $this->payment = $payment;
         $this->issueDateTime = $this->generateIssueDateTime();
@@ -76,14 +69,6 @@ abstract class RequestBase implements RequestInterface
     }
 
     /**
-     * @return string
-     */
-    final public function invoiceNumber(): string
-    {
-        return $this->invoiceNumber;
-    }
-
-    /**
      * @return DateTimeInterface
      */
     final public function issueDateTime(): DateTimeInterface
@@ -100,15 +85,23 @@ abstract class RequestBase implements RequestInterface
     }
 
     /**
-     * @return array
+     * @return ItemInterface[]
      */
-    final public function items(): array
+    public function items(): array
     {
         return $this->items;
     }
 
     /**
-     * @return array
+     * @return array|null
+     */
+    public function advertisementItems(): array|null
+    {
+        return null;
+    }
+
+    /**
+     * @return PaymentTypeInterface[]
      */
     final public function payments(): array
     {
