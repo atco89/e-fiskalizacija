@@ -13,18 +13,18 @@ use TaxCore\Entities\RequestInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
 use TaxCore\Request\AdvanceSale\AdvanceSale;
 use TaxCore\Request\AdvanceSale\AdvanceSaleCustomerIdentified;
-use TaxCore\Request\AdvanceSale\AdvanceSaleRefund;
-use TaxCore\Request\AdvanceSale\AdvanceSaleRefundCustomerIdentified;
-use TaxCore\Request\CopySale\CopySale;
-use TaxCore\Request\CopySale\CopySaleCustomerIdentified;
-use TaxCore\Request\CopySale\CopySaleRefund;
-use TaxCore\Request\CopySale\CopySaleRefundCustomerIdentified;
-use TaxCore\Request\NormalSale\NormalSale;
+use TaxCore\Request\AdvanceSale\AdvanceSaleRefundCustomerIdentifiedRequest;
+use TaxCore\Request\AdvanceSale\AdvanceSaleRefundRequest;
+use TaxCore\Request\CopySale\CopySaleRequest;
+use TaxCore\Request\CopySale\CopySaleCustomerIdentifiedRequest;
+use TaxCore\Request\CopySale\CopySaleRefundRequest;
+use TaxCore\Request\CopySale\CopySaleRefundCustomerIdentifiedRequest;
+use TaxCore\Request\NormalSale\NormalSaleRequest;
 use TaxCore\Request\NormalSale\NormalSaleCloseAdvanceSale;
 use TaxCore\Request\NormalSale\NormalSaleCloseAdvanceSaleCustomerIdentified;
-use TaxCore\Request\NormalSale\NormalSaleCustomerIdentified;
-use TaxCore\Request\NormalSale\NormalSaleRefund;
-use TaxCore\Request\NormalSale\NormalSaleRefundCustomerIdentified;
+use TaxCore\Request\NormalSale\NormalSaleCustomerIdentifiedRequest;
+use TaxCore\Request\NormalSale\NormalSaleRefundRequest;
+use TaxCore\Request\NormalSale\NormalSaleRefundCustomerIdentifiedRequest;
 use TaxCore\Request\NormalSale\ReferentDocument\ReferentDocument;
 use TaxCore\Response\Response;
 use TaxCore\Response\ResponseBuilder;
@@ -60,7 +60,7 @@ final class Request extends RequestBuilder
      */
     public function normalSale(string $cashier, array $items, array $payment): ResponseBuilder
     {
-        $request = new NormalSale($cashier, $items, $payment);
+        $request = new NormalSaleRequest($cashier, $items, $payment);
         return $this->run($request);
     }
 
@@ -111,7 +111,7 @@ final class Request extends RequestBuilder
         BuyerInterface $buyer
     ): ResponseBuilder
     {
-        $request = new NormalSaleCustomerIdentified($cashier, $items, $payment, $buyer);
+        $request = new NormalSaleCustomerIdentifiedRequest($cashier, $items, $payment, $buyer);
         return $this->run($request);
     }
 
@@ -130,7 +130,7 @@ final class Request extends RequestBuilder
         ReferentDocumentInterface $referentDocument
     ): ResponseBuilder
     {
-        $request = new NormalSaleRefund($cashier, $items, $payment, $referentDocument);
+        $request = new NormalSaleRefundRequest($cashier, $items, $payment, $referentDocument);
         return $this->run($request);
     }
 
@@ -151,7 +151,7 @@ final class Request extends RequestBuilder
         BuyerInterface            $buyer
     ): ResponseBuilder
     {
-        $request = new NormalSaleRefundCustomerIdentified($cashier, $items, $payment, $referentDocument, $buyer);
+        $request = new NormalSaleRefundCustomerIdentifiedRequest($cashier, $items, $payment, $referentDocument, $buyer);
         return $this->run($request);
     }
 
@@ -191,7 +191,7 @@ final class Request extends RequestBuilder
         ReferentDocumentInterface $referentDocument,
     ): ResponseBuilder
     {
-        $request = new AdvanceSaleRefund($cashier, $items, $payment, $referentDocument);
+        $request = new AdvanceSaleRefundRequest($cashier, $items, $payment, $referentDocument);
         return $this->run($request);
     }
 
@@ -247,7 +247,7 @@ final class Request extends RequestBuilder
         BuyerInterface            $buyer
     ): ResponseBuilder
     {
-        $request = new AdvanceSaleRefundCustomerIdentified($cashier, $items, $payment, $referentDocument, $buyer);
+        $request = new AdvanceSaleRefundCustomerIdentifiedRequest($cashier, $items, $payment, $referentDocument, $buyer);
         return $this->run($request);
     }
 
@@ -298,7 +298,7 @@ final class Request extends RequestBuilder
         ReferentDocumentInterface $referentDocument,
     ): ResponseBuilder
     {
-        $request = new CopySale($cashier, $items, $payment, $referentDocument);
+        $request = new CopySaleRequest($cashier, $items, $payment, $referentDocument);
         return $this->run($request);
     }
 
@@ -319,7 +319,7 @@ final class Request extends RequestBuilder
         BuyerInterface            $buyer
     ): ResponseBuilder
     {
-        $request = new CopySaleCustomerIdentified($cashier, $items, $payment, $buyer, $referentDocument);
+        $request = new CopySaleCustomerIdentifiedRequest($cashier, $items, $payment, $buyer, $referentDocument);
         return $this->run($request);
     }
 
@@ -338,7 +338,7 @@ final class Request extends RequestBuilder
         ReferentDocumentInterface $referentDocument
     ): ResponseBuilder
     {
-        $request = new CopySaleRefund($cashier, $items, $payment, $referentDocument);
+        $request = new CopySaleRefundRequest($cashier, $items, $payment, $referentDocument);
         return $this->run($request);
     }
 
@@ -359,7 +359,7 @@ final class Request extends RequestBuilder
         BuyerInterface            $buyer
     ): ResponseBuilder
     {
-        $request = new CopySaleRefundCustomerIdentified($cashier, $items, $payment, $referentDocument, $buyer);
+        $request = new CopySaleRefundCustomerIdentifiedRequest($cashier, $items, $payment, $referentDocument, $buyer);
         return $this->run($request);
     }
 }

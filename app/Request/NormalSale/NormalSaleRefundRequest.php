@@ -6,7 +6,7 @@ namespace TaxCore\Request\NormalSale;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Request\Refund;
 
-final class NormalSaleRefund extends Refund
+final class NormalSaleRefundRequest extends Refund
 {
 
     /**

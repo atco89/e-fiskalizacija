@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Request\CopySale;
+namespace TaxCore\Request\NormalSale;
 
 use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Request\Refund;
+use TaxCore\Request\Sale;
 
-final class CopySaleRefund extends Refund
+final class NormalSaleRequest extends Sale
 {
 
     /**
@@ -14,6 +14,6 @@ final class CopySaleRefund extends Refund
      */
     public function invoiceType(): InvoiceType
     {
-        return InvoiceType::COPY;
+        return InvoiceType::NORMAL;
     }
 }

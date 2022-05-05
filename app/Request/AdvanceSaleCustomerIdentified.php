@@ -4,10 +4,8 @@ declare(strict_types=1);
 namespace TaxCore\Request;
 
 use TaxCore\Entities\BuyerInterface;
-use TaxCore\Entities\ItemInterface;
-use TaxCore\Entities\PaymentTypeInterface;
 
-abstract class SaleCustomerIdentified extends Sale implements BuyerInterface
+abstract class AdvanceSaleCustomerIdentified extends AdvanceSale implements BuyerInterface
 {
 
     /**
@@ -17,8 +15,8 @@ abstract class SaleCustomerIdentified extends Sale implements BuyerInterface
 
     /**
      * @param string $cashier
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
+     * @param array $items
+     * @param array $payment
      * @param BuyerInterface $buyer
      */
     public function __construct(string $cashier, array $items, array $payment, BuyerInterface $buyer)

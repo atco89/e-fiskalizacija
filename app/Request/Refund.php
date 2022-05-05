@@ -5,6 +5,8 @@ namespace TaxCore\Request;
 
 use DateTimeInterface;
 use TaxCore\Entities\Enums\TransactionType;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
 
 abstract class Refund extends RequestBase implements ReferentDocumentInterface
@@ -17,19 +19,27 @@ abstract class Refund extends RequestBase implements ReferentDocumentInterface
 
     /**
      * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param ReferentDocumentInterface $buyer
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
+     * @param ReferentDocumentInterface $referentDocument
      */
     public function __construct(
         string                    $cashier,
         array                     $items,
         array                     $payment,
-        ReferentDocumentInterface $buyer
+        ReferentDocumentInterface $referentDocument
     )
     {
         parent::__construct($cashier, $items, $payment);
-        $this->referentDocument = $buyer;
+        $this->referentDocument = $referentDocument;
+    }
+
+    /**
+     * @return TransactionType
+     */
+    final public function transactionType(): TransactionType
+    {
+        return TransactionType::REFUND;
     }
 
     /**
@@ -46,13 +56,5 @@ abstract class Refund extends RequestBase implements ReferentDocumentInterface
     final public function referentDocumentDateTime(): DateTimeInterface
     {
         return $this->referentDocument->referentDocumentDateTime();
-    }
-
-    /**
-     * @return TransactionType
-     */
-    final public function transactionType(): TransactionType
-    {
-        return TransactionType::REFUND;
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace TaxCore\Request;
 
 use TaxCore\Entities\BuyerInterface;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
 
 abstract class RefundCustomerIdentified extends Refund implements BuyerInterface
@@ -16,8 +18,8 @@ abstract class RefundCustomerIdentified extends Refund implements BuyerInterface
 
     /**
      * @param string $cashier
-     * @param array $items
-     * @param array $payment
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param ReferentDocumentInterface $referentDocument
      * @param BuyerInterface $buyer
      */
@@ -39,13 +41,5 @@ abstract class RefundCustomerIdentified extends Refund implements BuyerInterface
     final public function buyerId(): string
     {
         return $this->buyer->buyerId();
-    }
-
-    /**
-     * @return string|null
-     */
-    final public function buyerCostCenterId(): string|null
-    {
-        return $this->buyer->buyerCostCenterId();
     }
 }

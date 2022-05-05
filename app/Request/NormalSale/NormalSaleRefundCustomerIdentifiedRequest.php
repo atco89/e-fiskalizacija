@@ -6,7 +6,7 @@ namespace TaxCore\Request\NormalSale;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Request\RefundCustomerIdentified;
 
-final class NormalSaleRefundCustomerIdentified extends RefundCustomerIdentified
+final class NormalSaleRefundCustomerIdentifiedRequest extends RefundCustomerIdentified
 {
 
     /**

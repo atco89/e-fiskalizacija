@@ -10,9 +10,4 @@ interface BuyerInterface
      * @return string
      */
     public function buyerId(): string;
-
-    /**
-     * @return string|null
-     */
-    public function buyerCostCenterId(): string|null;
 }

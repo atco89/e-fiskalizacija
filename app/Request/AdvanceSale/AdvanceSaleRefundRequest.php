@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Request\NormalSale;
+namespace TaxCore\Request\AdvanceSale;
 
 use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Request\Sale;
+use TaxCore\Request\Refund;
 
-final class NormalSale extends Sale
+final class AdvanceSaleRefundRequest extends Refund
 {
 
     /**
@@ -14,6 +14,6 @@ final class NormalSale extends Sale
      */
     public function invoiceType(): InvoiceType
     {
-        return InvoiceType::NORMAL;
+        return InvoiceType::ADVANCE;
     }
 }

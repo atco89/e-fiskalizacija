@@ -1,15 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Request\NormalSale;
+namespace TaxCore\Request\CopySale;
 
 use DateTimeInterface;
+use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Enums\InvoiceType;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
-use TaxCore\Request\NormalSale\AdvertisementItem\NormalSaleAdvertisementItem;
-use TaxCore\Request\Sale;
+use TaxCore\Request\SaleCustomerIdentified;
 
-final class NormalSaleCloseAdvanceSale extends Sale implements ReferentDocumentInterface
+final class CopySaleCustomerIdentifiedRequest extends SaleCustomerIdentified implements ReferentDocumentInterface
 {
 
     /**
@@ -19,19 +21,29 @@ final class NormalSaleCloseAdvanceSale extends Sale implements ReferentDocumentI
 
     /**
      * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param ReferentDocumentInterface $buyer
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
+     * @param BuyerInterface $buyer
+     * @param ReferentDocumentInterface $referentDocument
      */
     public function __construct(
         string                    $cashier,
         array                     $items,
         array                     $payment,
-        ReferentDocumentInterface $buyer
+        BuyerInterface            $buyer,
+        ReferentDocumentInterface $referentDocument
     )
     {
-        parent::__construct($cashier, $items, $payment);
-        $this->referentDocument = $buyer;
+        parent::__construct($cashier, $items, $payment, $buyer);
+        $this->referentDocument = $referentDocument;
+    }
+
+    /**
+     * @return InvoiceType
+     */
+    public function invoiceType(): InvoiceType
+    {
+        return InvoiceType::COPY;
     }
 
     /**
@@ -48,22 +60,5 @@ final class NormalSaleCloseAdvanceSale extends Sale implements ReferentDocumentI
     public function referentDocumentDateTime(): DateTimeInterface
     {
         return $this->referentDocument->referentDocumentDateTime();
-    }
-
-    /**
-     * @return InvoiceType
-     */
-    public function invoiceType(): InvoiceType
-    {
-        return InvoiceType::NORMAL;
-    }
-
-    /**
-     * @return array|null
-     * @noinspection PhpPureAttributeCanBeAddedInspection
-     */
-    public function advertisementItems(): array|null
-    {
-        return [new NormalSaleAdvertisementItem($this->referentDocument)];
     }
 }

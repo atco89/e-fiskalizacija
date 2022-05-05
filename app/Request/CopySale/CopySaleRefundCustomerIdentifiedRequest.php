@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Request\AdvanceSale;
+namespace TaxCore\Request\CopySale;
 
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Request\RefundCustomerIdentified;
 
-final class AdvanceSaleRefundCustomerIdentified extends RefundCustomerIdentified
+final class CopySaleRefundCustomerIdentifiedRequest extends RefundCustomerIdentified
 {
 
     /**
@@ -14,6 +14,6 @@ final class AdvanceSaleRefundCustomerIdentified extends RefundCustomerIdentified
      */
     public function invoiceType(): InvoiceType
     {
-        return InvoiceType::ADVANCE;
+        return InvoiceType::COPY;
     }
 }

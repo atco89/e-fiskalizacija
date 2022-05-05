@@ -4,12 +4,11 @@ declare(strict_types=1);
 namespace TaxCore\Request\CopySale;
 
 use DateTimeInterface;
-use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\ReferentDocumentInterface;
-use TaxCore\Request\SaleCustomerIdentified;
+use TaxCore\Request\Sale;
 
-final class CopySaleCustomerIdentified extends SaleCustomerIdentified implements ReferentDocumentInterface
+final class CopySaleRequest extends Sale implements ReferentDocumentInterface
 {
 
     /**
@@ -21,18 +20,16 @@ final class CopySaleCustomerIdentified extends SaleCustomerIdentified implements
      * @param string $cashier
      * @param array $items
      * @param array $payment
-     * @param BuyerInterface $buyer
      * @param ReferentDocumentInterface $referentDocument
      */
     public function __construct(
         string                    $cashier,
         array                     $items,
         array                     $payment,
-        BuyerInterface            $buyer,
         ReferentDocumentInterface $referentDocument
     )
     {
-        parent::__construct($cashier, $items, $payment, $buyer);
+        parent::__construct($cashier, $items, $payment);
         $this->referentDocument = $referentDocument;
     }
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace TaxCore\Request\AdvanceSale;
 
 use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Request\Refund;
+use TaxCore\Request\RefundCustomerIdentified;
 
-final class AdvanceSaleRefund extends Refund
+final class AdvanceSaleRefundCustomerIdentifiedRequest extends RefundCustomerIdentified
 {
 
     /**
