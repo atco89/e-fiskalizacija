@@ -18,7 +18,6 @@ final class Configuration implements ConfigurationInterface
 
     /**
      * @return string
-     * @noinspection HttpUrlsUsage
      */
     public function apiUrl(): string
     {
@@ -63,5 +62,13 @@ final class Configuration implements ConfigurationInterface
     public function esdcNumber(): string
     {
         return '923/v1.0';
+    }
+
+    /**
+     * @return string
+     */
+    public function cashier(): string
+    {
+        return 'Petar Petrović';
     }
 }
