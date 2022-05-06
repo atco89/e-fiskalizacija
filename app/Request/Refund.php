@@ -5,56 +5,53 @@ namespace TaxCore\Request;
 
 use DateTimeInterface;
 use TaxCore\Entities\Enums\TransactionType;
-use TaxCore\Entities\ItemInterface;
-use TaxCore\Entities\PaymentTypeInterface;
+use TaxCore\Entities\Properties\RequestRefundPropertiesInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
 
 abstract class Refund extends RequestBase implements ReferentDocumentInterface
 {
 
     /**
-     * @var ReferentDocumentInterface
+     * @var string
      */
-    protected ReferentDocumentInterface $referentDocument;
+    protected string $referentDocumentNumber;
 
     /**
-     * @param string $cashier
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
-     * @param ReferentDocumentInterface $referentDocument
+     * @var DateTimeInterface
      */
-    public function __construct(
-        string                    $cashier,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument
-    )
-    {
-        parent::__construct($cashier, $items, $payment);
-        $this->referentDocument = $referentDocument;
-    }
+    protected DateTimeInterface $referentDocumentDateTime;
 
     /**
-     * @return TransactionType
+     * @param RequestRefundPropertiesInterface $properties
      */
-    final public function transactionType(): TransactionType
+    public function __construct(RequestRefundPropertiesInterface $properties)
     {
-        return TransactionType::REFUND;
+        parent::__construct($properties);
+        $this->referentDocumentNumber = $properties->referentDocumentNumber();
+        $this->referentDocumentDateTime = $properties->referentDocumentDateTime();
     }
 
     /**
      * @return string
      */
-    final public function referentDocumentNumber(): string
+    public function referentDocumentNumber(): string
     {
-        return $this->referentDocument->referentDocumentNumber();
+        return $this->referentDocumentNumber;
     }
 
     /**
      * @return DateTimeInterface
      */
-    final public function referentDocumentDateTime(): DateTimeInterface
+    public function referentDocumentDateTime(): DateTimeInterface
     {
-        return $this->referentDocument->referentDocumentDateTime();
+        return $this->referentDocumentDateTime;
+    }
+
+    /**
+     * @return TransactionType
+     */
+    public function transactionType(): TransactionType
+    {
+        return TransactionType::REFUND;
     }
 }

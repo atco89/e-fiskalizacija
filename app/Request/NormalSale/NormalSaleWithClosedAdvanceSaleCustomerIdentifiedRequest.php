@@ -1,12 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Request;
+namespace TaxCore\Request\NormalSale;
 
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Properties\RequestCustomerIdentifiedPropertiesInterface;
+use TaxCore\Request\CloseAdvanceSale;
+use TaxCore\Response\Response;
 
-abstract class SaleCustomerIdentified extends Sale implements BuyerInterface
+final class NormalSaleWithClosedAdvanceSaleCustomerIdentifiedRequest extends CloseAdvanceSale implements BuyerInterface
 {
 
     /**
@@ -16,10 +18,14 @@ abstract class SaleCustomerIdentified extends Sale implements BuyerInterface
 
     /**
      * @param RequestCustomerIdentifiedPropertiesInterface $properties
+     * @param Response $response
      */
-    public function __construct(RequestCustomerIdentifiedPropertiesInterface $properties)
+    public function __construct(
+        RequestCustomerIdentifiedPropertiesInterface $properties,
+        Response                                     $response
+    )
     {
-        parent::__construct($properties);
+        parent::__construct($properties, $response);
         $this->buyerId = $properties->buyerId();
     }
 

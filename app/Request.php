@@ -6,12 +6,14 @@ namespace TaxCore;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use TaxCore\Entities\BuyerCostCenterInterface;
-use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\ConfigurationInterface;
-use TaxCore\Entities\ItemInterface;
-use TaxCore\Entities\PaymentTypeInterface;
-use TaxCore\Entities\ReferentDocumentInterface;
+use TaxCore\Entities\Properties\RequestCustomerIdentifiedPropertiesInterface;
+use TaxCore\Entities\Properties\RequestCustomerIdentifiedWithCostCenterPropertiesInterface;
+use TaxCore\Entities\Properties\RequestPropertiesInterface;
+use TaxCore\Entities\Properties\RequestRefundCustomerIdentifiedPropertiesInterface;
+use TaxCore\Entities\Properties\RequestRefundPropertiesInterface;
+use TaxCore\Entities\Properties\RequestWithReferentDocumentProperties;
+use TaxCore\Entities\Properties\RequestWithReferentDocumentPropertiesCustomerIdentifiedInterface;
 use TaxCore\Entities\RequestInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
 use TaxCore\Request\AdvanceSale\AdvanceSaleCustomerIdentifiedRequest;
@@ -26,6 +28,8 @@ use TaxCore\Request\NormalSale\NormalSaleCustomerIdentifiedRequest;
 use TaxCore\Request\NormalSale\NormalSaleRefundCustomerIdentifiedRequest;
 use TaxCore\Request\NormalSale\NormalSaleRefundRequest;
 use TaxCore\Request\NormalSale\NormalSaleRequest;
+use TaxCore\Request\NormalSale\NormalSaleWithClosedAdvanceSaleCustomerIdentifiedRequest;
+use TaxCore\Request\NormalSale\NormalSaleWithClosedAdvanceSaleRequest;
 use TaxCore\Response\Response;
 use TaxCore\Response\ResponseBuilder;
 use TaxCore\Twig\Twig;
@@ -52,15 +56,13 @@ final class Request extends RequestBuilder
     }
 
     /**
-     * @param string $cashier
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
+     * @param RequestPropertiesInterface $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function normalSale(string $cashier, array $items, array $payment): ResponseBuilder
+    public function normalSale(RequestPropertiesInterface $properties): ResponseBuilder
     {
-        $request = new NormalSaleRequest($cashier, $items, $payment);
+        $request = new NormalSaleRequest($properties);
         return $this->run($request);
     }
 
@@ -72,9 +74,9 @@ final class Request extends RequestBuilder
     private function run(RequestInterface $request): ResponseBuilder
     {
         try {
-            $client = new Client();
-            $clientResponse = $client->post($this->configuration->apiUrl(), $this->requestOptions($request));
-            $response = new Response(json_decode($clientResponse->getBody()->getContents()));
+            $httpClient = new Client();
+            $httpClientResponse = $httpClient->post($this->configuration->apiUrl(), $this->requestOptions($request));
+            $response = new Response(json_decode($httpClientResponse->getBody()->getContents()));
             return $this->buildResponse($request, $response);
         } catch (LoaderError | RuntimeError | SyntaxError | GuzzleException | Exception | Throwable $e) {
             throw new TaxCoreRequestException($e->getMessage());
@@ -97,215 +99,169 @@ final class Request extends RequestBuilder
     }
 
     /**
-     * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param BuyerInterface $buyer
-     * @param BuyerCostCenterInterface $buyerCostCenter
+     * @param RequestCustomerIdentifiedWithCostCenterPropertiesInterface $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
     public function normalSaleCustomerIdentified(
-        string                   $cashier,
-        array                    $items,
-        array                    $payment,
-        BuyerInterface           $buyer,
-        BuyerCostCenterInterface $buyerCostCenter,
+        RequestCustomerIdentifiedWithCostCenterPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new NormalSaleCustomerIdentifiedRequest($cashier, $items, $payment, $buyer, $buyerCostCenter);
+        $request = new NormalSaleCustomerIdentifiedRequest($properties);
         return $this->run($request);
     }
 
     /**
-     * @param string $cashier
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
-     * @param ReferentDocumentInterface $referentDocument
+     * @param RequestRefundPropertiesInterface $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function normalSaleRefund(
-        string                    $cashier,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument
-    ): ResponseBuilder
+    public function normalSaleRefund(RequestRefundPropertiesInterface $properties): ResponseBuilder
     {
-        $request = new NormalSaleRefundRequest($cashier, $items, $payment, $referentDocument);
+        $request = new NormalSaleRefundRequest($properties);
         return $this->run($request);
     }
 
     /**
-     * @param string $cashier
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
-     * @param ReferentDocumentInterface $referentDocument
-     * @param BuyerInterface $buyer
+     * @param RequestRefundCustomerIdentifiedPropertiesInterface $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
     public function normalSaleRefundCustomerIdentified(
-        string                    $cashier,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument,
-        BuyerInterface            $buyer
+        RequestRefundCustomerIdentifiedPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new NormalSaleRefundCustomerIdentifiedRequest($cashier, $items, $payment, $referentDocument, $buyer);
+        $request = new NormalSaleRefundCustomerIdentifiedRequest($properties);
         return $this->run($request);
     }
 
     /**
-     * @param string $cashier
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
-     * @param ReferentDocumentInterface $referentDocument
-     * @return ResponseBuilder
-     * @throws TaxCoreRequestException
-     */
-    public function advanceSaleRefund(
-        string                    $cashier,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument,
-    ): ResponseBuilder
-    {
-        $request = new AdvanceSaleRefundRequest($cashier, $items, $payment, $referentDocument);
-        return $this->run($request);
-    }
-
-    /**
-     * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param ReferentDocumentInterface $referentDocument
-     * @param BuyerInterface $buyer
+     * @param RequestRefundCustomerIdentifiedPropertiesInterface $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
     public function advanceSaleRefundCustomerIdentified(
-        string                    $cashier,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument,
-        BuyerInterface            $buyer
+        RequestRefundCustomerIdentifiedPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new AdvanceSaleRefundCustomerIdentifiedRequest($cashier, $items, $payment, $referentDocument, $buyer);
+        $request = new AdvanceSaleRefundCustomerIdentifiedRequest($properties);
         return $this->run($request);
     }
 
     /**
-     * @param string $cashier
-     * @param array $items
-     * @param array $payment
+     * @param RequestPropertiesInterface $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function advanceSale(string $cashier, array $items, array $payment): ResponseBuilder
+    public function advanceSale(RequestPropertiesInterface $properties): ResponseBuilder
     {
-        $request = new AdvanceSaleRequest($cashier, $items, $payment);
+        $request = new AdvanceSaleRequest($properties);
         return $this->run($request);
     }
 
     /**
-     * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param BuyerInterface $buyer
+     * @param RequestCustomerIdentifiedPropertiesInterface $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
     public function advanceSaleCustomerIdentified(
-        string         $cashier,
-        array          $items,
-        array          $payment,
-        BuyerInterface $buyer
+        RequestCustomerIdentifiedPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new AdvanceSaleCustomerIdentifiedRequest($cashier, $items, $payment, $buyer);
+        $request = new AdvanceSaleCustomerIdentifiedRequest($properties);
         return $this->run($request);
     }
 
     /**
-     * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param ReferentDocumentInterface $referentDocument
+     * @param RequestWithReferentDocumentProperties $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function copySale(
-        string                    $cashier,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument,
-    ): ResponseBuilder
+    public function copySale(RequestWithReferentDocumentProperties $properties): ResponseBuilder
     {
-        $request = new CopySaleRequest($cashier, $items, $payment, $referentDocument);
+        $request = new CopySaleRequest($properties);
         return $this->run($request);
     }
 
     /**
-     * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param ReferentDocumentInterface $referentDocument
-     * @param BuyerInterface $buyer
+     * @param RequestWithReferentDocumentPropertiesCustomerIdentifiedInterface $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
     public function copySaleCustomerIdentified(
-        string                    $cashier,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument,
-        BuyerInterface            $buyer
+        RequestWithReferentDocumentPropertiesCustomerIdentifiedInterface $properties
     ): ResponseBuilder
     {
-        $request = new CopySaleCustomerIdentifiedRequest($cashier, $items, $payment, $buyer, $referentDocument);
+        $request = new CopySaleCustomerIdentifiedRequest($properties);
         return $this->run($request);
     }
 
     /**
-     * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param ReferentDocumentInterface $referentDocument
+     * @param RequestRefundPropertiesInterface $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
     public function copySaleRefund(
-        string                    $cashier,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument
+        RequestRefundPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new CopySaleRefundRequest($cashier, $items, $payment, $referentDocument);
+        $request = new CopySaleRefundRequest($properties);
         return $this->run($request);
     }
 
     /**
-     * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param ReferentDocumentInterface $referentDocument
-     * @param BuyerInterface $buyer
+     * @param RequestRefundCustomerIdentifiedPropertiesInterface $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
     public function copySaleRefundCustomerIdentified(
-        string                    $cashier,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument,
-        BuyerInterface            $buyer
+        RequestRefundCustomerIdentifiedPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new CopySaleRefundCustomerIdentifiedRequest($cashier, $items, $payment, $referentDocument, $buyer);
+        $request = new CopySaleRefundCustomerIdentifiedRequest($properties);
+        return $this->run($request);
+    }
+
+    /**
+     * @param RequestRefundPropertiesInterface $refundProperties
+     * @param RequestPropertiesInterface $saleProperties
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSaleWithClosedAdvanceSaleRequest(
+        RequestRefundPropertiesInterface $refundProperties,
+        RequestPropertiesInterface       $saleProperties
+    ): ResponseBuilder
+    {
+        $response = $this->advanceSaleRefund($refundProperties)->getResponse();
+        $request = new NormalSaleWithClosedAdvanceSaleRequest($saleProperties, $response);
+        return $this->run($request);
+    }
+
+    /**
+     * @param RequestRefundPropertiesInterface $properties
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function advanceSaleRefund(RequestRefundPropertiesInterface $properties): ResponseBuilder
+    {
+        $request = new AdvanceSaleRefundRequest($properties);
+        return $this->run($request);
+    }
+
+    /**
+     * @param RequestRefundCustomerIdentifiedPropertiesInterface $refundProperties
+     * @param RequestCustomerIdentifiedPropertiesInterface $saleProperties
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSaleWithClosedAdvanceSaleCustomerIdentifiedRequest(
+        RequestRefundCustomerIdentifiedPropertiesInterface $refundProperties,
+        RequestCustomerIdentifiedPropertiesInterface       $saleProperties
+    ): ResponseBuilder
+    {
+        $response = $this->advanceSaleRefund($refundProperties)->getResponse();
+        $request = new NormalSaleWithClosedAdvanceSaleCustomerIdentifiedRequest($saleProperties, $response);
         return $this->run($request);
     }
 }

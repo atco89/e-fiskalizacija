@@ -5,6 +5,7 @@ namespace TaxCore\Request\CopySale;
 
 use DateTimeInterface;
 use TaxCore\Entities\Enums\InvoiceType;
+use TaxCore\Entities\Properties\RequestWithReferentDocumentProperties;
 use TaxCore\Entities\ReferentDocumentInterface;
 use TaxCore\Request\Sale;
 
@@ -12,25 +13,39 @@ final class CopySaleRequest extends Sale implements ReferentDocumentInterface
 {
 
     /**
-     * @var ReferentDocumentInterface
+     * @var string
      */
-    private ReferentDocumentInterface $referentDocument;
+    protected string $referentDocumentNumber;
 
     /**
-     * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param ReferentDocumentInterface $referentDocument
+     * @var DateTimeInterface
      */
-    public function __construct(
-        string                    $cashier,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument
-    )
+    protected DateTimeInterface $referentDocumentDateTime;
+
+    /**
+     * @param RequestWithReferentDocumentProperties $properties
+     */
+    public function __construct(RequestWithReferentDocumentProperties $properties)
     {
-        parent::__construct($cashier, $items, $payment);
-        $this->referentDocument = $referentDocument;
+        parent::__construct($properties);
+        $this->referentDocumentNumber = $properties->referentDocumentNumber();
+        $this->referentDocumentDateTime = $properties->referentDocumentDateTime();
+    }
+
+    /**
+     * @return string
+     */
+    public function referentDocumentNumber(): string
+    {
+        return $this->referentDocumentNumber;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function referentDocumentDateTime(): DateTimeInterface
+    {
+        return $this->referentDocumentDateTime;
     }
 
     /**
@@ -39,21 +54,5 @@ final class CopySaleRequest extends Sale implements ReferentDocumentInterface
     public function invoiceType(): InvoiceType
     {
         return InvoiceType::COPY;
-    }
-
-    /**
-     * @return string
-     */
-    public function referentDocumentNumber(): string
-    {
-        return $this->referentDocument->referentDocumentNumber();
-    }
-
-    /**
-     * @return DateTimeInterface
-     */
-    public function referentDocumentDateTime(): DateTimeInterface
-    {
-        return $this->referentDocument->referentDocumentDateTime();
     }
 }

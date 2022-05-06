@@ -40,4 +40,9 @@ interface ConfigurationInterface
      * @return string
      */
     public function esdcNumber(): string;
+
+    /**
+     * @return string
+     */
+    public function cashier(): string;
 }

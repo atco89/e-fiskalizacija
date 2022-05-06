@@ -4,32 +4,30 @@ declare(strict_types=1);
 namespace TaxCore\Request;
 
 use TaxCore\Entities\BuyerInterface;
+use TaxCore\Entities\Properties\RequestCustomerIdentifiedPropertiesInterface;
 
 abstract class AdvanceSaleCustomerIdentified extends AdvanceSale implements BuyerInterface
 {
 
     /**
-     * @var BuyerInterface
+     * @var string
      */
-    protected BuyerInterface $buyer;
+    protected string $buyerId;
 
     /**
-     * @param string $cashier
-     * @param array $items
-     * @param array $payment
-     * @param BuyerInterface $buyer
+     * @param RequestCustomerIdentifiedPropertiesInterface $properties
      */
-    public function __construct(string $cashier, array $items, array $payment, BuyerInterface $buyer)
+    public function __construct(RequestCustomerIdentifiedPropertiesInterface $properties)
     {
-        parent::__construct($cashier, $items, $payment);
-        $this->buyer = $buyer;
+        parent::__construct($properties);
+        $this->buyerId = $properties->buyerId();
     }
 
     /**
      * @return string
      */
-    final public function buyerId(): string
+    public function buyerId(): string
     {
-        return $this->buyer->buyerId();
+        return $this->buyerId;
     }
 }

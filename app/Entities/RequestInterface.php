@@ -11,11 +11,6 @@ interface RequestInterface
 {
 
     /**
-     * @return string
-     */
-    public function cashier(): string;
-
-    /**
      * @return InvoiceType
      */
     public function invoiceType(): InvoiceType;
@@ -26,9 +21,9 @@ interface RequestInterface
     public function transactionType(): TransactionType;
 
     /**
-     * @return DateTimeInterface
+     * @return DateTimeInterface|null
      */
-    public function issueDateTime(): DateTimeInterface;
+    public function issueDateTime(): DateTimeInterface|null;
 
     /**
      * @return string
@@ -54,9 +49,4 @@ interface RequestInterface
      * @return AdvertisementItemInterface[]|null
      */
     public function advertisementItems(): array|null;
-
-    /**
-     * @return AdvanceSaleAmountInterface|null
-     */
-    public function advanceSaleAmountInterface(): AdvanceSaleAmountInterface|null;
 }

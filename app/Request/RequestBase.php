@@ -3,36 +3,30 @@ declare(strict_types=1);
 
 namespace TaxCore\Request;
 
-use DateTime;
 use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
-use TaxCore\Entities\AdvanceSaleAmountInterface;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
+use TaxCore\Entities\Properties\RequestPropertiesInterface;
 use TaxCore\Entities\RequestInterface;
 
 abstract class RequestBase implements RequestInterface
 {
 
     /**
-     * @var string
-     */
-    protected string $cashier;
-
-    /**
-     * @var ItemInterface[]
+     * @var array
      */
     protected array $items;
 
     /**
-     * @var PaymentTypeInterface[]
+     * @var array
      */
     protected array $payment;
 
     /**
-     * @var DateTimeInterface
+     * @var float
      */
-    protected DateTimeInterface $issueDateTime;
+    protected float $amount;
 
     /**
      * @var string
@@ -40,25 +34,26 @@ abstract class RequestBase implements RequestInterface
     protected string $requestId;
 
     /**
-     * @param string $cashier
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
+     * @param RequestPropertiesInterface $properties
      */
-    public function __construct(string $cashier, array $items, array $payment)
+    public function __construct(RequestPropertiesInterface $properties)
     {
-        $this->cashier = $cashier;
-        $this->items = $items;
-        $this->payment = $payment;
-        $this->issueDateTime = $this->generateIssueDateTime();
+        $this->items = $properties->items();
+        $this->payment = $properties->payment();
+        $this->amount = $this->sumItemsAmount($this->items);
         $this->requestId = $this->generateRequestId();
     }
 
     /**
-     * @return DateTimeInterface
+     * @param array $items
+     * @return float
      */
-    private function generateIssueDateTime(): DateTimeInterface
+    private function sumItemsAmount(array $items): float
     {
-        return new DateTime();
+        return array_reduce($items, function (float|null $carry, ItemInterface $item): float {
+            $carry += $item->amount();
+            return $carry;
+        });
     }
 
     /**
@@ -70,43 +65,11 @@ abstract class RequestBase implements RequestInterface
     }
 
     /**
-     * @return DateTimeInterface
+     * @return DateTimeInterface|null
      */
-    final public function issueDateTime(): DateTimeInterface
-    {
-        return $this->issueDateTime;
-    }
-
-    /**
-     * @return string
-     */
-    final public function cashier(): string
-    {
-        return $this->cashier;
-    }
-
-    /**
-     * @return ItemInterface[]
-     */
-    public function items(): array
-    {
-        return $this->items;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function advertisementItems(): array|null
+    public function issueDateTime(): DateTimeInterface|null
     {
         return null;
-    }
-
-    /**
-     * @return PaymentTypeInterface[]
-     */
-    final public function payments(): array
-    {
-        return $this->payment;
     }
 
     /**
@@ -118,20 +81,33 @@ abstract class RequestBase implements RequestInterface
     }
 
     /**
+     * @return ItemInterface[]
+     */
+    public function items(): array
+    {
+        return $this->items;
+    }
+
+    /**
+     * @return PaymentTypeInterface[]
+     */
+    final public function payments(): array
+    {
+        return $this->payment;
+    }
+
+    /**
      * @return float
      */
     final public function amount(): float
     {
-        return array_reduce($this->items, function (float|null $carry, ItemInterface $item): float {
-            $carry += $item->amount();
-            return $carry;
-        });
+        return $this->amount;
     }
 
     /**
-     * @return AdvanceSaleAmountInterface|null
+     * @return array|null
      */
-    public function advanceSaleAmountInterface(): AdvanceSaleAmountInterface|null
+    public function advertisementItems(): array|null
     {
         return null;
     }

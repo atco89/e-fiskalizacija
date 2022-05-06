@@ -8,12 +8,11 @@ use GuzzleHttp\RequestOptions;
 use TaxCore\Entities\BuyerCostCenterInterface;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\ConfigurationInterface;
-use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
 use TaxCore\Entities\RequestInterface;
+use TaxCore\Request\AdvanceSale\AdvanceSaleRequest;
 
 abstract class RequestBuilder
 {
@@ -86,8 +85,8 @@ abstract class RequestBuilder
         $props = [
             'invoiceType'            => $request->invoiceType()->value,
             'transactionType'        => $request->transactionType()->value,
-            'invoiceNumber'          => $this->configuration->esdcNumber(), // ESIR broj
-            'cashier'                => $request->cashier(),
+            'invoiceNumber'          => $this->configuration->esdcNumber(),
+            'cashier'                => $this->configuration->cashier(),
             'referentDocumentNumber' => $this->loadReferentDocumentNumber($request),
             'referentDocumentDT'     => $this->loadReferentDocumentDateTime($request),
             'items'                  => $this->buildItems($request->items()),
@@ -95,9 +94,7 @@ abstract class RequestBuilder
             'options'                => $this->buildOptions(),
         ];
 
-        $invoiceType = $request->invoiceType();
-        $transactionType = $request->transactionType();
-        if ($invoiceType === InvoiceType::ADVANCE && $transactionType === TransactionType::SALE) {
+        if ($request instanceof AdvanceSaleRequest) {
             $props['dateAndTimeOfIssue'] = $request->issueDateTime()->format(self::DATE_TIME_FORMAT);
         }
 
@@ -108,7 +105,7 @@ abstract class RequestBuilder
         if ($request instanceof BuyerCostCenterInterface) {
             $buyerCostCenterId = $this->loadBuyerCostCenterId($request);
             if (!empty($buyerCostCenterId)) {
-                $props['buyerCostCenterId'] = $this->loadBuyerCostCenterId($request);
+                $props['buyerCostCenterId'] = $buyerCostCenterId;
             }
         }
 

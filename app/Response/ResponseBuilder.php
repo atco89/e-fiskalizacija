@@ -8,7 +8,7 @@ use TaxCore\Entities\CustomerSignatureInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\RequestInterface;
-use TaxCore\Receipt\Receipt;
+use TaxCore\Receipt\ReceiptBuilder;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -43,9 +43,9 @@ final class ResponseBuilder
     private string $title;
 
     /**
-     * @var Receipt
+     * @var ReceiptBuilder
      */
-    private Receipt $receipt;
+    private ReceiptBuilder $receipt;
 
     /**
      * @param ConfigurationInterface $configuration
@@ -68,7 +68,7 @@ final class ResponseBuilder
         $this->request = $request;
         $this->response = $response;
         $this->title = $this->title();
-        $this->receipt = new Receipt($this->title, $this->generateReceipt());
+        $this->receipt = new ReceiptBuilder($this->title, $this->generateReceipt());
     }
 
     /**
@@ -121,9 +121,9 @@ final class ResponseBuilder
     }
 
     /**
-     * @return Receipt
+     * @return ReceiptBuilder
      */
-    public function getReceipt(): Receipt
+    public function getReceipt(): ReceiptBuilder
     {
         return $this->receipt;
     }

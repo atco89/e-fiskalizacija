@@ -13,6 +13,7 @@
             </div>
             <!-- MERCHANT LOGO END -->
 
+            {% if request.invoiceType.value == 2 %}
             <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
@@ -24,11 +25,7 @@
             <!-- DOCUMENT TITLE CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12 text-center">
-                    {% if request.invoiceType.value == 2 %}
-                        <strong class="text-uppercase">Ово није фискални рачун</strong>
-                    {% else %}
-                        <strong class="text-uppercase">Фискални рачун</strong>
-                    {% endif %}
+                    <strong class="text-uppercase">Ово није фискални рачун</strong>
                 </div>
             </div>
             <!-- DOCUMENT TITLE CONTAINER END -->
@@ -40,30 +37,44 @@
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
+            {% else %}
+                <!-- DOCUMENT TITLE CONTAINER START -->
+                <div class="row lh-1 mb-2">
+                    <div class="col-12 text-center">
+                        ============ <strong>Фискални рачун</strong> ============
+                    </div>
+                </div>
+                <!-- DOCUMENT TITLE CONTAINER END -->
+            {% endif %}
 
             <!-- INVOICE INFO START -->
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
                         <tr>
-                            <td class="align-middle text-start">ПИБ:</td>
-                            <td class="align-middle text-end">{{ response.tin }}</td>
+                            <td colspan="2" class="align-middle text-center">
+                                {{ response.tin }}
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-start">Предузеће:</td>
-                            <td class="align-middle text-end">{{ response.businessName }}</td>
+                            <td colspan="2" class="align-middle text-center">
+                                {{ response.businessName }}
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-start">Име:</td>
-                            <td class="align-middle text-end">{{ response.locationName }}</td>
+                            <td colspan="2" class="align-middle text-center">
+                                {{ response.locationName }}
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-start">Адреса:</td>
-                            <td class="align-middle text-end">{{ response.address }}</td>
+                            <td colspan="2" class="align-middle text-center">
+                                {{ response.address }}
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-start">Место:</td>
-                            <td class="align-middle text-end">{{ response.district }}</td>
+                            <td colspan="2" class="align-middle text-center pb-2">
+                                {{ response.district }}
+                            </td>
                         </tr>
 
                         <tr>
@@ -191,7 +202,7 @@
                         </tr>
 
                         {% set advanceSaleAmountInterface = request.advanceSaleAmountInterface %}
-                        {% if advanceSaleAmountInterface instanceof AdvanceSaleAmountInterface %}
+                        {% if advanceSaleAmountInterface is not empty %}
                             <tr>
                                 <td class="text-start">Плаћено авансом:</td>
                                 <td class="text-end">{{ advanceSaleAmountInterface.receivedAmount | decimal }}</td>

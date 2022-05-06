@@ -4,42 +4,30 @@ declare(strict_types=1);
 namespace TaxCore\Request;
 
 use TaxCore\Entities\BuyerInterface;
-use TaxCore\Entities\ItemInterface;
-use TaxCore\Entities\PaymentTypeInterface;
-use TaxCore\Entities\ReferentDocumentInterface;
+use TaxCore\Entities\Properties\RequestRefundCustomerIdentifiedPropertiesInterface;
 
 abstract class RefundCustomerIdentified extends Refund implements BuyerInterface
 {
 
     /**
-     * @var BuyerInterface
+     * @var string
      */
-    protected BuyerInterface $buyer;
+    protected string $buyerId;
 
     /**
-     * @param string $cashier
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
-     * @param ReferentDocumentInterface $referentDocument
-     * @param BuyerInterface $buyer
+     * @param RequestRefundCustomerIdentifiedPropertiesInterface $properties
      */
-    public function __construct(
-        string                    $cashier,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument,
-        BuyerInterface            $buyer
-    )
+    public function __construct(RequestRefundCustomerIdentifiedPropertiesInterface $properties)
     {
-        parent::__construct($cashier, $items, $payment, $referentDocument);
-        $this->buyer = $buyer;
+        parent::__construct($properties);
+        $this->buyerId = $properties->buyerId();
     }
 
     /**
      * @return string
      */
-    final public function buyerId(): string
+    public function buyerId(): string
     {
-        return $this->buyer->buyerId();
+        return $this->buyerId;
     }
 }

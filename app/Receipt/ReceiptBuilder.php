@@ -5,7 +5,7 @@ namespace TaxCore\Receipt;
 
 use TaxCore\Entities\ReceiptInterface;
 
-final class Receipt implements ReceiptInterface
+final class ReceiptBuilder implements ReceiptInterface
 {
 
     /**
