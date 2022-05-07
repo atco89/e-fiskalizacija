@@ -7,7 +7,7 @@ use TaxCore\Entities\ConfigurationInterface;
 use TaxCore\Entities\CustomerSignatureInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
-use TaxCore\Entities\RequestInterface;
+use TaxCore\Entities\ApiRequestInterface;
 use TaxCore\Receipt\ReceiptBuilder;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -28,9 +28,9 @@ final class ResponseBuilder
     private Environment $twig;
 
     /**
-     * @var RequestInterface
+     * @var ApiRequestInterface
      */
-    private RequestInterface $request;
+    private ApiRequestInterface $request;
 
     /**
      * @var Response
@@ -50,7 +50,7 @@ final class ResponseBuilder
     /**
      * @param ConfigurationInterface $configuration
      * @param Environment $twig
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @param Response $response
      * @throws LoaderError
      * @throws RuntimeError
@@ -59,7 +59,7 @@ final class ResponseBuilder
     public function __construct(
         ConfigurationInterface $configuration,
         Environment            $twig,
-        RequestInterface       $request,
+        ApiRequestInterface    $request,
         Response               $response
     )
     {
@@ -105,9 +105,9 @@ final class ResponseBuilder
     }
 
     /**
-     * @return RequestInterface
+     * @return ApiRequestInterface
      */
-    public function getRequest(): RequestInterface
+    public function getRequest(): ApiRequestInterface
     {
         return $this->request;
     }

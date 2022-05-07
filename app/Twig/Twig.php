@@ -23,23 +23,9 @@ final class Twig
     {
         $this->environment = new Environment(new FilesystemLoader(__DIR__ . '/../../resources/views'));
 
-        $this->environment->addExtension(new InstanceOfExtension());
-
         $this->environment->addFilter(new TwigFilter('base64Encode',
             function (string|null $imagePath): string {
                 return base64_encode(file_get_contents($imagePath));
-            }
-        ));
-
-        $this->environment->addFilter(new TwigFilter('delimiter',
-            function (string|null $string): string {
-                $size = empty($string) ? 41 : 39;
-                $length = $size - mb_strlen($string, mb_detect_encoding($string));
-                $spaces = empty($string) ? 0 : 1;
-                $left = intval(ceil($length / 2) - $spaces);
-                $showString = empty($string) ? $string : " $string ";
-                $right = intval($length - $left - $spaces);
-                return implode('', [str_repeat('=', $left), $showString, str_repeat('=', $right)]);
             }
         ));
 
@@ -62,6 +48,12 @@ final class Twig
                     $carry += $item->amount();
                     return $carry;
                 });
+            }
+        ));
+
+        $this->environment->addFilter(new TwigFilter('instanceof',
+            function (mixed $variable, mixed $instance): bool {
+                return $variable instanceof $instance;
             }
         ));
     }

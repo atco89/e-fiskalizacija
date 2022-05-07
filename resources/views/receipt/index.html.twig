@@ -17,7 +17,7 @@
             <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
-                    {{ '' | delimiter }}
+                    =========================================
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -31,11 +31,11 @@
             <!-- DOCUMENT TITLE CONTAINER END -->
 
             <!-- BORDERED CONTAINER START -->
-            <div class="row lh-1">
-                <div class="col-12">
-                    {{ '' | delimiter }}
+                <div class="row lh-1">
+                    <div class="col-12">
+                        =========================================
+                    </div>
                 </div>
-            </div>
             <!-- BORDERED CONTAINER END -->
             {% else %}
                 <!-- DOCUMENT TITLE CONTAINER START -->
@@ -132,7 +132,7 @@
             <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
-                    {{ '' | delimiter }}
+                    =========================================
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -148,7 +148,7 @@
             <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
-                    {{ '' | delimiter }}
+                    =========================================
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -175,7 +175,8 @@
                                 </td>
                                 <td class="text-center">{{ item.quantity | decimal }}</td>
                                 <td class="text-end">
-                                    {{ request.transactionType.value == 1 ? '-' : '' }} {{ item.amount | decimal }}
+                                    {{ request | instanceof('\\TaxCore\\Request\\Refund') ? '-' : '' }}
+                                    {{ item.amount | decimal }}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -187,7 +188,7 @@
             <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
-                    {{ '' | delimiter }}
+                    =========================================
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -201,19 +202,14 @@
                             <td class="text-end">{{ request.amount | decimal }}</td>
                         </tr>
 
-                        {% set advanceSaleAmountInterface = request.advanceSaleAmountInterface %}
-                        {% if advanceSaleAmountInterface is not empty %}
+                        {% if request | instanceof('\\TaxCore\\Entities\\AdvanceSaleAmountInterface') %}
                             <tr>
-                                <td class="text-start">Плаћено авансом:</td>
-                                <td class="text-end">{{ advanceSaleAmountInterface.receivedAmount | decimal }}</td>
+                                <th class="text-start">Плаћено авансом:</th>
+                                <th class="text-end">{{ request.receivedAmount | decimal }}</th>
                             </tr>
                             <tr>
-                                <td class="text-start">ПДВ на аванс:</td>
-                                <td class="text-end">{{ advanceSaleAmountInterface.receivedTax | decimal }}</td>
-                            </tr>
-                            <tr>
-                                <td class="text-start">Преостало за плаћање:</td>
-                                <td class="text-end">{{ advanceSaleAmountInterface.remainingAmount | decimal }}</td>
+                                <th class="text-start">ПДВ на аванс:</th>
+                                <th class="text-end">{{ request.receivedTax | decimal }}</th>
                             </tr>
                         {% endif %}
 
@@ -223,6 +219,13 @@
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
+
+                        {% if request | instanceof('\\TaxCore\\Entities\\AdvanceSaleAmountInterface') %}
+                            <tr>
+                                <th class="text-start">Преостало за плаћање:</th>
+                                <th class="text-end">{{ request.remainingAmount | decimal }}</th>
+                            </tr>
+                        {% endif %}
                     </table>
                 </div>
             </div>
@@ -231,7 +234,7 @@
             <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
-                    {{ '' | delimiter }}
+                    =========================================
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -256,7 +259,7 @@
                         {% endfor %}
                         <tr>
                             <td colspan="4 lh-1">
-                                {{ '' | delimiter }}
+                                =========================================
                             </td>
                         </tr>
                         <tr>
@@ -265,7 +268,7 @@
                         </tr>
                         <tr>
                             <td colspan="4 lh-1">
-                                {{ '' | delimiter }}
+                                =========================================
                             </td>
                         </tr>
                     </table>
@@ -297,7 +300,7 @@
             <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
-                    {{ '' | delimiter }}
+                    =========================================
                 </div>
             </div>
             <!-- BORDERED CONTAINER END -->
@@ -311,7 +314,7 @@
             </div>
             <!-- QR CODE CONTAINER END -->
 
-            {% if instanceOfCustomerSignature %}
+            {% if request | instanceof('\\TaxCore\\Entities\\CustomerSignatureInterface') %}
                 <!-- CUSTOMER SIGNATURE CONTAINER START -->
                 <div class="row mt-5 mb-3">
                     <div class="col-4">
@@ -341,11 +344,15 @@
                                 {% if advertisementItem.amount is not null %}
                                     <tr>
                                         <td class="text-start">* {{ advertisementItem.name  }}</td>
+                                    </tr>
+                                    <tr>
                                         <td class="text-end">{{ advertisementItem.amount | decimal }}</td>
                                     </tr>
                                 {% else %}
                                     <tr>
-                                        <td class="text-start">* Последњи авансни рачун</td>
+                                        <td class="text-start">* Последњи авансни рачун:</td>
+                                    </tr>
+                                    <tr>
                                         <td class="text-end">{{ advertisementItem.name  }}</td>
                                     </tr>
                                 {% endif %}

@@ -11,8 +11,8 @@ use TaxCore\Entities\ConfigurationInterface;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
-use TaxCore\Entities\RequestInterface;
-use TaxCore\Request\AdvanceSale\AdvanceSaleRequest;
+use TaxCore\Entities\ApiRequestInterface;
+use TaxCore\Request\AdvanceSale\RequestAdvanceSale;
 
 abstract class RequestBuilder
 {
@@ -36,11 +36,11 @@ abstract class RequestBuilder
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @return array
      * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
      */
-    protected function requestOptions(RequestInterface $request): array
+    protected function requestOptions(ApiRequestInterface $request): array
     {
         return [
             RequestOptions::CERT    => $this->cert(),
@@ -77,10 +77,10 @@ abstract class RequestBuilder
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @return array
      */
-    private function requestBody(RequestInterface $request): array
+    private function requestBody(ApiRequestInterface $request): array
     {
         $props = [
             'invoiceType'            => $request->invoiceType()->value,
@@ -94,7 +94,7 @@ abstract class RequestBuilder
             'options'                => $this->buildOptions(),
         ];
 
-        if ($request instanceof AdvanceSaleRequest) {
+        if ($request instanceof RequestAdvanceSale) {
             $props['dateAndTimeOfIssue'] = $request->issueDateTime()->format(self::DATE_TIME_FORMAT);
         }
 
@@ -113,19 +113,19 @@ abstract class RequestBuilder
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @return string|null
      */
-    private function loadReferentDocumentNumber(RequestInterface $request): string|null
+    private function loadReferentDocumentNumber(ApiRequestInterface $request): string|null
     {
         return $request instanceof ReferentDocumentInterface ? $request->referentDocumentNumber() : null;
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @return string|null
      */
-    private function loadReferentDocumentDateTime(RequestInterface $request): string|null
+    private function loadReferentDocumentDateTime(ApiRequestInterface $request): string|null
     {
         return $request instanceof ReferentDocumentInterface
             ? $request->referentDocumentDateTime()->format(self::DATE_TIME_FORMAT)
@@ -177,19 +177,19 @@ abstract class RequestBuilder
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @return string|null
      */
-    private function loadBuyerId(RequestInterface $request): string|null
+    private function loadBuyerId(ApiRequestInterface $request): string|null
     {
         return $request instanceof BuyerInterface ? $request->buyerId() : null;
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @return string|null
      */
-    private function loadBuyerCostCenterId(RequestInterface $request): string|null
+    private function loadBuyerCostCenterId(ApiRequestInterface $request): string|null
     {
         return $request instanceof BuyerCostCenterInterface ? $request->buyerCostCenterId() : null;
     }

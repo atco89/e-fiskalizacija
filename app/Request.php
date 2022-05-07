@@ -7,29 +7,29 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use TaxCore\Entities\ConfigurationInterface;
-use TaxCore\Entities\Properties\RequestCustomerIdentifiedPropertiesInterface;
-use TaxCore\Entities\Properties\RequestCustomerIdentifiedWithCostCenterPropertiesInterface;
-use TaxCore\Entities\Properties\RequestPropertiesInterface;
-use TaxCore\Entities\Properties\RequestRefundCustomerIdentifiedPropertiesInterface;
-use TaxCore\Entities\Properties\RequestRefundPropertiesInterface;
-use TaxCore\Entities\Properties\RequestWithReferentDocumentProperties;
-use TaxCore\Entities\Properties\RequestWithReferentDocumentPropertiesCustomerIdentifiedInterface;
-use TaxCore\Entities\RequestInterface;
+use TaxCore\Entities\Request\RequestCustomerIdentifiedPropertiesInterface;
+use TaxCore\Entities\Request\RequestCustomerIdentifiedWithCostCenterPropertiesInterface;
+use TaxCore\Entities\Request\RequestPropertiesInterface;
+use TaxCore\Entities\Request\RequestRefundCustomerIdentifiedPropertiesInterface;
+use TaxCore\Entities\Request\RequestRefundPropertiesInterface;
+use TaxCore\Entities\Request\RequestWithReferentDocumentPropertiesCustomerIdentifiedInterface;
+use TaxCore\Entities\Request\RequestWithReferentDocumentPropertiesInterface;
+use TaxCore\Entities\ApiRequestInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
-use TaxCore\Request\AdvanceSale\AdvanceSaleCustomerIdentifiedRequest;
-use TaxCore\Request\AdvanceSale\AdvanceSaleRefundCustomerIdentifiedRequest;
-use TaxCore\Request\AdvanceSale\AdvanceSaleRefundRequest;
-use TaxCore\Request\AdvanceSale\AdvanceSaleRequest;
-use TaxCore\Request\CopySale\CopySaleCustomerIdentifiedRequest;
-use TaxCore\Request\CopySale\CopySaleRefundCustomerIdentifiedRequest;
-use TaxCore\Request\CopySale\CopySaleRefundRequest;
-use TaxCore\Request\CopySale\CopySaleRequest;
-use TaxCore\Request\NormalSale\NormalSaleCustomerIdentifiedRequest;
-use TaxCore\Request\NormalSale\NormalSaleRefundCustomerIdentifiedRequest;
-use TaxCore\Request\NormalSale\NormalSaleRefundRequest;
-use TaxCore\Request\NormalSale\NormalSaleRequest;
-use TaxCore\Request\NormalSale\NormalSaleWithClosedAdvanceSaleCustomerIdentifiedRequest;
-use TaxCore\Request\NormalSale\NormalSaleWithClosedAdvanceSaleRequest;
+use TaxCore\Request\AdvanceSale\RequestAdvanceSaleBuyerIdentified;
+use TaxCore\Request\AdvanceSale\RequestAdvanceSaleBuyerIdentifiedRefund;
+use TaxCore\Request\AdvanceSale\RequestAdvanceSaleRefund;
+use TaxCore\Request\AdvanceSale\RequestAdvanceSale;
+use TaxCore\Request\CopySale\RequestCopySaleBuyerIdentified;
+use TaxCore\Request\CopySale\RequestCopySaleBuyerIdentifiedRefund;
+use TaxCore\Request\CopySale\RequestCopySaleRefund;
+use TaxCore\Request\CopySale\RequestCopySale;
+use TaxCore\Request\NormalSale\RequestNormalSaleBuyerAndCostCenterIdentified;
+use TaxCore\Request\NormalSale\RequestNormalSaleBuyerIdentifiedRefund;
+use TaxCore\Request\NormalSale\RequestNormalSaleRefund;
+use TaxCore\Request\NormalSale\RequestNormalSale;
+use TaxCore\Request\NormalSale\RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale;
+use TaxCore\Request\NormalSale\RequestNormalSaleWithClosingAdvanceSale;
 use TaxCore\Response\Response;
 use TaxCore\Response\ResponseBuilder;
 use TaxCore\Twig\Twig;
@@ -62,16 +62,16 @@ final class Request extends RequestBuilder
      */
     public function normalSale(RequestPropertiesInterface $properties): ResponseBuilder
     {
-        $request = new NormalSaleRequest($properties);
+        $request = new RequestNormalSale($properties);
         return $this->run($request);
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    private function run(RequestInterface $request): ResponseBuilder
+    private function run(ApiRequestInterface $request): ResponseBuilder
     {
         try {
             $httpClient = new Client();
@@ -84,14 +84,14 @@ final class Request extends RequestBuilder
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @param Response $response
      * @return ResponseBuilder
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    private function buildResponse(RequestInterface $request, Response $response): ResponseBuilder
+    private function buildResponse(ApiRequestInterface $request, Response $response): ResponseBuilder
     {
         $configuration = $this->configuration;
         $environment = $this->twig->getEnvironment();
@@ -107,7 +107,7 @@ final class Request extends RequestBuilder
         RequestCustomerIdentifiedWithCostCenterPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new NormalSaleCustomerIdentifiedRequest($properties);
+        $request = new RequestNormalSaleBuyerAndCostCenterIdentified($properties);
         return $this->run($request);
     }
 
@@ -118,7 +118,7 @@ final class Request extends RequestBuilder
      */
     public function normalSaleRefund(RequestRefundPropertiesInterface $properties): ResponseBuilder
     {
-        $request = new NormalSaleRefundRequest($properties);
+        $request = new RequestNormalSaleRefund($properties);
         return $this->run($request);
     }
 
@@ -131,7 +131,7 @@ final class Request extends RequestBuilder
         RequestRefundCustomerIdentifiedPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new NormalSaleRefundCustomerIdentifiedRequest($properties);
+        $request = new RequestNormalSaleBuyerIdentifiedRefund($properties);
         return $this->run($request);
     }
 
@@ -144,7 +144,7 @@ final class Request extends RequestBuilder
         RequestRefundCustomerIdentifiedPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new AdvanceSaleRefundCustomerIdentifiedRequest($properties);
+        $request = new RequestAdvanceSaleBuyerIdentifiedRefund($properties);
         return $this->run($request);
     }
 
@@ -155,7 +155,7 @@ final class Request extends RequestBuilder
      */
     public function advanceSale(RequestPropertiesInterface $properties): ResponseBuilder
     {
-        $request = new AdvanceSaleRequest($properties);
+        $request = new RequestAdvanceSale($properties);
         return $this->run($request);
     }
 
@@ -168,18 +168,18 @@ final class Request extends RequestBuilder
         RequestCustomerIdentifiedPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new AdvanceSaleCustomerIdentifiedRequest($properties);
+        $request = new RequestAdvanceSaleBuyerIdentified($properties);
         return $this->run($request);
     }
 
     /**
-     * @param RequestWithReferentDocumentProperties $properties
+     * @param RequestWithReferentDocumentPropertiesInterface $properties
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function copySale(RequestWithReferentDocumentProperties $properties): ResponseBuilder
+    public function copySale(RequestWithReferentDocumentPropertiesInterface $properties): ResponseBuilder
     {
-        $request = new CopySaleRequest($properties);
+        $request = new RequestCopySale($properties);
         return $this->run($request);
     }
 
@@ -192,7 +192,7 @@ final class Request extends RequestBuilder
         RequestWithReferentDocumentPropertiesCustomerIdentifiedInterface $properties
     ): ResponseBuilder
     {
-        $request = new CopySaleCustomerIdentifiedRequest($properties);
+        $request = new RequestCopySaleBuyerIdentified($properties);
         return $this->run($request);
     }
 
@@ -205,7 +205,7 @@ final class Request extends RequestBuilder
         RequestRefundPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new CopySaleRefundRequest($properties);
+        $request = new RequestCopySaleRefund($properties);
         return $this->run($request);
     }
 
@@ -218,24 +218,29 @@ final class Request extends RequestBuilder
         RequestRefundCustomerIdentifiedPropertiesInterface $properties
     ): ResponseBuilder
     {
-        $request = new CopySaleRefundCustomerIdentifiedRequest($properties);
+        $request = new RequestCopySaleBuyerIdentifiedRefund($properties);
         return $this->run($request);
     }
 
     /**
-     * @param RequestRefundPropertiesInterface $refundProperties
-     * @param RequestPropertiesInterface $saleProperties
-     * @return ResponseBuilder
+     * @param RequestRefundPropertiesInterface $requestRefund
+     * @param RequestPropertiesInterface $requestSale
+     * @return ResponseBuilder[]
      * @throws TaxCoreRequestException
      */
     public function normalSaleWithClosedAdvanceSaleRequest(
-        RequestRefundPropertiesInterface $refundProperties,
-        RequestPropertiesInterface       $saleProperties
-    ): ResponseBuilder
+        RequestRefundPropertiesInterface $requestRefund,
+        RequestPropertiesInterface       $requestSale
+    ): array
     {
-        $response = $this->advanceSaleRefund($refundProperties)->getResponse();
-        $request = new NormalSaleWithClosedAdvanceSaleRequest($saleProperties, $response);
-        return $this->run($request);
+        $advanceSaleRefundResponseBuilder = $this->advanceSaleRefund($requestRefund);
+        return [
+            $advanceSaleRefundResponseBuilder,
+            $this->run(new RequestNormalSaleWithClosingAdvanceSale(
+                $requestSale,
+                $advanceSaleRefundResponseBuilder->getResponse()
+            )),
+        ];
     }
 
     /**
@@ -245,7 +250,7 @@ final class Request extends RequestBuilder
      */
     public function advanceSaleRefund(RequestRefundPropertiesInterface $properties): ResponseBuilder
     {
-        $request = new AdvanceSaleRefundRequest($properties);
+        $request = new RequestAdvanceSaleRefund($properties);
         return $this->run($request);
     }
 
@@ -261,7 +266,7 @@ final class Request extends RequestBuilder
     ): ResponseBuilder
     {
         $response = $this->advanceSaleRefund($refundProperties)->getResponse();
-        $request = new NormalSaleWithClosedAdvanceSaleCustomerIdentifiedRequest($saleProperties, $response);
+        $request = new RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale($saleProperties, $response);
         return $this->run($request);
     }
 }
