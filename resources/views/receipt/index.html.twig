@@ -4,34 +4,27 @@
     <div class="row">
         <div class="col-12">
 
-            <!-- MERCHANT LOGO START -->
             <div class="row">
                 <div class="col-12 text-center">
                     <img src="{{ configuration.logoPath | base64Encode | image64('png') }}" alt="merchant-log-path"
                          class="img-fluid w-50 px-4 py-2"/>
                 </div>
             </div>
-            <!-- MERCHANT LOGO END -->
 
             {% if request | instanceof('\\TaxCore\\Request\\RefundBuilder') %}
-                <!-- DOCUMENT TITLE CONTAINER START -->
                 <div class="row lh-1 mb-2">
                     <div class="col-12 text-center">
                         ======== <strong>Ово није фискални рачун</strong> ========
                     </div>
                 </div>
-                <!-- DOCUMENT TITLE CONTAINER END -->
             {% else %}
-                <!-- DOCUMENT TITLE CONTAINER START -->
                 <div class="row lh-1 mb-2">
                     <div class="col-12 text-center">
                         ============ <strong>Фискални рачун</strong> ============
                     </div>
                 </div>
-                <!-- DOCUMENT TITLE CONTAINER END -->
             {% endif %}
 
-            <!-- INVOICE INFO START -->
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
@@ -111,33 +104,25 @@
                     </table>
                 </div>
             </div>
-            <!-- INVOICE INFO END -->
 
-            <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
                     =========================================
                 </div>
             </div>
-            <!-- BORDERED CONTAINER END -->
 
-            <!-- DOCUMENT TITLE CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12 text-center">
                     {{ title }}
                 </div>
             </div>
-            <!-- DOCUMENT TITLE CONTAINER END -->
 
-            <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
                     =========================================
                 </div>
             </div>
-            <!-- BORDERED CONTAINER END -->
 
-            <!-- ITEMS START -->
             <div class="row">
                 <div class="col-12">
                     <small class="ps-0">Артикли:</small>
@@ -167,17 +152,13 @@
                     </table>
                 </div>
             </div>
-            <!-- ITEMS END -->
 
-            <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
-                <div class="col-12">
-                    =========================================
+                <div class="col-12 text-center">
+                    ------------------------------------------------
                 </div>
             </div>
-            <!-- BORDERED CONTAINER END -->
 
-            <!-- ITEMS SUMMARY START -->
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
@@ -227,19 +208,15 @@
                     </table>
                 </div>
             </div>
-            <!-- ITEMS SUMMARY END -->
 
             {% if request | instanceof('\\TaxCore\\Request\\RefundBuilder') == false %}
-                <!-- BORDERED CONTAINER START -->
                 <div class="row lh-1">
                     <div class="col-12">
                         =========================================
                     </div>
                 </div>
-                <!-- BORDERED CONTAINER END -->
             {% endif %}
 
-            <!-- TAX DETAILS START -->
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
@@ -263,7 +240,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="3">Укупан износ ПДВ-а:</td>
+                            <td colspan="3">Укупан износ пореза:</td>
                             <td class="text-end">{{ response.taxItems | taxAmount | decimal }}</td>
                         </tr>
                         <tr>
@@ -274,9 +251,7 @@
                     </table>
                 </div>
             </div>
-            <!-- TAX DETAILS END -->
 
-            <!-- TAX CORE INVOICE DETAILS START -->
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
@@ -295,27 +270,21 @@
                     </table>
                 </div>
             </div>
-            <!-- TAX CORE INVOICE DETAILS END -->
 
-            <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
                     =========================================
                 </div>
             </div>
-            <!-- BORDERED CONTAINER END -->
 
-            <!-- QR CODE CONTAINER START -->
             <div class="row my-1">
                 <div class="col-12 text-center">
                     <img src="{{ response.verificationQRCode | image64('gif') }}" alt="verification-qr-code"
                          id="verification-qr-code" class="img-fluid"/>
                 </div>
             </div>
-            <!-- QR CODE CONTAINER END -->
 
             {% if request | instanceof('\\TaxCore\\Entities\\CustomerSignatureInterface') %}
-                <!-- CUSTOMER SIGNATURE CONTAINER START -->
                 <div class="row mt-5 mb-3">
                     <div class="col-4">
                         Потпис купца:
@@ -324,19 +293,15 @@
                         <div class="border-top-0 border-left-0 border-right-0 bordered-bottom h-100"></div>
                     </div>
                 </div>
-                <!-- CUSTOMER SIGNATURE CONTAINER END -->
             {% endif %}
 
-            <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12 text-center">
                     ========= <strong>Крај фискалног рачуна</strong> =========
                 </div>
             </div>
-            <!-- BORDERED CONTAINER END -->
 
             {% if request.advertisementItems is not empty %}
-                <!-- ADVERTISEMENT ITEMS START -->
                 <div class="row mt-2">
                     <div class="col-12">
                         <table class="table table-sm table-borderless">
@@ -360,7 +325,6 @@
                         </table>
                     </div>
                 </div>
-                <!-- ADVERTISEMENT ITEMS END -->
             {% endif %}
 
         </div>
