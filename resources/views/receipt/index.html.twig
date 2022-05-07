@@ -175,7 +175,7 @@
                                 </td>
                                 <td class="text-center">{{ item.quantity | decimal }}</td>
                                 <td class="text-end">
-                                    {{ request | instanceof('\\TaxCore\\Request\\Refund') ? '-' : '' }}
+                                    {{ request | instanceof('\\TaxCore\\Request\\RefundBuilder') ? '-' : '' }}
                                     {{ item.amount | decimal }}
                                 </td>
                             </tr>

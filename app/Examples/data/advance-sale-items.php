@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use TaxCore\Entities\Enums\TaxRateLabel;
-use TaxCore\Examples\AdvanceSaleItemBuilder;
+use TaxCore\Examples\AdvanceSaleItemInterfaceBuilder;
 
 $advanceSaleItems = [
     [
@@ -20,5 +20,5 @@ $advanceSaleItems = [
 ];
 
 return array_map(function (array $item) {
-    return new AdvanceSaleItemBuilder($item);
+    return new AdvanceSaleItemInterfaceBuilder($item);
 }, $advanceSaleItems);

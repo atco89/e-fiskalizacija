@@ -8,6 +8,10 @@ use TaxCore\Examples\Request\AdvanceSale;
 use TaxCore\Examples\Request\AdvanceSaleBuyerIdentified;
 use TaxCore\Examples\Request\AdvanceSaleBuyerIdentifiedRefund;
 use TaxCore\Examples\Request\AdvanceSaleRefund;
+use TaxCore\Examples\Request\CopySale;
+use TaxCore\Examples\Request\CopySaleBuyerIdentified;
+use TaxCore\Examples\Request\CopySaleRefund;
+use TaxCore\Examples\Request\CopySaleRefundBuyerIdentified;
 use TaxCore\Examples\Request\NormalSale;
 use TaxCore\Examples\Request\NormalSaleBuyerAndCostCenterIdentified;
 use TaxCore\Examples\Request\NormalSaleBuyerIdentifiedRefund;
@@ -57,17 +61,17 @@ try {
 
     // ===== COPY SALE =====
 
-//    $c1 = $request->copySale(new CopySale($n1->getResponse()));
-//    saveOne($c1);
+    $c1 = $request->copySale(new CopySale($n1->getResponse()));
+    saveOne($c1);
 
-//    $c2 = $request->copySaleBuyerIdentifiedBuilder('');
-//    saveOne($c2);
+    $c2 = $request->copySaleBuyerIdentifiedBuilder(new CopySaleBuyerIdentified($n2->getResponse()));
+    saveOne($c2);
 
-//    $c3 = $request->copySaleRefund(new CopySaleRefund($n3->getResponse()));
-//    saveOne($c3);
-//
-//    $c4 = $request->copySaleRefundBuyerIdentified(new CopySaleRefundBuyerIdentified($n4->getResponse()));
-//    saveOne($c4);
+    $c3 = $request->copySaleRefund(new CopySaleRefund($n3->getResponse()));
+    saveOne($c3);
+
+    $c4 = $request->copySaleRefundBuyerIdentified(new CopySaleRefundBuyerIdentified($n4->getResponse()));
+    saveOne($c4);
 } catch (Exception $e) {
     die($e->getMessage());
 }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Examples\Request;
 
-use TaxCore\Entities\AdvanceSaleItem;
+use TaxCore\Entities\AdvanceSaleItemInterface;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\Request\RequestBuyerIdentifiedInterface;
@@ -36,7 +36,7 @@ final class AdvanceSaleBuyerIdentified implements RequestBuyerIdentifiedInterfac
     }
 
     /**
-     * @return AdvanceSaleItem[]|null
+     * @return AdvanceSaleItemInterface[]|null
      */
     public function advanceSaleItems(): array|null
     {

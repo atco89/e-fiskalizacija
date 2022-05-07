@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace TaxCore\Examples;
 
-use TaxCore\Entities\AdvanceSaleItem;
+use TaxCore\Entities\AdvanceSaleItemInterface;
 use TaxCore\Entities\Enums\TaxRateLabel;
 
-final class AdvanceSaleItemBuilder implements AdvanceSaleItem
+final class AdvanceSaleItemInterfaceBuilder implements AdvanceSaleItemInterface
 {
 
     /**

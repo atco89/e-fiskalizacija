@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities\Request;
 
-use TaxCore\Entities\AdvanceSaleItem;
+use TaxCore\Entities\AdvanceSaleItemInterface;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
 
@@ -21,7 +21,7 @@ interface RequestInterface
     public function payment(): array;
 
     /**
-     * @return AdvanceSaleItem[]|null
+     * @return AdvanceSaleItemInterface[]|null
      */
     public function advanceSaleItems(): array|null;
 }

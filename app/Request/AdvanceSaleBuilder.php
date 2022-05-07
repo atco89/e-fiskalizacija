@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TaxCore\Request;
 
-use TaxCore\Entities\AdvanceSaleItem;
+use TaxCore\Entities\AdvanceSaleItemInterface;
 use TaxCore\Entities\AdvertisementItemInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\ItemInterface;
@@ -13,7 +13,7 @@ abstract class AdvanceSaleBuilder extends SaleBuilder
 {
 
     /**
-     * @var AdvanceSaleItem[]
+     * @var AdvanceSaleItemInterface[]
      */
     protected array $advanceSaleItems;
 
@@ -40,16 +40,16 @@ abstract class AdvanceSaleBuilder extends SaleBuilder
      */
     final public function items(): array
     {
-        return array_map(function (AdvanceSaleItem $item): ItemInterface {
+        return array_map(function (AdvanceSaleItemInterface $item): ItemInterface {
             return $this->buildAdvanceSaleItem($item);
         }, $this->advanceSaleItems);
     }
 
     /**
-     * @param AdvanceSaleItem $item
+     * @param AdvanceSaleItemInterface $item
      * @return ItemInterface
      */
-    final protected function buildAdvanceSaleItem(AdvanceSaleItem $item): ItemInterface
+    final protected function buildAdvanceSaleItem(AdvanceSaleItemInterface $item): ItemInterface
     {
         return new class($item) implements ItemInterface {
 
@@ -59,14 +59,14 @@ abstract class AdvanceSaleBuilder extends SaleBuilder
             const DEFAULT_QUANTITY = 1.00;
 
             /**
-             * @var AdvanceSaleItem
+             * @var AdvanceSaleItemInterface
              */
-            private AdvanceSaleItem $item;
+            private AdvanceSaleItemInterface $item;
 
             /**
-             * @param AdvanceSaleItem $item
+             * @param AdvanceSaleItemInterface $item
              */
-            public function __construct(AdvanceSaleItem $item)
+            public function __construct(AdvanceSaleItemInterface $item)
             {
                 $this->item = $item;
             }
