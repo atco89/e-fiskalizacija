@@ -13,30 +13,30 @@
             </div>
             <!-- MERCHANT LOGO END -->
 
-            {% if request.invoiceType.value == 2 %}
-            <!-- BORDERED CONTAINER START -->
-            <div class="row lh-1">
-                <div class="col-12">
-                    =========================================
-                </div>
-            </div>
-            <!-- BORDERED CONTAINER END -->
-
-            <!-- DOCUMENT TITLE CONTAINER START -->
-            <div class="row lh-1">
-                <div class="col-12 text-center">
-                    <strong class="text-uppercase">Ово није фискални рачун</strong>
-                </div>
-            </div>
-            <!-- DOCUMENT TITLE CONTAINER END -->
-
-            <!-- BORDERED CONTAINER START -->
+            {% if request | instanceof('\\TaxCore\\Request\\RefundBuilder') %}
+                <!-- BORDERED CONTAINER START -->
                 <div class="row lh-1">
                     <div class="col-12">
                         =========================================
                     </div>
                 </div>
-            <!-- BORDERED CONTAINER END -->
+                <!-- BORDERED CONTAINER END -->
+
+                <!-- DOCUMENT TITLE CONTAINER START -->
+                <div class="row lh-1">
+                    <div class="col-12 text-center">
+                        <strong class="text-uppercase">Ово није фискални рачун</strong>
+                    </div>
+                </div>
+                <!-- DOCUMENT TITLE CONTAINER END -->
+
+                <!-- BORDERED CONTAINER START -->
+                    <div class="row lh-1">
+                        <div class="col-12">
+                            =========================================
+                        </div>
+                    </div>
+                <!-- BORDERED CONTAINER END -->
             {% else %}
                 <!-- DOCUMENT TITLE CONTAINER START -->
                 <div class="row lh-1 mb-2">
@@ -225,6 +225,32 @@
                                 <th class="text-start">Преостало за плаћање:</th>
                                 <th class="text-end">{{ request.remainingAmount | decimal }}</th>
                             </tr>
+                        {% endif %}
+
+                        {% if request | instanceof('\\TaxCore\\Request\\RefundBuilder') %}
+                            <!-- BORDERED CONTAINER START -->
+                            <div class="row lh-1">
+                                <div class="col-12">
+                                    =========================================
+                                </div>
+                            </div>
+                            <!-- BORDERED CONTAINER END -->
+
+                            <!-- DOCUMENT TITLE CONTAINER START -->
+                            <div class="row lh-1">
+                                <div class="col-12 text-center">
+                                    <strong class="text-uppercase">Ово није фискални рачун</strong>
+                                </div>
+                            </div>
+                            <!-- DOCUMENT TITLE CONTAINER END -->
+
+                            <!-- BORDERED CONTAINER START -->
+                            <div class="row lh-1">
+                                <div class="col-12">
+                                    =========================================
+                                </div>
+                            </div>
+                            <!-- BORDERED CONTAINER END -->
                         {% endif %}
                     </table>
                 </div>
