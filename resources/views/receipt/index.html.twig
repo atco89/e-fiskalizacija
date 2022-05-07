@@ -14,29 +14,13 @@
             <!-- MERCHANT LOGO END -->
 
             {% if request | instanceof('\\TaxCore\\Request\\RefundBuilder') %}
-                <!-- BORDERED CONTAINER START -->
-                <div class="row lh-1">
-                    <div class="col-12">
-                        =========================================
-                    </div>
-                </div>
-                <!-- BORDERED CONTAINER END -->
-
                 <!-- DOCUMENT TITLE CONTAINER START -->
-                <div class="row lh-1">
+                <div class="row lh-1 mb-2">
                     <div class="col-12 text-center">
-                        <strong class="text-uppercase">Ово није фискални рачун</strong>
+                        ======== <strong>Ово није фискални рачун</strong> ========
                     </div>
                 </div>
                 <!-- DOCUMENT TITLE CONTAINER END -->
-
-                <!-- BORDERED CONTAINER START -->
-                    <div class="row lh-1">
-                        <div class="col-12">
-                            =========================================
-                        </div>
-                    </div>
-                <!-- BORDERED CONTAINER END -->
             {% else %}
                 <!-- DOCUMENT TITLE CONTAINER START -->
                 <div class="row lh-1 mb-2">
@@ -228,42 +212,32 @@
                         {% endif %}
 
                         {% if request | instanceof('\\TaxCore\\Request\\RefundBuilder') %}
-                            <!-- BORDERED CONTAINER START -->
-                            <div class="row lh-1">
-                                <div class="col-12">
-                                    =========================================
-                                </div>
-                            </div>
-                            <!-- BORDERED CONTAINER END -->
-
-                            <!-- DOCUMENT TITLE CONTAINER START -->
-                            <div class="row lh-1">
-                                <div class="col-12 text-center">
+                            <tr>
+                                <td colspan="2">=========================================</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-center">
                                     <strong class="text-uppercase">Ово није фискални рачун</strong>
-                                </div>
-                            </div>
-                            <!-- DOCUMENT TITLE CONTAINER END -->
-
-                            <!-- BORDERED CONTAINER START -->
-                            <div class="row lh-1">
-                                <div class="col-12">
-                                    =========================================
-                                </div>
-                            </div>
-                            <!-- BORDERED CONTAINER END -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">=========================================</td>
+                            </tr>
                         {% endif %}
                     </table>
                 </div>
             </div>
             <!-- ITEMS SUMMARY END -->
 
-            <!-- BORDERED CONTAINER START -->
-            <div class="row lh-1">
-                <div class="col-12">
-                    =========================================
+            {% if request | instanceof('\\TaxCore\\Request\\RefundBuilder') == false %}
+                <!-- BORDERED CONTAINER START -->
+                <div class="row lh-1">
+                    <div class="col-12">
+                        =========================================
+                    </div>
                 </div>
-            </div>
-            <!-- BORDERED CONTAINER END -->
+                <!-- BORDERED CONTAINER END -->
+            {% endif %}
 
             <!-- TAX DETAILS START -->
             <div class="row">
@@ -285,7 +259,7 @@
                         {% endfor %}
                         <tr>
                             <td colspan="4 lh-1">
-                                =========================================
+                                ------------------------------------------------
                             </td>
                         </tr>
                         <tr>
