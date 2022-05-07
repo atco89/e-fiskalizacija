@@ -9,12 +9,12 @@ final class ResponsesBuilder
     /**
      * @var ResponseBuilder
      */
-    protected ResponseBuilder $advanceSale;
+    protected ResponseBuilder $firstInvoice;
 
     /**
      * @var ResponseBuilder
      */
-    protected ResponseBuilder $normalSale;
+    protected ResponseBuilder $secondInvoice;
 
     /**
      * @param ResponseBuilder $advanceSale
@@ -22,23 +22,23 @@ final class ResponsesBuilder
      */
     public function __construct(ResponseBuilder $advanceSale, ResponseBuilder $normalSale)
     {
-        $this->advanceSale = $advanceSale;
-        $this->normalSale = $normalSale;
+        $this->firstInvoice = $advanceSale;
+        $this->secondInvoice = $normalSale;
     }
 
     /**
      * @return ResponseBuilder
      */
-    public function getAdvanceSale(): ResponseBuilder
+    public function getFirstInvoice(): ResponseBuilder
     {
-        return $this->advanceSale;
+        return $this->firstInvoice;
     }
 
     /**
      * @return ResponseBuilder
      */
-    public function getNormalSale(): ResponseBuilder
+    public function getSecondInvoice(): ResponseBuilder
     {
-        return $this->normalSale;
+        return $this->secondInvoice;
     }
 }

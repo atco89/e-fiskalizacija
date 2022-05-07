@@ -25,17 +25,17 @@ try {
 
     // ===== NORMAL SALE =====
 
-//    $n1 = $request->normalSale(new NormalSale());
-//    saveOne($n1);
-//
-//    $n2 = $request->normalSaleBuyerAndCostCenterIdentified(new NormalSaleBuyerAndCostCenterIdentified());
-//    saveOne($n2);
-//
-//    $n3 = $request->normalSaleRefund(new NormalSaleRefund($n1->getResponse()));
-//    saveOne($n3);
-//
-//    $n4 = $request->normalSaleBuyerIdentifiedRefund(new NormalSaleBuyerIdentifiedRefund($n2->getResponse()));
-//    saveOne($n4);
+    $n1 = $request->normalSale(new NormalSale());
+    saveOne($n1);
+
+    $n2 = $request->normalSaleBuyerAndCostCenterIdentified(new NormalSaleBuyerAndCostCenterIdentified());
+    saveOne($n2);
+
+    $n3 = $request->normalSaleRefund(new NormalSaleRefund($n1->getResponse()));
+    saveOne($n3);
+
+    $n4 = $request->normalSaleBuyerIdentifiedRefund(new NormalSaleBuyerIdentifiedRefund($n2->getResponse()));
+    saveOne($n4);
 
     // ===== ADVANCE SALE =====
 
@@ -53,25 +53,30 @@ try {
 
     // ===== CLOSE ADVANCE SALE =====
 
-//    $n5 = $request->normalSaleWithClosingAdvanceSale('', '');
-//    saveAll($n5);
-//
-//    $n6 = $request->normalSaleBuyerIdentifiedWithClosingAdvanceSale('', '');
-//    saveAll($n6);
+    $n5 = $request->normalSaleWithClosingAdvanceSale(
+        new AdvanceSaleRefund($a1->getResponse()),
+        new NormalSale()
+    );
+    saveAll($n5);
+
+    $n6 = $request->normalSaleBuyerIdentifiedWithClosingAdvanceSale(
+        new AdvanceSaleBuyerIdentifiedRefund($a2->getResponse()),
+        new NormalSaleBuyerAndCostCenterIdentified());
+    saveAll($n6);
 
     // ===== COPY SALE =====
 
-//    $c1 = $request->copySale(new CopySale($n1->getResponse()));
-//    saveOne($c1);
-//
-//    $c2 = $request->copySaleBuyerIdentifiedBuilder(new CopySaleBuyerIdentified($n2->getResponse()));
-//    saveOne($c2);
-//
-//    $c3 = $request->copySaleRefund(new CopySaleRefund($n3->getResponse()));
-//    saveOne($c3);
-//
-//    $c4 = $request->copySaleRefundBuyerIdentified(new CopySaleRefundBuyerIdentified($n4->getResponse()));
-//    saveOne($c4);
+    $c1 = $request->copySale(new CopySale($n1->getResponse()));
+    saveOne($c1);
+
+    $c2 = $request->copySaleBuyerIdentifiedBuilder(new CopySaleBuyerIdentified($n2->getResponse()));
+    saveOne($c2);
+
+    $c3 = $request->copySaleRefund(new CopySaleRefund($n3->getResponse()));
+    saveOne($c3);
+
+    $c4 = $request->copySaleRefundBuyerIdentified(new CopySaleRefundBuyerIdentified($n4->getResponse()));
+    saveOne($c4);
 } catch (Exception $e) {
     die($e->getMessage());
 }
@@ -91,6 +96,6 @@ function saveOne(ResponseBuilder $builder): void
  */
 function saveAll(ResponsesBuilder $builder): void
 {
-    saveOne($builder->getAdvanceSale());
-    saveOne($builder->getNormalSale());
+    saveOne($builder->getFirstInvoice());
+    saveOne($builder->getSecondInvoice());
 }

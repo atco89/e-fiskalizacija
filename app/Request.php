@@ -199,7 +199,7 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function normalSaleBuyerIdentifiedWithClosingAdvanceSale(
         RequestWithReferentDocumentBuyerIdentifiedInterface $requestRefund,
-        RequestWithReferentDocumentBuyerIdentifiedInterface $requestSale
+        RequestBuyerIdentifiedInterface                     $requestSale
     ): ResponsesBuilder
     {
         $responseBuilder = $this->advanceSaleBuyerIdentifiedRefund($requestRefund);
@@ -242,7 +242,7 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function normalSaleWithClosingAdvanceSale(
         RequestWithReferentDocumentInterface $requestRefund,
-        RequestWithReferentDocumentInterface $requestSale
+        RequestInterface                     $requestSale
     ): ResponsesBuilder
     {
         $responseBuilder = $this->advanceSaleRefund($requestRefund);
