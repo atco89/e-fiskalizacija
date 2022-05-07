@@ -19,6 +19,7 @@ use TaxCore\Request\AdvanceSale\RequestAdvanceSaleBuyerIdentified;
 use TaxCore\Request\AdvanceSale\RequestAdvanceSaleBuyerIdentifiedRefund;
 use TaxCore\Request\AdvanceSale\RequestAdvanceSaleRefund;
 use TaxCore\Request\CopySale\RequestCopySale;
+use TaxCore\Request\CopySale\RequestCopySaleBuyerIdentified;
 use TaxCore\Request\CopySale\RequestCopySaleBuyerIdentifiedRefund;
 use TaxCore\Request\CopySale\RequestCopySaleRefund;
 use TaxCore\Request\NormalSale\RequestNormalSale;
@@ -121,10 +122,12 @@ final class Request extends RequestBuilder implements RequestMethods
     /**
      * @param $request
      * @return ResponseBuilder
+     * @throws TaxCoreRequestException
      */
     public function copySaleBuyerIdentifiedBuilder($request): ResponseBuilder
     {
-        // TODO: Implement copySaleBuyerIdentifiedBuilder() method.
+        $serviceRequest = new RequestCopySaleBuyerIdentified($request);
+        return $this->run($serviceRequest);
     }
 
     /**
