@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace TaxCore\Entities;
+namespace TaxCore\Entities\Request;
 
-interface BuyerInterface
+interface RequestBuyerIdentifiedInterface extends RequestInterface
 {
 
     /**

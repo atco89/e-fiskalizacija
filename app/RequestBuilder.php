@@ -5,12 +5,14 @@ namespace TaxCore;
 
 use DateTimeInterface;
 use GuzzleHttp\RequestOptions;
+use TaxCore\Entities\ApiRequestInterface;
+use TaxCore\Entities\BuyerCostCenterInterface;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\ConfigurationInterface;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
-use TaxCore\Entities\RequestInterface;
+use TaxCore\Request\AdvanceSale\RequestAdvanceSale;
 
 abstract class RequestBuilder
 {
@@ -34,11 +36,11 @@ abstract class RequestBuilder
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @return array
      * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
      */
-    protected function requestOptions(RequestInterface $request): array
+    protected function requestOptions(ApiRequestInterface $request): array
     {
         return [
             RequestOptions::CERT    => $this->cert(),
@@ -54,7 +56,7 @@ abstract class RequestBuilder
     {
         return [
             $this->configuration->certPath(),
-            $this->configuration->externalSalesDataControllerNumber(),
+            $this->configuration->password(),
         ];
     }
 
@@ -75,63 +77,77 @@ abstract class RequestBuilder
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @return array
      */
-    private function requestBody(RequestInterface $request): array
+    private function requestBody(ApiRequestInterface $request): array
     {
-        return [
-            'dateAndTimeOfIssue'     => $request->issueDateTime()->format(self::DATE_TIME_FORMAT),
+        $props = [
             'invoiceType'            => $request->invoiceType()->value,
             'transactionType'        => $request->transactionType()->value,
-            'invoiceNumber'          => $request->invoiceNumber(),
-            'cashier'                => $request->cashier(),
-            'buyerId'                => $this->loadBuyerId($request),
-            'buyerCostCenterId'      => $this->loadBuyerCostCenterId($request),
+            'invoiceNumber'          => $this->configuration->esdcNumber(),
+            'cashier'                => $this->configuration->cashier(),
             'referentDocumentNumber' => $this->loadReferentDocumentNumber($request),
             'referentDocumentDT'     => $this->loadReferentDocumentDateTime($request),
+            'items'                  => $this->buildItems($request->items()),
             'payment'                => $this->buildPayment($request->payments()),
             'options'                => $this->buildOptions(),
-            'items'                  => $this->buildItems($request->items()),
         ];
+
+        if ($request instanceof RequestAdvanceSale) {
+            $props['dateAndTimeOfIssue'] = $request->issueDateTime()->format(self::DATE_TIME_FORMAT);
+        }
+
+        if ($request instanceof BuyerInterface) {
+            $props['buyerId'] = $this->loadBuyerId($request);
+        }
+
+        if ($request instanceof BuyerCostCenterInterface) {
+            $buyerCostCenterId = $this->loadBuyerCostCenterId($request);
+            if (!empty($buyerCostCenterId)) {
+                $props['buyerCostCenterId'] = $buyerCostCenterId;
+            }
+        }
+
+        return $props;
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @return string|null
      */
-    private function loadBuyerId(RequestInterface $request): string|null
-    {
-        return $request instanceof BuyerInterface ? $request->buyerId() : null;
-    }
-
-    /**
-     * @param RequestInterface $request
-     * @return string|null
-     */
-    private function loadBuyerCostCenterId(RequestInterface $request): string|null
-    {
-        return $request instanceof BuyerInterface ? $request->buyerCostCenterId() : null;
-    }
-
-    /**
-     * @param RequestInterface $request
-     * @return string|null
-     */
-    private function loadReferentDocumentNumber(RequestInterface $request): string|null
+    private function loadReferentDocumentNumber(ApiRequestInterface $request): string|null
     {
         return $request instanceof ReferentDocumentInterface ? $request->referentDocumentNumber() : null;
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @return string|null
      */
-    private function loadReferentDocumentDateTime(RequestInterface $request): string|null
+    private function loadReferentDocumentDateTime(ApiRequestInterface $request): string|null
     {
         return $request instanceof ReferentDocumentInterface
             ? $request->referentDocumentDateTime()->format(self::DATE_TIME_FORMAT)
             : null;
+    }
+
+    /**
+     * @param array $items
+     * @return array
+     */
+    private function buildItems(array $items): array
+    {
+        return array_map(function (ItemInterface $item): array {
+            return [
+                'gtin'        => $item->gtin(),
+                'name'        => $item->name(),
+                'quantity'    => $item->quantity(),
+                'unitPrice'   => $item->unitPrice(),
+                'labels'      => $item->labels(),
+                'totalAmount' => $item->amount(),
+            ];
+        }, $items);
     }
 
     /**
@@ -161,20 +177,20 @@ abstract class RequestBuilder
     }
 
     /**
-     * @param array $items
-     * @return array
+     * @param ApiRequestInterface $request
+     * @return string|null
      */
-    private function buildItems(array $items): array
+    private function loadBuyerId(ApiRequestInterface $request): string|null
     {
-        return array_map(function (ItemInterface $item): array {
-            return [
-                'gtin'        => $item->gtin(),
-                'name'        => $item->name(),
-                'quantity'    => $item->quantity(),
-                'unitPrice'   => $item->unitPrice(),
-                'labels'      => $item->labels(),
-                'totalAmount' => $item->amount(),
-            ];
-        }, $items);
+        return $request instanceof BuyerInterface ? $request->buyerId() : null;
+    }
+
+    /**
+     * @param ApiRequestInterface $request
+     * @return string|null
+     */
+    private function loadBuyerCostCenterId(ApiRequestInterface $request): string|null
+    {
+        return $request instanceof BuyerCostCenterInterface ? $request->buyerCostCenterId() : null;
     }
 }

@@ -4,51 +4,59 @@
     <div class="row">
         <div class="col-12">
 
-            <!-- MERCHANT LOGO START -->
             <div class="row">
                 <div class="col-12 text-center">
                     <img src="{{ configuration.logoPath | base64Encode | image64('png') }}" alt="merchant-log-path"
                          class="img-fluid w-50 px-4 py-2"/>
                 </div>
             </div>
-            <!-- MERCHANT LOGO END -->
 
-            <!-- BORDERED CONTAINER START -->
-            <div class="row lh-1">
-                <div class="col-12 text-center">
-                    {{ 'Фискални рачун' | delimiter | raw }}
+            {% if request.invoiceType.value == 2 %}
+                <div class="row lh-1 mb-2">
+                    <div class="col-12 text-center">
+                        ======== <strong>Ово није фискални рачун</strong> ========
+                    </div>
                 </div>
-            </div>
-            <!-- BORDERED CONTAINER END -->
+            {% else %}
+                <div class="row lh-1 mb-2">
+                    <div class="col-12 text-center">
+                        ============ <strong>Фискални рачун</strong> ============
+                    </div>
+                </div>
+            {% endif %}
 
-            <!-- INVOICE INFO START -->
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
                         <tr>
-                            <td class="align-middle text-start">ПИБ:</td>
-                            <td class="align-middle text-end">{{ response.tin }}</td>
+                            <td colspan="2" class="align-middle text-center">
+                                {{ response.tin }}
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-start">Предузеће:</td>
-                            <td class="align-middle text-end">{{ response.businessName }}</td>
+                            <td colspan="2" class="align-middle text-center">
+                                {{ response.businessName }}
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-start">Име:</td>
-                            <td class="align-middle text-end">{{ response.locationName }}</td>
+                            <td colspan="2" class="align-middle text-center">
+                                {{ response.locationName }}
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-start">Адреса:</td>
-                            <td class="align-middle text-end">{{ response.address }}</td>
+                            <td colspan="2" class="align-middle text-center">
+                                {{ response.address }}
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-start">Место:</td>
-                            <td class="align-middle text-end">{{ response.district }}</td>
+                            <td colspan="2" class="align-middle text-center pb-2">
+                                {{ response.district }}
+                            </td>
                         </tr>
 
                         <tr>
                             <td class="align-middle text-start">Касир:</td>
-                            <td class="align-middle text-end">{{ request.cashier }}</td>
+                            <td class="align-middle text-end">{{ configuration.cashier }}</td>
                         </tr>
 
                         {% if request.buyerId is not empty %}
@@ -67,7 +75,7 @@
 
                         <tr>
                             <td class="align-middle text-start">ЕСИР број:</td>
-                            <td class="align-middle text-end">{{ configuration.externalSalesDataControllerNumber }}</td>
+                            <td class="align-middle text-end">{{ configuration.esdcNumber }}</td>
                         </tr>
 
                         {% if request.invoiceType.value == 4 and request.transactionType.value == 0  %}
@@ -96,33 +104,25 @@
                     </table>
                 </div>
             </div>
-            <!-- INVOICE INFO END -->
 
-            <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
-                    {{ '' | delimiter }}
+                    =========================================
                 </div>
             </div>
-            <!-- BORDERED CONTAINER END -->
 
-            <!-- DOCUMENT TITLE CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12 text-center">
                     {{ title }}
                 </div>
             </div>
-            <!-- DOCUMENT TITLE CONTAINER END -->
 
-            <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
-                    {{ '' | delimiter }}
+                    =========================================
                 </div>
             </div>
-            <!-- BORDERED CONTAINER END -->
 
-            <!-- ITEMS START -->
             <div class="row">
                 <div class="col-12">
                     <small class="ps-0">Артикли:</small>
@@ -139,25 +139,26 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td class="text-center">{{ item.unitPrice | decimal }}</td>
+                                <td class="text-center">
+                                   {{ item.unitPrice | decimal }}
+                                </td>
                                 <td class="text-center">{{ item.quantity | decimal }}</td>
-                                <td class="text-end">{{ item.amount | decimal }}</td>
+                                <td class="text-end">
+                                    {{ request.transactionType.value == 1 ? '-' : '' }}
+                                    {{ item.amount | decimal }}
+                                </td>
                             </tr>
                         {% endfor %}
                     </table>
                 </div>
             </div>
-            <!-- ITEMS END -->
 
-            <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
-                <div class="col-12">
-                    {{ '' | delimiter }}
+                <div class="col-12 text-center">
+                    ------------------------------------------------
                 </div>
             </div>
-            <!-- BORDERED CONTAINER END -->
 
-            <!-- ITEMS SUMMARY START -->
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
@@ -165,26 +166,57 @@
                             <td class="text-start">Укупан износ:</td>
                             <td class="text-end">{{ request.amount | decimal }}</td>
                         </tr>
+
+                        {% if request | instanceof('\\TaxCore\\Entities\\AdvanceSaleAmountInterface') %}
+                            <tr>
+                                <th class="text-start">Плаћено авансом:</th>
+                                <th class="text-end">{{ request.receivedAmount | decimal }}</th>
+                            </tr>
+                            <tr>
+                                <th class="text-start">ПДВ на аванс:</th>
+                                <th class="text-end">{{ request.receivedTax | decimal }}</th>
+                            </tr>
+                        {% endif %}
+
                         {% for payment in request.payments %}
                             <tr>
                                 <td class="text-start">{{ payment.name }}:</td>
                                 <td class="text-end">{{ payment.amount | decimal }}</td>
                             </tr>
                         {% endfor %}
+
+                        {% if request | instanceof('\\TaxCore\\Entities\\AdvanceSaleAmountInterface') %}
+                            <tr>
+                                <th class="text-start">Преостало за плаћање:</th>
+                                <th class="text-end">{{ request.remainingAmount | decimal }}</th>
+                            </tr>
+                        {% endif %}
+
+                        {% if request.invoiceType.value == 2 %}
+                            <tr>
+                                <td colspan="2" class="lh-1">=========================================</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-center lh-1">
+                                    <strong class="text-uppercase">Ово није фискални рачун</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="lh-1">=========================================</td>
+                            </tr>
+                        {% endif %}
                     </table>
                 </div>
             </div>
-            <!-- ITEMS SUMMARY END -->
 
-            <!-- BORDERED CONTAINER START -->
-            <div class="row lh-1">
-                <div class="col-12">
-                    {{ '' | delimiter }}
+            {% if request.invoiceType.value != 2 %}
+                <div class="row lh-1">
+                    <div class="col-12">
+                        =========================================
+                    </div>
                 </div>
-            </div>
-            <!-- BORDERED CONTAINER END -->
+            {% endif %}
 
-            <!-- TAX DETAILS START -->
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
@@ -204,24 +236,22 @@
                         {% endfor %}
                         <tr>
                             <td colspan="4 lh-1">
-                                {{ '' | delimiter }}
+                                ------------------------------------------------
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="3">Укупан износ ПДВ-а:</td>
+                            <td colspan="3">Укупан износ пореза:</td>
                             <td class="text-end">{{ response.taxItems | taxAmount | decimal }}</td>
                         </tr>
                         <tr>
                             <td colspan="4 lh-1">
-                                {{ '' | delimiter }}
+                                =========================================
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
-            <!-- TAX DETAILS END -->
 
-            <!-- TAX CORE INVOICE DETAILS START -->
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-borderless">
@@ -240,27 +270,21 @@
                     </table>
                 </div>
             </div>
-            <!-- TAX CORE INVOICE DETAILS END -->
 
-            <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12">
-                    {{ '' | delimiter }}
+                    =========================================
                 </div>
             </div>
-            <!-- BORDERED CONTAINER END -->
 
-            <!-- QR CODE CONTAINER START -->
             <div class="row my-1">
                 <div class="col-12 text-center">
                     <img src="{{ response.verificationQRCode | image64('gif') }}" alt="verification-qr-code"
                          id="verification-qr-code" class="img-fluid"/>
                 </div>
             </div>
-            <!-- QR CODE CONTAINER END -->
 
-            {% if instanceOfCustomerSignature %}
-                <!-- CUSTOMER SIGNATURE CONTAINER START -->
+            {% if request | instanceof('\\TaxCore\\Entities\\CustomerSignatureInterface') %}
                 <div class="row mt-5 mb-3">
                     <div class="col-4">
                         Потпис купца:
@@ -269,16 +293,39 @@
                         <div class="border-top-0 border-left-0 border-right-0 bordered-bottom h-100"></div>
                     </div>
                 </div>
-                <!-- CUSTOMER SIGNATURE CONTAINER END -->
             {% endif %}
 
-            <!-- BORDERED CONTAINER START -->
             <div class="row lh-1">
                 <div class="col-12 text-center">
-                    {{ 'Крај фискалног рачуна' | delimiter | raw }}
+                    ========= <strong>Крај фискалног рачуна</strong> =========
                 </div>
             </div>
-            <!-- BORDERED CONTAINER END -->
+
+            {% if request.advertisementItems is not empty %}
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <table class="table table-sm table-borderless">
+                            {% for advertisementItem in request.advertisementItems %}
+                                {% if advertisementItem.amount is not null %}
+                                    <tr>
+                                        <td class="text-start">* {{ advertisementItem.name  }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-end">{{ advertisementItem.amount | decimal }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td class="text-start">* Последњи авансни рачун:</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-end">{{ advertisementItem.name  }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
 
         </div>
     </div>

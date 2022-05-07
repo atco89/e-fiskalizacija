@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace TaxCore\Response;
 
+use TaxCore\Entities\ApiRequestInterface;
 use TaxCore\Entities\ConfigurationInterface;
-use TaxCore\Entities\CustomerSignatureInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
-use TaxCore\Entities\RequestInterface;
-use TaxCore\Receipt\Receipt;
+use TaxCore\Receipt\ReceiptBuilder;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -28,9 +27,9 @@ final class ResponseBuilder
     private Environment $twig;
 
     /**
-     * @var RequestInterface
+     * @var ApiRequestInterface
      */
-    private RequestInterface $request;
+    private ApiRequestInterface $request;
 
     /**
      * @var Response
@@ -43,14 +42,14 @@ final class ResponseBuilder
     private string $title;
 
     /**
-     * @var Receipt
+     * @var ReceiptBuilder
      */
-    private Receipt $receipt;
+    private ReceiptBuilder $receipt;
 
     /**
      * @param ConfigurationInterface $configuration
      * @param Environment $twig
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @param Response $response
      * @throws LoaderError
      * @throws RuntimeError
@@ -59,7 +58,7 @@ final class ResponseBuilder
     public function __construct(
         ConfigurationInterface $configuration,
         Environment            $twig,
-        RequestInterface       $request,
+        ApiRequestInterface    $request,
         Response               $response
     )
     {
@@ -68,7 +67,7 @@ final class ResponseBuilder
         $this->request = $request;
         $this->response = $response;
         $this->title = $this->title();
-        $this->receipt = new Receipt($this->title, $this->generateReceipt());
+        $this->receipt = new ReceiptBuilder($this->title, $this->generateReceipt());
     }
 
     /**
@@ -96,18 +95,17 @@ final class ResponseBuilder
     private function generateReceipt(): string
     {
         return $this->twig->render('./receipt/index.html.twig', [
-            'title'                       => $this->title,
-            'configuration'               => $this->configuration,
-            'request'                     => $this->request,
-            'response'                    => $this->response,
-            'instanceOfCustomerSignature' => $this->request instanceof CustomerSignatureInterface,
+            'title'         => $this->title,
+            'configuration' => $this->configuration,
+            'request'       => $this->request,
+            'response'      => $this->response,
         ]);
     }
 
     /**
-     * @return RequestInterface
+     * @return ApiRequestInterface
      */
-    public function getRequest(): RequestInterface
+    public function getRequest(): ApiRequestInterface
     {
         return $this->request;
     }
@@ -121,9 +119,9 @@ final class ResponseBuilder
     }
 
     /**
-     * @return Receipt
+     * @return ReceiptBuilder
      */
-    public function getReceipt(): Receipt
+    public function getReceipt(): ReceiptBuilder
     {
         return $this->receipt;
     }

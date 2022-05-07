@@ -29,21 +29,9 @@ final class Twig
             }
         ));
 
-        $this->environment->addFilter(new TwigFilter('delimiter',
-            function (string|null $string): string {
-                $size = empty($string) ? 41 : 39;
-                $length = $size - mb_strlen($string, mb_detect_encoding($string));
-                $spaces = empty($string) ? 0 : 1;
-                $left = intval(ceil($length / 2) - $spaces);
-                $showString = empty($string) ? $string : "<strong> $string </strong>";
-                $right = intval($length - $left - $spaces);
-                return implode('', [str_repeat('=', $left), $showString, str_repeat('=', $right)]);
-            }
-        ));
-
         $this->environment->addFilter(new TwigFilter('image64',
             function (string|null $encodedImage, string $type): string {
-                return implode(', ', ["data:image/$type;base64", $encodedImage]) . PHP_EOL;
+                return implode(', ', ["data:image/$type;base64", $encodedImage]);
             }
         ));
 
@@ -60,6 +48,12 @@ final class Twig
                     $carry += $item->amount();
                     return $carry;
                 });
+            }
+        ));
+
+        $this->environment->addFilter(new TwigFilter('instanceof',
+            function (mixed $variable, mixed $instance): bool {
+                return $variable instanceof $instance;
             }
         ));
     }

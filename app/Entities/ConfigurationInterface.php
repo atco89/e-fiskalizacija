@@ -39,5 +39,10 @@ interface ConfigurationInterface
     /**
      * @return string
      */
-    public function externalSalesDataControllerNumber(): string;
+    public function esdcNumber(): string;
+
+    /**
+     * @return string
+     */
+    public function cashier(): string;
 }

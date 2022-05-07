@@ -6,26 +6,38 @@ namespace TaxCore;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use TaxCore\Entities\BuyerInterface;
+use TaxCore\Entities\ApiRequestInterface;
 use TaxCore\Entities\ConfigurationInterface;
-use TaxCore\Entities\ItemInterface;
-use TaxCore\Entities\PaymentTypeInterface;
-use TaxCore\Entities\ReferentDocumentInterface;
-use TaxCore\Entities\RequestInterface;
+use TaxCore\Entities\Request\RequestBuyerAndCostCenterIdentifiedInterface;
+use TaxCore\Entities\Request\RequestBuyerIdentifiedInterface;
+use TaxCore\Entities\Request\RequestInterface;
+use TaxCore\Entities\Request\RequestWithReferentDocumentBuyerIdentifiedInterface;
+use TaxCore\Entities\Request\RequestWithReferentDocumentInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
-use TaxCore\Request\NormalSale\NormalSale;
-use TaxCore\Request\NormalSale\NormalSaleCustomerIdentified;
-use TaxCore\Request\NormalSale\NormalSaleRefund;
-use TaxCore\Request\NormalSale\NormalSaleRefundCustomerIdentified;
+use TaxCore\Request\AdvanceSale\RequestAdvanceSale;
+use TaxCore\Request\AdvanceSale\RequestAdvanceSaleBuyerIdentified;
+use TaxCore\Request\AdvanceSale\RequestAdvanceSaleBuyerIdentifiedRefund;
+use TaxCore\Request\AdvanceSale\RequestAdvanceSaleRefund;
+use TaxCore\Request\CopySale\RequestCopySale;
+use TaxCore\Request\CopySale\RequestCopySaleBuyerIdentified;
+use TaxCore\Request\CopySale\RequestCopySaleBuyerIdentifiedRefund;
+use TaxCore\Request\CopySale\RequestCopySaleRefund;
+use TaxCore\Request\NormalSale\RequestNormalSale;
+use TaxCore\Request\NormalSale\RequestNormalSaleBuyerAndCostCenterIdentified;
+use TaxCore\Request\NormalSale\RequestNormalSaleBuyerIdentifiedRefund;
+use TaxCore\Request\NormalSale\RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale;
+use TaxCore\Request\NormalSale\RequestNormalSaleRefund;
+use TaxCore\Request\NormalSale\RequestNormalSaleWithClosingAdvanceSale;
 use TaxCore\Response\Response;
 use TaxCore\Response\ResponseBuilder;
+use TaxCore\Response\ResponsesBuilder;
 use TaxCore\Twig\Twig;
 use Throwable;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-final class Request extends RequestBuilder
+final class Request extends RequestBuilder implements RequestMethods
 {
 
     /**
@@ -43,29 +55,27 @@ final class Request extends RequestBuilder
     }
 
     /**
-     * @param string $cashier
-     * @param string $invoiceNumber
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
-     * @return ResponseBuilder
-     * @throws TaxCoreRequestException
-     */
-    public function normalSale(string $cashier, string $invoiceNumber, array $items, array $payment): ResponseBuilder
-    {
-        return $this->run(new NormalSale($cashier, $invoiceNumber, $items, $payment));
-    }
-
-    /**
      * @param RequestInterface $request
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    private function run(RequestInterface $request): ResponseBuilder
+    public function advanceSale(RequestInterface $request): ResponseBuilder
+    {
+        $serviceRequest = new RequestAdvanceSale($request);
+        return $this->run($serviceRequest);
+    }
+
+    /**
+     * @param ApiRequestInterface $request
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    private function run(ApiRequestInterface $request): ResponseBuilder
     {
         try {
-            $client = new Client();
-            $clientResponse = $client->post($this->configuration->apiUrl(), $this->requestOptions($request));
-            $response = new Response(json_decode($clientResponse->getBody()->getContents()));
+            $httpClient = new Client();
+            $httpClientResponse = $httpClient->post($this->configuration->apiUrl(), $this->requestOptions($request));
+            $response = new Response(json_decode($httpClientResponse->getBody()->getContents()));
             return $this->buildResponse($request, $response);
         } catch (LoaderError | RuntimeError | SyntaxError | GuzzleException | Exception | Throwable $e) {
             throw new TaxCoreRequestException($e->getMessage());
@@ -73,14 +83,14 @@ final class Request extends RequestBuilder
     }
 
     /**
-     * @param RequestInterface $request
+     * @param ApiRequestInterface $request
      * @param Response $response
      * @return ResponseBuilder
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    private function buildResponse(RequestInterface $request, Response $response): ResponseBuilder
+    private function buildResponse(ApiRequestInterface $request, Response $response): ResponseBuilder
     {
         $configuration = $this->configuration;
         $environment = $this->twig->getEnvironment();
@@ -88,77 +98,166 @@ final class Request extends RequestBuilder
     }
 
     /**
-     * @param string $cashier
-     * @param string $invoiceNumber
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
-     * @param BuyerInterface $buyer
+     * @param RequestBuyerIdentifiedInterface $request
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function normalSaleCustomerIdentified(
-        string         $cashier,
-        string         $invoiceNumber,
-        array          $items,
-        array          $payment,
-        BuyerInterface $buyer
-    ): ResponseBuilder
+    public function advanceSaleBuyerIdentified(RequestBuyerIdentifiedInterface $request): ResponseBuilder
     {
-        return $this->run(new NormalSaleCustomerIdentified(
-            $cashier,
-            $invoiceNumber,
-            $items,
-            $payment,
-            $buyer
-        ));
+        $serviceRequest = new RequestAdvanceSaleBuyerIdentified($request);
+        return $this->run($serviceRequest);
     }
 
     /**
-     * @param string $cashier
-     * @param string $invoiceNumber
-     * @param array $items
-     * @param array $payment
-     * @param ReferentDocumentInterface $referentDocument
+     * @param RequestWithReferentDocumentInterface $request
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function normalSaleRefund(
-        string                    $cashier,
-        string                    $invoiceNumber,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument
-    ): ResponseBuilder
+    public function copySale(RequestWithReferentDocumentInterface $request): ResponseBuilder
     {
-        return $this->run(new NormalSaleRefund($cashier, $invoiceNumber, $items, $payment, $referentDocument));
+        $serviceRequest = new RequestCopySale($request);
+        return $this->run($serviceRequest);
     }
 
     /**
-     * @param string $cashier
-     * @param string $invoiceNumber
-     * @param array $items
-     * @param array $payment
-     * @param ReferentDocumentInterface $referentDocument
-     * @param BuyerInterface $buyer
+     * @param $request
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function normalSaleRefundCustomerIdentified(
-        string                    $cashier,
-        string                    $invoiceNumber,
-        array                     $items,
-        array                     $payment,
-        ReferentDocumentInterface $referentDocument,
-        BuyerInterface            $buyer
+    public function copySaleBuyerIdentifiedBuilder($request): ResponseBuilder
+    {
+        $serviceRequest = new RequestCopySaleBuyerIdentified($request);
+        return $this->run($serviceRequest);
+    }
+
+    /**
+     * @param RequestWithReferentDocumentInterface $request
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function copySaleRefund(RequestWithReferentDocumentInterface $request): ResponseBuilder
+    {
+        $serviceRequest = new RequestCopySaleRefund($request);
+        return $this->run($serviceRequest);
+    }
+
+    /**
+     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $request
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function copySaleRefundBuyerIdentified(
+        RequestWithReferentDocumentBuyerIdentifiedInterface $request
     ): ResponseBuilder
     {
-        return $this->run(new NormalSaleRefundCustomerIdentified(
-            $cashier,
-            $invoiceNumber,
-            $items,
-            $payment,
-            $referentDocument,
-            $buyer
-        ));
+        $serviceRequest = new RequestCopySaleBuyerIdentifiedRefund($request);
+        return $this->run($serviceRequest);
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSale(RequestInterface $request): ResponseBuilder
+    {
+        $serviceRequest = new RequestNormalSale($request);
+        return $this->run($serviceRequest);
+    }
+
+    /**
+     * @param RequestBuyerAndCostCenterIdentifiedInterface $request
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSaleBuyerAndCostCenterIdentified(
+        RequestBuyerAndCostCenterIdentifiedInterface $request
+    ): ResponseBuilder
+    {
+        $serviceRequest = new RequestNormalSaleBuyerAndCostCenterIdentified($request);
+        return $this->run($serviceRequest);
+    }
+
+    /**
+     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $request
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSaleBuyerIdentifiedRefund(
+        RequestWithReferentDocumentBuyerIdentifiedInterface $request
+    ): ResponseBuilder
+    {
+        $serviceRequest = new RequestNormalSaleBuyerIdentifiedRefund($request);
+        return $this->run($serviceRequest);
+    }
+
+    /**
+     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $requestRefund
+     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $requestSale
+     * @return ResponsesBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSaleBuyerIdentifiedWithClosingAdvanceSale(
+        RequestWithReferentDocumentBuyerIdentifiedInterface $requestRefund,
+        RequestBuyerIdentifiedInterface                     $requestSale
+    ): ResponsesBuilder
+    {
+        $responseBuilder = $this->advanceSaleBuyerIdentifiedRefund($requestRefund);
+        $serviceRequest = new RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale(
+            $requestSale,
+            $responseBuilder->getResponse()
+        );
+        return new ResponsesBuilder($responseBuilder, $this->run($serviceRequest));
+    }
+
+    /**
+     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $request
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function advanceSaleBuyerIdentifiedRefund(
+        RequestWithReferentDocumentBuyerIdentifiedInterface $request
+    ): ResponseBuilder
+    {
+        $serviceRequest = new RequestAdvanceSaleBuyerIdentifiedRefund($request);
+        return $this->run($serviceRequest);
+    }
+
+    /**
+     * @param RequestWithReferentDocumentInterface $request
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSaleRefund(RequestWithReferentDocumentInterface $request): ResponseBuilder
+    {
+        $serviceRequest = new RequestNormalSaleRefund($request);
+        return $this->run($serviceRequest);
+    }
+
+    /**
+     * @param RequestWithReferentDocumentInterface $requestRefund
+     * @param RequestWithReferentDocumentInterface $requestSale
+     * @return ResponsesBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function normalSaleWithClosingAdvanceSale(
+        RequestWithReferentDocumentInterface $requestRefund,
+        RequestInterface                     $requestSale
+    ): ResponsesBuilder
+    {
+        $responseBuilder = $this->advanceSaleRefund($requestRefund);
+        $serviceRequest = new RequestNormalSaleWithClosingAdvanceSale($requestSale, $responseBuilder->getResponse());
+        return new ResponsesBuilder($responseBuilder, $this->run($serviceRequest));
+    }
+
+    /**
+     * @param RequestWithReferentDocumentInterface $request
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function advanceSaleRefund(RequestWithReferentDocumentInterface $request): ResponseBuilder
+    {
+        $serviceRequest = new RequestAdvanceSaleRefund($request);
+        return $this->run($serviceRequest);
     }
 }
