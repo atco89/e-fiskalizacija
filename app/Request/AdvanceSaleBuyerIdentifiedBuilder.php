@@ -6,7 +6,7 @@ namespace TaxCore\Request;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Request\RequestBuyerIdentifiedInterface;
 
-abstract class AdvanceSaleBuyerIdentifiedBuilder extends AdvanceSaleBuilderBuilder implements BuyerInterface
+abstract class AdvanceSaleBuyerIdentifiedBuilder extends AdvanceSaleBuilder implements BuyerInterface
 {
 
     /**

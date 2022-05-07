@@ -4,101 +4,89 @@ declare(strict_types=1);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use TaxCore\Examples\Configuration;
-use TaxCore\Examples\Request\RequestCustomerIdentifiedProperties;
-use TaxCore\Examples\Request\RequestCustomerIdentifiedWithCostCenterProperties;
-use TaxCore\Examples\Request\RequestSaleProperties;
-use TaxCore\Examples\Request\RequestRefundCustomerIdentifiedProperties;
-use TaxCore\Examples\Request\RequestRefundProperties;
+use TaxCore\Examples\Request\AdvanceSale;
+use TaxCore\Examples\Request\AdvanceSaleBuyerIdentified;
+use TaxCore\Examples\Request\AdvanceSaleBuyerIdentifiedRefund;
+use TaxCore\Examples\Request\AdvanceSaleRefund;
+use TaxCore\Examples\Request\NormalSale;
+use TaxCore\Examples\Request\NormalSaleBuyerAndCostCenterIdentified;
+use TaxCore\Examples\Request\NormalSaleBuyerIdentifiedRefund;
+use TaxCore\Examples\Request\NormalSaleRefund;
 use TaxCore\Request;
 use TaxCore\Response\ResponseBuilder;
-
-$requestProperties = new RequestSaleProperties();
-$requestCustomerIdentifiedWithCostCenterProperties = new RequestCustomerIdentifiedWithCostCenterProperties();
+use TaxCore\Response\ResponsesBuilder;
 
 try {
     $request = new Request(new Configuration());
 
-//    // ==========================================================================================
-//    // NORMAL SALE
-//    // ==========================================================================================
-//    $r1 = $request->normalSale($requestProperties);
-//    save($r1->getResponse()->invoiceNumber(), $r1->getReceipt()->receipt());
-//
-//    // ==========================================================================================
-//    // NORMAL SALE CUSTOMER IDENTIFIED
-//    // ==========================================================================================
-//    $r2 = $request->normalSaleCustomerIdentified($requestCustomerIdentifiedWithCostCenterProperties);
-//    save($r2->getResponse()->invoiceNumber(), $r2->getReceipt()->receipt());
-//
-//    // ==========================================================================================
-//    // NORMAL SALE REFUND
-//    // ==========================================================================================
-//    $r3 = $request->normalSaleRefund(
-//        new RequestRefundProperties($r1->getResponse()->invoiceNumber(), $r1->getResponse()->sdcDateTime())
-//    );
-//    save($r3->getResponse()->invoiceNumber(), $r3->getReceipt()->receipt());
-//
-//    // ==========================================================================================
-//    // NORMAL SALE CUSTOMER IDENTIFIED REFUND
-//    // ==========================================================================================
-//    $r4 = $request->normalSaleRefundCustomerIdentified(
-//        new RequestRefundCustomerIdentifiedProperties($r2->getResponse()->invoiceNumber(), $r2->getResponse()->sdcDateTime())
-//    );
-//    save($r4->getResponse()->invoiceNumber(), $r4->getReceipt()->receipt());
-//
-    // ==========================================================================================
-    // ADVANCE SALE
-    // ==========================================================================================
-    $r5 = $request->advanceSale(new RequestSaleProperties());
-    save($r5->getResponse()->invoiceNumber(), $r5->getReceipt()->receipt());
-//
-//    // ==========================================================================================
-//    // ADVANCE SALE CUSTOMER IDENTIFIED
-//    // ==========================================================================================
-//    $r6 = $request->advanceSaleCustomerIdentified(new RequestCustomerIdentifiedProperties());
-//    save($r6->getResponse()->invoiceNumber(), $r6->getReceipt()->receipt());
-//
-//    // ==========================================================================================
-//    // ADVANCE SALE REFUND
-//    // ==========================================================================================
-//    $r7 = $request->advanceSaleRefund(new RequestRefundProperties(
-//        $r5->getResponse()->invoiceNumber(),
-//        $r5->getResponse()->sdcDateTime()
-//    ));
-//    save($r7->getResponse()->invoiceNumber(), $r7->getReceipt()->receipt());
-//
-//    // ==========================================================================================
-//    // ADVANCE SALE CUSTOMER IDENTIFIED REFUND
-//    // ==========================================================================================
-//    $r7 = $request->advanceSaleRefundCustomerIdentified(new RequestRefundCustomerIdentifiedProperties(
-//        $r6->getResponse()->invoiceNumber(),
-//        $r6->getResponse()->sdcDateTime()
-//    ));
-//    save($r7->getResponse()->invoiceNumber(), $r7->getReceipt()->receipt());
+    // ===== NORMAL SALE =====
 
-    // ==========================================================================================
-    // ADVANCE SALE CUSTOMER IDENTIFIED REFUND
-    // ==========================================================================================
-    $r9 = $request->normalSaleWithClosedAdvanceSaleRequest(
-        new RequestRefundProperties($r5->getResponse()->invoiceNumber(), $r5->getResponse()->sdcDateTime()),
-        new RequestSaleProperties(),
-    );
+    $n1 = $request->normalSale(new NormalSale());
+    saveOne($n1);
 
-    /** @var ResponseBuilder $item */
-    foreach ($r9 as $item) {
-        save($item->getResponse()->invoiceNumber(), $item->getReceipt()->receipt());
-    }
+    $n2 = $request->normalSaleBuyerAndCostCenterIdentified(new NormalSaleBuyerAndCostCenterIdentified());
+    saveOne($n2);
+
+    $n3 = $request->normalSaleRefund(new NormalSaleRefund($n1->getResponse()));
+    saveOne($n3);
+
+    $n4 = $request->normalSaleBuyerIdentifiedRefund(new NormalSaleBuyerIdentifiedRefund($n2->getResponse()));
+    saveOne($n4);
+
+    // ===== ADVANCE SALE =====
+
+    $a1 = $request->advanceSale(new AdvanceSale());
+    saveOne($a1);
+
+    $a2 = $request->advanceSaleBuyerIdentified(new AdvanceSaleBuyerIdentified());
+    saveOne($a2);
+
+    $a3 = $request->advanceSaleRefund(new AdvanceSaleRefund($a1->getResponse()));
+    saveOne($a3);
+
+    $a4 = $request->advanceSaleBuyerIdentifiedRefund(new AdvanceSaleBuyerIdentifiedRefund($a2->getResponse()));
+    saveOne($a4);
+
+    // ===== CLOSE ADVANCE SALE =====
+
+//    $n5 = $request->normalSaleWithClosingAdvanceSale('', '');
+//    saveAll($n5);
+//
+//    $n6 = $request->normalSaleBuyerIdentifiedWithClosingAdvanceSale('', '');
+//    saveAll($n6);
+
+    // ===== COPY SALE =====
+
+//    $c1 = $request->copySale(new CopySale($n1->getResponse()));
+//    saveOne($c1);
+
+//    $c2 = $request->copySaleBuyerIdentifiedBuilder('');
+//    saveOne($c2);
+
+//    $c3 = $request->copySaleRefund(new CopySaleRefund($n3->getResponse()));
+//    saveOne($c3);
+//
+//    $c4 = $request->copySaleRefundBuyerIdentified(new CopySaleRefundBuyerIdentified($n4->getResponse()));
+//    saveOne($c4);
 } catch (Exception $e) {
     die($e->getMessage());
 }
 
 /**
- * @param string $invoiceNumber
- * @param string $receipt
+ * @param ResponseBuilder $builder
  */
-function save(string $invoiceNumber, string $receipt): void
+function saveOne(ResponseBuilder $builder): void
 {
-    $file = fopen(__DIR__ . "/../resources/output/$invoiceNumber.html", 'w');
-    fwrite($file, $receipt);
+    $file = fopen(__DIR__ . "/../resources/receipts/{$builder->getResponse()->invoiceNumber()}.html", 'w');
+    fwrite($file, $builder->getReceipt()->receipt());
     fclose($file);
+}
+
+/**
+ * @param ResponsesBuilder $builder
+ */
+function saveAll(ResponsesBuilder $builder): void
+{
+    saveOne($builder->getAdvanceSale());
+    saveOne($builder->getNormalSale());
 }

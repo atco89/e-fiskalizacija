@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities\Request;
 
-interface RequestWithReferentDocumentBuyerIdentifiedInterface extends RequestWithReferentDocumentInterface
+use TaxCore\Entities\ReferentDocumentInterface;
+
+interface RequestWithReferentDocumentBuyerIdentifiedInterface
+    extends RequestBuyerIdentifiedInterface, ReferentDocumentInterface
 {
 
-    /**
-     * @return string
-     */
-    public function buyerId(): string;
 }

@@ -2,4 +2,4 @@
 *.icloud
 /.idea/
 /vendor/
-/resources/output/
+/resources/receipts/

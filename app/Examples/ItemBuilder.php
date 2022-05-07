@@ -5,7 +5,7 @@ namespace TaxCore\Examples;
 
 use TaxCore\Entities\ItemInterface;
 
-final class Item implements ItemInterface
+final class ItemBuilder implements ItemInterface
 {
 
     /**

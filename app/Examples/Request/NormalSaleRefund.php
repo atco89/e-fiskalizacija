@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace TaxCore\Examples\Request;
 
-use DateTime;
 use DateTimeInterface;
 use Exception;
-use TaxCore\Entities\Request\RequestWithReferentDocumentPropertiesInterface;
+use TaxCore\Entities\AdvanceSaleItem;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
+use TaxCore\Entities\Request\RequestWithReferentDocumentInterface;
+use TaxCore\Response\Response;
 
-final class RequestWithReferentDocumentProperties implements RequestWithReferentDocumentPropertiesInterface
+final class NormalSaleRefund implements RequestWithReferentDocumentInterface
 {
 
     /**
@@ -22,18 +25,17 @@ final class RequestWithReferentDocumentProperties implements RequestWithReferent
     protected DateTimeInterface $referentDocumentDateTime;
 
     /**
-     * @param string $referentDocumentNumber
-     * @param string $referentDocumentDateTime
+     * @param Response $response
      * @throws Exception
      */
-    public function __construct(string $referentDocumentNumber, string $referentDocumentDateTime)
+    public function __construct(Response $response)
     {
-        $this->referentDocumentNumber = $referentDocumentNumber;
-        $this->referentDocumentDateTime = new DateTime($referentDocumentDateTime);
+        $this->referentDocumentNumber = $response->invoiceNumber();
+        $this->referentDocumentDateTime = $response->sdcDateTime();
     }
 
     /**
-     * @return array
+     * @return ItemInterface[]
      */
     public function items(): array
     {
@@ -41,11 +43,11 @@ final class RequestWithReferentDocumentProperties implements RequestWithReferent
     }
 
     /**
-     * @return array
+     * @return PaymentTypeInterface[]
      */
     public function payment(): array
     {
-        return include __DIR__ . '/../data/payment.php';
+        return include __DIR__ . '/../data/refund-payment.php';
     }
 
     /**
@@ -62,5 +64,13 @@ final class RequestWithReferentDocumentProperties implements RequestWithReferent
     public function referentDocumentDateTime(): DateTimeInterface
     {
         return $this->referentDocumentDateTime;
+    }
+
+    /**
+     * @return AdvanceSaleItem[]|null
+     */
+    public function advanceSaleItems(): array|null
+    {
+        return null;
     }
 }

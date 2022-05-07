@@ -7,8 +7,8 @@ use TaxCore\Examples\PaymentBuilder;
 
 $paymentItems = [
     [
-        'type'   => PaymentType::CARD,
-        'amount' => 500.00,
+        'type'   => PaymentType::CASH,
+        'amount' => 981.88,
     ],
 ];
 

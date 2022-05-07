@@ -4,9 +4,14 @@ declare(strict_types=1);
 namespace TaxCore\Examples\Request;
 
 use DateTimeInterface;
-use TaxCore\Entities\Request\RequestRefundPropertiesInterface;
+use Exception;
+use TaxCore\Entities\AdvanceSaleItem;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
+use TaxCore\Entities\Request\RequestWithReferentDocumentInterface;
+use TaxCore\Response\Response;
 
-final class RequestRefundProperties implements RequestRefundPropertiesInterface
+final class CopySaleRefund implements RequestWithReferentDocumentInterface
 {
 
     /**
@@ -20,17 +25,17 @@ final class RequestRefundProperties implements RequestRefundPropertiesInterface
     protected DateTimeInterface $referentDocumentDateTime;
 
     /**
-     * @param string $referentDocumentNumber
-     * @param DateTimeInterface $referentDocumentDateTime
+     * @param Response $response
+     * @throws Exception
      */
-    public function __construct(string $referentDocumentNumber, DateTimeInterface $referentDocumentDateTime)
+    public function __construct(Response $response)
     {
-        $this->referentDocumentNumber = $referentDocumentNumber;
-        $this->referentDocumentDateTime = $referentDocumentDateTime;
+        $this->referentDocumentNumber = $response->invoiceNumber();
+        $this->referentDocumentDateTime = $response->sdcDateTime();
     }
 
     /**
-     * @return array
+     * @return ItemInterface[]
      */
     public function items(): array
     {
@@ -38,11 +43,11 @@ final class RequestRefundProperties implements RequestRefundPropertiesInterface
     }
 
     /**
-     * @return array
+     * @return PaymentTypeInterface[]
      */
     public function payment(): array
     {
-        return include __DIR__ . '/../data/payment.php';
+        return include __DIR__ . '/../data/refund-payment.php';
     }
 
     /**
@@ -59,5 +64,13 @@ final class RequestRefundProperties implements RequestRefundPropertiesInterface
     public function referentDocumentDateTime(): DateTimeInterface
     {
         return $this->referentDocumentDateTime;
+    }
+
+    /**
+     * @return AdvanceSaleItem[]|null
+     */
+    public function advanceSaleItems(): array|null
+    {
+        return null;
     }
 }

@@ -6,6 +6,7 @@ namespace TaxCore\Request;
 use DateTimeInterface;
 use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Entities\ReferentDocumentInterface;
+use TaxCore\Entities\Request\RequestInterface;
 use TaxCore\Entities\Request\RequestWithReferentDocumentInterface;
 
 abstract class RefundBuilder extends ApiRequestBase implements ReferentDocumentInterface
@@ -24,7 +25,7 @@ abstract class RefundBuilder extends ApiRequestBase implements ReferentDocumentI
     /**
      * @param RequestWithReferentDocumentInterface $request
      */
-    public function __construct(RequestWithReferentDocumentInterface $request)
+    public function __construct(RequestInterface $request)
     {
         parent::__construct($request);
         $this->referentDocumentNumber = $request->referentDocumentNumber();

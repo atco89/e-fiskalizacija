@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace TaxCore\Examples\Request;
 
+use TaxCore\Entities\AdvanceSaleItem;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
-use TaxCore\Entities\Request\RequestPropertiesInterface;
+use TaxCore\Entities\Request\RequestInterface;
 
-final class RequestSaleProperties implements RequestPropertiesInterface
+final class AdvanceSale implements RequestInterface
 {
 
     /**
@@ -23,6 +24,14 @@ final class RequestSaleProperties implements RequestPropertiesInterface
      */
     public function payment(): array
     {
-        return include __DIR__ . '/../data/payment.php';
+        return include __DIR__ . '/../data/advance-payment.php';
+    }
+
+    /**
+     * @return AdvanceSaleItem[]|null
+     */
+    public function advanceSaleItems(): array|null
+    {
+        return include __DIR__ . '/../data/advance-sale-items.php';
     }
 }

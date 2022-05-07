@@ -6,9 +6,9 @@ namespace TaxCore\Request\AdvanceSale;
 use DateTime;
 use DateTimeInterface;
 use TaxCore\Entities\Request\RequestInterface;
-use TaxCore\Request\AdvanceSaleBuilderBuilder;
+use TaxCore\Request\AdvanceSaleBuilder;
 
-final class RequestAdvanceSale extends AdvanceSaleBuilderBuilder
+final class RequestAdvanceSale extends AdvanceSaleBuilder
 {
 
     /**

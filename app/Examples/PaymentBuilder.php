@@ -7,7 +7,7 @@ use Exception;
 use TaxCore\Entities\Enums\PaymentType;
 use TaxCore\Entities\PaymentTypeInterface;
 
-final class Payment implements PaymentTypeInterface
+final class PaymentBuilder implements PaymentTypeInterface
 {
 
     /**

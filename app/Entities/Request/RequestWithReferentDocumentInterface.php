@@ -3,18 +3,9 @@ declare(strict_types=1);
 
 namespace TaxCore\Entities\Request;
 
-use DateTimeInterface;
+use TaxCore\Entities\ReferentDocumentInterface;
 
-interface RequestWithReferentDocumentInterface extends RequestInterface
+interface RequestWithReferentDocumentInterface extends RequestInterface, ReferentDocumentInterface
 {
 
-    /**
-     * @return string
-     */
-    public function referentDocumentNumber(): string;
-
-    /**
-     * @return DateTimeInterface
-     */
-    public function referentDocumentDateTime(): DateTimeInterface;
 }

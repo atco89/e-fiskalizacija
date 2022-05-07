@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use TaxCore\Entities\ItemInterface;
-use TaxCore\Examples\Item;
+use TaxCore\Examples\ItemBuilder;
 
 $items = [
     [
@@ -29,5 +29,5 @@ $items = [
 ];
 
 return array_map(function (array $item): ItemInterface {
-    return new Item($item);
+    return new ItemBuilder($item);
 }, $items);
