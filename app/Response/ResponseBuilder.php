@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace TaxCore\Response;
 
+use TaxCore\Entities\ApiRequestInterface;
 use TaxCore\Entities\ConfigurationInterface;
-use TaxCore\Entities\CustomerSignatureInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TransactionType;
-use TaxCore\Entities\ApiRequestInterface;
 use TaxCore\Receipt\ReceiptBuilder;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -96,11 +95,10 @@ final class ResponseBuilder
     private function generateReceipt(): string
     {
         return $this->twig->render('./receipt/index.html.twig', [
-            'title'                       => $this->title,
-            'configuration'               => $this->configuration,
-            'request'                     => $this->request,
-            'response'                    => $this->response,
-            'instanceOfCustomerSignature' => $this->request instanceof CustomerSignatureInterface,
+            'title'         => $this->title,
+            'configuration' => $this->configuration,
+            'request'       => $this->request,
+            'response'      => $this->response,
         ]);
     }
 
