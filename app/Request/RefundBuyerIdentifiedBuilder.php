@@ -19,8 +19,8 @@ abstract class RefundBuyerIdentifiedBuilder extends RefundBuilder implements Buy
      */
     public function __construct(RequestWithReferentDocumentBuyerIdentifiedInterface $request)
     {
-        parent::__construct($request);
         $this->buyerId = $request->buyerId();
+        parent::__construct($request);
     }
 
     /**

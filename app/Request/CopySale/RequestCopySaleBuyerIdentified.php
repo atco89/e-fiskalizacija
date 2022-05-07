@@ -27,9 +27,9 @@ final class RequestCopySaleBuyerIdentified extends SaleBuyerIdentifiedBuilder im
      */
     public function __construct(RequestWithReferentDocumentBuyerIdentifiedInterface $request)
     {
-        parent::__construct($request);
         $this->referentDocumentNumber = $request->referentDocumentNumber();
         $this->referentDocumentDateTime = $request->referentDocumentDateTime();
+        parent::__construct($request);
     }
 
     /**

@@ -27,9 +27,9 @@ abstract class RefundBuilder extends ApiRequestBase implements ReferentDocumentI
      */
     public function __construct(RequestInterface $request)
     {
-        parent::__construct($request);
         $this->referentDocumentNumber = $request->referentDocumentNumber();
         $this->referentDocumentDateTime = $request->referentDocumentDateTime();
+        parent::__construct($request);
     }
 
     /**

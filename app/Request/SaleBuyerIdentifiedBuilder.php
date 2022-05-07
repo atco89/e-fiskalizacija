@@ -19,8 +19,8 @@ abstract class SaleBuyerIdentifiedBuilder extends SaleBuilder implements BuyerIn
      */
     public function __construct(RequestBuyerIdentifiedInterface $request)
     {
-        parent::__construct($request);
         $this->buyerId = $request->buyerId();
+        parent::__construct($request);
     }
 
     /**

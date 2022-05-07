@@ -21,8 +21,8 @@ final class RequestAdvanceSale extends AdvanceSaleBuilder
      */
     public function __construct(RequestInterface $request)
     {
-        parent::__construct($request);
         $this->issueDateTime = $this->generateIssueDateTime();
+        parent::__construct($request);
     }
 
     /**

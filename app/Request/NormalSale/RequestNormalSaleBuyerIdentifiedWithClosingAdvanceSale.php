@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace TaxCore\Request\NormalSale;
 
 use TaxCore\Entities\BuyerInterface;
-use TaxCore\Entities\Request\RequestWithReferentDocumentInterface;
+use TaxCore\Entities\Request\RequestWithReferentDocumentBuyerIdentifiedInterface;
 use TaxCore\Request\CloseAdvanceSaleBuilder;
 use TaxCore\Response\Response;
 
@@ -18,16 +18,16 @@ final class RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale extends Close
     protected string $buyerId;
 
     /**
-     * @param RequestWithReferentDocumentInterface $request
+     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $request
      * @param Response $response
      */
     public function __construct(
-        RequestWithReferentDocumentInterface $request,
-        Response                             $response
+        RequestWithReferentDocumentBuyerIdentifiedInterface $request,
+        Response                                            $response
     )
     {
-        parent::__construct($request, $response);
         $this->buyerId = $request->buyerId();
+        parent::__construct($request, $response);
     }
 
     /**

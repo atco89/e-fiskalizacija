@@ -40,22 +40,28 @@ abstract class ApiRequestBase implements ApiRequestInterface
     {
         $this->items = $request->items();
         $this->payment = $request->payment();
-        $this->amount = $this->sumItemsAmount($request->items(), $request->advanceSaleItems());
+        $this->amount = $this->sumItemsAmount($this->items());
         $this->requestId = $this->generateRequestId();
     }
 
     /**
-     * @param array $items
-     * @param array|null $advanceSaleItems
+     * @param ItemInterface[] $items
      * @return float
      */
-    private function sumItemsAmount(array $items, array|null $advanceSaleItems): float
+    private function sumItemsAmount(array $items): float
     {
-        $items = empty($advanceSaleItems) ? $items : $advanceSaleItems;
         return array_reduce($items, function (float|null $carry, ItemInterface $item): float {
             $carry += $item->amount();
             return $carry;
         });
+    }
+
+    /**
+     * @return ItemInterface[]
+     */
+    public function items(): array
+    {
+        return $this->items;
     }
 
     /**
@@ -80,14 +86,6 @@ abstract class ApiRequestBase implements ApiRequestInterface
     final public function requestId(): string
     {
         return $this->requestId;
-    }
-
-    /**
-     * @return ItemInterface[]
-     */
-    public function items(): array
-    {
-        return $this->items;
     }
 
     /**

@@ -9,6 +9,7 @@ use TaxCore\Entities\AdvanceSaleAmountInterface;
 use TaxCore\Entities\AdvertisementItemInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\ReferentDocumentInterface;
+use TaxCore\Entities\Request\RequestInterface;
 use TaxCore\Entities\Request\RequestWithReferentDocumentInterface;
 use TaxCore\Entities\TaxItemInterface;
 use TaxCore\Response\Response;
@@ -26,7 +27,7 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
      * @param RequestWithReferentDocumentInterface $request
      * @param Response $response
      */
-    public function __construct(RequestWithReferentDocumentInterface $request, Response $response)
+    public function __construct(RequestInterface $request, Response $response)
     {
         parent::__construct($request);
         $this->response = $response;

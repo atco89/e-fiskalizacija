@@ -27,9 +27,9 @@ final class RequestCopySale extends SaleBuilder implements ReferentDocumentInter
      */
     public function __construct(RequestWithReferentDocumentInterface $request)
     {
-        parent::__construct($request);
         $this->referentDocumentNumber = $request->referentDocumentNumber();
         $this->referentDocumentDateTime = $request->referentDocumentDateTime();
+        parent::__construct($request);
     }
 
     /**

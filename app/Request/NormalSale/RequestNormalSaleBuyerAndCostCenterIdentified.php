@@ -22,8 +22,8 @@ final class RequestNormalSaleBuyerAndCostCenterIdentified extends SaleBuyerIdent
      */
     public function __construct(RequestBuyerAndCostCenterIdentifiedInterface $request)
     {
-        parent::__construct($request);
         $this->buyerCostCenterId = $request->buyerCostCenterId();
+        parent::__construct($request);
     }
 
     /**

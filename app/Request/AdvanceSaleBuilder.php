@@ -22,8 +22,8 @@ abstract class AdvanceSaleBuilder extends SaleBuilder
      */
     public function __construct(RequestInterface $request)
     {
-        parent::__construct($request);
         $this->advanceSaleItems = $request->advanceSaleItems();
+        parent::__construct($request);
     }
 
     /**
