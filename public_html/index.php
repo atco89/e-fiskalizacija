@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use TaxCore\Entities\ApiRequestInterface;
+use TaxCore\Entities\Enums\InvoiceType;
+use TaxCore\Entities\Enums\TransactionType;
 use TaxCore\Examples\Configuration;
 use TaxCore\Request;
 use TaxCore\Response\ResponseBuilder;
@@ -134,9 +137,30 @@ try {
  */
 function saveOne(ResponseBuilder $builder): void
 {
-    $file = fopen(__DIR__ . "/../resources/receipts/{$builder->getResponse()->invoiceNumber()}.html", 'w');
+    $basePath = __DIR__ . "/../resources/receipts";
+    $directoryName = directoryName($builder->getRequest());
+    if (!file_exists("$basePath/$directoryName")) {
+        mkdir("$basePath/$directoryName", 0777, true);
+    }
+
+    $file = fopen("$basePath/$directoryName/{$builder->getResponse()->invoiceNumber()}.html", 'w');
     fwrite($file, $builder->getReceipt()->receipt());
     fclose($file);
+}
+
+/**
+ * @param ApiRequestInterface $request
+ * @return string
+ */
+function directoryName(ApiRequestInterface $request): string
+{
+    $transactionType = $request->transactionType() === TransactionType::SALE ? 'prodaja' : 'refundacija';
+    $invoiceType = match ($request->invoiceType()) {
+        InvoiceType::NORMAL  => 'promet',
+        InvoiceType::ADVANCE => 'avans',
+        InvoiceType::COPY    => 'kopija',
+    };
+    return implode('-', [$invoiceType, $transactionType]);
 }
 
 /**
