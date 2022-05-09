@@ -303,7 +303,7 @@
                 </div>
             </div>
 
-            {% if request.advertisementItems is not empty %}
+            {% if request.advertisementItems is not empty and request.transactionType == 0 %}
                 <div class="row mt-2">
                     <div class="col-12">
                         <table class="table table-sm table-borderless">
