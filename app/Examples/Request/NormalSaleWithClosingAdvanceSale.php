@@ -7,7 +7,6 @@ use DateTimeInterface;
 use Exception;
 use TaxCore\Entities\AdvanceSaleItemInterface;
 use TaxCore\Entities\ItemInterface;
-use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\Request\RequestWithReferentDocumentInterface;
 use TaxCore\Response\Response;
 
@@ -40,14 +39,6 @@ final class NormalSaleWithClosingAdvanceSale implements RequestWithReferentDocum
     public function items(): array
     {
         return include __DIR__ . '/../data/items.php';
-    }
-
-    /**
-     * @return PaymentTypeInterface[]
-     */
-    public function payment(): array
-    {
-        return include __DIR__ . '/../data/advance-payment.php';
     }
 
     /**

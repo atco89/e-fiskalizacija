@@ -5,8 +5,8 @@ namespace TaxCore\Request\CopySale;
 
 use DateTimeInterface;
 use TaxCore\Entities\Enums\InvoiceType;
+use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
-use TaxCore\Entities\Request\RequestWithReferentDocumentInterface;
 use TaxCore\Request\SaleBuilder;
 
 final class RequestCopySale extends SaleBuilder implements ReferentDocumentInterface
@@ -23,13 +23,19 @@ final class RequestCopySale extends SaleBuilder implements ReferentDocumentInter
     protected DateTimeInterface $referentDocumentDateTime;
 
     /**
-     * @param RequestWithReferentDocumentInterface $request
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
      */
-    public function __construct(RequestWithReferentDocumentInterface $request)
+    public function __construct(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime
+    )
     {
-        $this->referentDocumentNumber = $request->referentDocumentNumber();
-        $this->referentDocumentDateTime = $request->referentDocumentDateTime();
-        parent::__construct($request);
+        parent::__construct($items);
+        $this->referentDocumentNumber = $referentDocumentNumber;
+        $this->referentDocumentDateTime = $referentDocumentDateTime;
     }
 
     /**

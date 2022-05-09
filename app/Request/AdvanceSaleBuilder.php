@@ -7,7 +7,6 @@ use TaxCore\Entities\AdvanceSaleItemInterface;
 use TaxCore\Entities\AdvertisementItemInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\ItemInterface;
-use TaxCore\Entities\Request\RequestInterface;
 
 abstract class AdvanceSaleBuilder extends SaleBuilder
 {
@@ -18,12 +17,13 @@ abstract class AdvanceSaleBuilder extends SaleBuilder
     protected array $advanceSaleItems;
 
     /**
-     * @param RequestInterface $request
+     * @param ItemInterface[] $items
+     * @param AdvanceSaleItemInterface[] $advanceSaleItems
      */
-    public function __construct(RequestInterface $request)
+    public function __construct(array $items, array $advanceSaleItems)
     {
-        $this->advanceSaleItems = $request->advanceSaleItems();
-        parent::__construct($request);
+        $this->advanceSaleItems = $advanceSaleItems;
+        parent::__construct($items);
     }
 
     /**
@@ -48,6 +48,7 @@ abstract class AdvanceSaleBuilder extends SaleBuilder
     /**
      * @param AdvanceSaleItemInterface $item
      * @return ItemInterface
+     * @noinspection DuplicatedCode
      */
     final protected function buildAdvanceSaleItem(AdvanceSaleItemInterface $item): ItemInterface
     {

@@ -6,7 +6,7 @@ namespace TaxCore\Examples;
 use TaxCore\Entities\AdvanceSaleItemInterface;
 use TaxCore\Entities\Enums\TaxRateLabel;
 
-final class AdvanceSaleItemInterfaceBuilder implements AdvanceSaleItemInterface
+final class AdvanceSaleItem implements AdvanceSaleItemInterface
 {
 
     /**
@@ -35,6 +35,6 @@ final class AdvanceSaleItemInterfaceBuilder implements AdvanceSaleItemInterface
      */
     public function taxRateLabel(): TaxRateLabel
     {
-        return TaxRateLabel::tryFrom($this->item['taxRateLabel']->value);
+        return $this->item['taxRateLabel'];
     }
 }

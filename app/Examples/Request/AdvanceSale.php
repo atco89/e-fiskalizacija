@@ -5,7 +5,6 @@ namespace TaxCore\Examples\Request;
 
 use TaxCore\Entities\AdvanceSaleItemInterface;
 use TaxCore\Entities\ItemInterface;
-use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\Request\RequestInterface;
 
 final class AdvanceSale implements RequestInterface
@@ -17,14 +16,6 @@ final class AdvanceSale implements RequestInterface
     public function items(): array
     {
         return include __DIR__ . '/../data/items.php';
-    }
-
-    /**
-     * @return PaymentTypeInterface[]
-     */
-    public function payment(): array
-    {
-        return include __DIR__ . '/../data/advance-payment.php';
     }
 
     /**

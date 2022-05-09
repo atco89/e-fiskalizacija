@@ -75,7 +75,7 @@ try {
     $c3 = $request->copySaleRefund(new CopySaleRefund($n3->getResponse()));
     saveOne($c3);
 
-    $c4 = $request->copySaleRefundBuyerIdentified(new CopySaleRefundBuyerIdentified($n4->getResponse()));
+    $c4 = $request->copySaleBuyerIdentifiedRefund(new CopySaleRefundBuyerIdentified($n4->getResponse()));
     saveOne($c4);
 } catch (Exception $e) {
     die($e->getMessage());

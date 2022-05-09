@@ -178,17 +178,19 @@
                             </tr>
                         {% endif %}
 
-                        {% for payment in request.payments %}
-                            <tr>
-                                <td class="text-start">{{ payment.name }}:</td>
-                                <td class="text-end">{{ payment.amount | decimal }}</td>
-                            </tr>
-                        {% endfor %}
-
                         {% if request | instanceof('\\TaxCore\\Entities\\AdvanceSaleAmountInterface') %}
                             <tr>
+                                <td class="text-start">Готовина:</td>
+                                <td class="text-end">{{ request.remainingAmount | decimal }}</td>
+                            </tr>
+                            <tr>
                                 <th class="text-start">Преостало за плаћање:</th>
-                                <th class="text-end">{{ request.remainingAmount | decimal }}</th>
+                                <th class="text-end">{{ '0.00' | decimal }}</th>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td class="text-start">Готовина:</td>
+                                <td class="text-end">{{ request.amount | decimal }}</td>
                             </tr>
                         {% endif %}
 

@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace TaxCore\Request\AdvanceSale;
 
+use DateTimeInterface;
+use TaxCore\Entities\AdvanceSaleItemInterface;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Enums\InvoiceType;
-use TaxCore\Entities\Request\RequestBuyerIdentifiedInterface;
+use TaxCore\Entities\ItemInterface;
 use TaxCore\Request\AdvanceSaleRefundBuilder;
 
 final class RequestAdvanceSaleBuyerIdentifiedRefund extends AdvanceSaleRefundBuilder implements BuyerInterface
@@ -17,12 +19,22 @@ final class RequestAdvanceSaleBuyerIdentifiedRefund extends AdvanceSaleRefundBui
     protected string $buyerId;
 
     /**
-     * @param RequestBuyerIdentifiedInterface $request
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param string $buyerId
      */
-    public function __construct(RequestBuyerIdentifiedInterface $request)
+    public function __construct(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        array             $advanceSaleItems,
+        string            $buyerId
+    )
     {
-        $this->buyerId = $request->buyerId();
-        parent::__construct($request);
+        parent::__construct($items, $referentDocumentNumber, $referentDocumentDateTime, $advanceSaleItems);
+        $this->buyerId = $buyerId;
     }
 
     /**

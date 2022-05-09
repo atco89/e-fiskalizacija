@@ -8,29 +8,54 @@ use Exception;
 use TaxCore\Entities\AdvanceSaleAmountInterface;
 use TaxCore\Entities\AdvertisementItemInterface;
 use TaxCore\Entities\Enums\InvoiceType;
+use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
-use TaxCore\Entities\Request\RequestInterface;
-use TaxCore\Entities\Request\RequestWithReferentDocumentInterface;
 use TaxCore\Entities\TaxItemInterface;
-use TaxCore\Response\Response;
 
 abstract class CloseAdvanceSaleBuilder extends SaleBuilder
     implements ReferentDocumentInterface, AdvanceSaleAmountInterface
 {
 
     /**
-     * @var Response
+     * @var string
      */
-    protected Response $response;
+    protected string $referentDocumentNumber;
 
     /**
-     * @param RequestWithReferentDocumentInterface $request
-     * @param Response $response
+     * @var DateTimeInterface
      */
-    public function __construct(RequestInterface $request, Response $response)
+    protected DateTimeInterface $referentDocumentDateTime;
+
+    /**
+     * @var float
+     */
+    protected float $receivedAmount;
+
+    /**
+     * @var TaxItemInterface[]
+     */
+    protected array $receivedTax;
+
+    /**
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param float $receivedAmount
+     * @param TaxItemInterface[] $receivedTax
+     */
+    public function __construct(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        float             $receivedAmount,
+        array             $receivedTax
+    )
     {
-        parent::__construct($request);
-        $this->response = $response;
+        $this->referentDocumentNumber = $referentDocumentNumber;
+        $this->referentDocumentDateTime = $referentDocumentDateTime;
+        $this->receivedAmount = $receivedAmount;
+        $this->receivedTax = $receivedTax;
+        parent::__construct($items);
     }
 
     /**
@@ -46,7 +71,7 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
      */
     final public function receivedTax(): float
     {
-        return array_reduce($this->response->taxItems(), function (float|null $carry, TaxItemInterface $item): float {
+        return array_reduce($this->receivedTax, function (float|null $carry, TaxItemInterface $item): float {
             $carry += $item->amount();
             return $carry;
         });
@@ -58,7 +83,7 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
      */
     final public function remainingAmount(): float
     {
-        return round($this->amount() - $this->receivedAmount(), 5);
+        return round($this->amount() - $this->receivedAmount, 5);
     }
 
     /**
@@ -67,7 +92,7 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
      */
     final public function receivedAmount(): float
     {
-        return $this->response->totalAmount();
+        return $this->receivedAmount;
     }
 
     /**
@@ -126,7 +151,7 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
      */
     final public function referentDocumentNumber(): string
     {
-        return $this->response->invoiceNumber();
+        return $this->referentDocumentNumber;
     }
 
     /**
@@ -135,6 +160,6 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
      */
     final public function referentDocumentDateTime(): DateTimeInterface
     {
-        return $this->response->sdcDateTime();
+        return $this->referentDocumentDateTime;
     }
 }

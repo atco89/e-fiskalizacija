@@ -5,9 +5,8 @@ namespace TaxCore\Request;
 
 use DateTimeInterface;
 use TaxCore\Entities\Enums\TransactionType;
+use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
-use TaxCore\Entities\Request\RequestInterface;
-use TaxCore\Entities\Request\RequestWithReferentDocumentInterface;
 
 abstract class RefundBuilder extends ApiRequestBase implements ReferentDocumentInterface
 {
@@ -23,13 +22,19 @@ abstract class RefundBuilder extends ApiRequestBase implements ReferentDocumentI
     protected DateTimeInterface $referentDocumentDateTime;
 
     /**
-     * @param RequestWithReferentDocumentInterface $request
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
      */
-    public function __construct(RequestInterface $request)
+    public function __construct(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime
+    )
     {
-        $this->referentDocumentNumber = $request->referentDocumentNumber();
-        $this->referentDocumentDateTime = $request->referentDocumentDateTime();
-        parent::__construct($request);
+        $this->referentDocumentNumber = $referentDocumentNumber;
+        $this->referentDocumentDateTime = $referentDocumentDateTime;
+        parent::__construct($items);
     }
 
     /**

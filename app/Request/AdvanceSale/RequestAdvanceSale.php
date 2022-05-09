@@ -5,7 +5,6 @@ namespace TaxCore\Request\AdvanceSale;
 
 use DateTime;
 use DateTimeInterface;
-use TaxCore\Entities\Request\RequestInterface;
 use TaxCore\Request\AdvanceSaleBuilder;
 
 final class RequestAdvanceSale extends AdvanceSaleBuilder
@@ -17,12 +16,13 @@ final class RequestAdvanceSale extends AdvanceSaleBuilder
     protected DateTimeInterface $issueDateTime;
 
     /**
-     * @param RequestInterface $request
+     * @param array $items
+     * @param array $advanceSaleItems
      */
-    public function __construct(RequestInterface $request)
+    public function __construct(array $items, array $advanceSaleItems)
     {
         $this->issueDateTime = $this->generateIssueDateTime();
-        parent::__construct($request);
+        parent::__construct($items, $advanceSaleItems);
     }
 
     /**
