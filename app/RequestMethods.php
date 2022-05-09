@@ -21,7 +21,7 @@ interface RequestMethods
 
     /**
      * @param ItemInterface[] $items
-     * @param array $advanceSaleItems
+     * @param AdvanceSaleItemInterface[] $advanceSaleItems
      * @param string $buyerId
      * @return ResponseBuilder
      */
@@ -91,7 +91,6 @@ interface RequestMethods
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @param string $buyerId
      * @return ResponseBuilder
      */
     public function copySaleRefund(
@@ -137,14 +136,14 @@ interface RequestMethods
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param string $buyerId
-     * @return ResponseBuilder
+     * @return ResponsesBuilder
      */
     public function normalSaleBuyerIdentifiedRefund(
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         string            $buyerId
-    ): ResponseBuilder;
+    ): ResponsesBuilder;
 
     /**
      * @param ItemInterface[] $items
@@ -166,13 +165,13 @@ interface RequestMethods
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @return ResponseBuilder
+     * @return ResponsesBuilder
      */
     public function normalSaleRefund(
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime
-    ): ResponseBuilder;
+    ): ResponsesBuilder;
 
     /**
      * @param ItemInterface[] $items

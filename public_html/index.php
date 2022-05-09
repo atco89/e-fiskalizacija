@@ -36,15 +36,15 @@ try {
         $n1->getResponse()->invoiceNumber(),
         $n1->getResponse()->sdcDateTime(),
     );
-    saveOne($n3);
+    saveAll($n3);
 
     $n4 = $request->normalSaleBuyerIdentifiedRefund(
         $items,
-        $n3->getResponse()->invoiceNumber(),
-        $n3->getResponse()->sdcDateTime(),
+        $n2->getResponse()->invoiceNumber(),
+        $n2->getResponse()->sdcDateTime(),
         $buyerId,
     );
-    saveOne($n4);
+    saveAll($n4);
 
     // ===== ADVANCE SALE =====
 
@@ -60,23 +60,6 @@ try {
         $buyerId,
     );
     saveOne($a2);
-
-    $a3 = $request->advanceSaleRefund(
-        $items,
-        $a1->getResponse()->invoiceNumber(),
-        $a1->getResponse()->sdcDateTime(),
-        $advanceSaleItems,
-    );
-    saveOne($a3);
-
-    $a4 = $request->advanceSaleBuyerIdentifiedRefund(
-        $items,
-        $a2->getResponse()->invoiceNumber(),
-        $a2->getResponse()->sdcDateTime(),
-        $advanceSaleItems,
-        $buyerId,
-    );
-    saveOne($a4);
 
     // ===== CLOSE ADVANCE SALE =====
 
@@ -106,34 +89,19 @@ try {
     );
     saveOne($c1);
 
-    $c2 = $request->copySaleBuyerIdentifiedBuilder(
-        $items,
-        $n3->getResponse()->invoiceNumber(),
-        $n3->getResponse()->sdcDateTime(),
-        $buyerId,
-    );
-    saveOne($c2);
-
     $c3 = $request->copySaleRefund(
         $items,
         $n1->getResponse()->invoiceNumber(),
         $n1->getResponse()->sdcDateTime(),
     );
     saveOne($c3);
-
-    $c4 = $request->copySaleBuyerIdentifiedRefund(
-        $items,
-        $n3->getResponse()->invoiceNumber(),
-        $n3->getResponse()->sdcDateTime(),
-        $buyerId,
-    );
-    saveOne($c4);
 } catch (Exception $e) {
     die($e->getMessage());
 }
 
 /**
  * @param ResponseBuilder $builder
+ * @throws Exception
  */
 function saveOne(ResponseBuilder $builder): void
 {
@@ -151,6 +119,7 @@ function saveOne(ResponseBuilder $builder): void
 /**
  * @param ApiRequestInterface $request
  * @return string
+ * @throws Exception
  */
 function directoryName(ApiRequestInterface $request): string
 {
@@ -159,6 +128,7 @@ function directoryName(ApiRequestInterface $request): string
         InvoiceType::NORMAL  => 'promet',
         InvoiceType::ADVANCE => 'avans',
         InvoiceType::COPY    => 'kopija',
+        default              => throw new Exception('Unexpected match value'),
     };
     return implode('-', [$invoiceType, $transactionType]);
 }

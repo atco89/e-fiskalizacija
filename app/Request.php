@@ -53,6 +53,18 @@ final class Request extends RequestBuilder implements RequestMethods
     }
 
     /**
+     * @param ItemInterface[] $items
+     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function advanceSale(array $items, array $advanceSaleItems): ResponseBuilder
+    {
+        $serviceRequest = new RequestAdvanceSale($items, $advanceSaleItems);
+        return $this->run($serviceRequest);
+    }
+
+    /**
      * @param ApiRequestInterface $request
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
@@ -86,18 +98,6 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
-     * @return ResponseBuilder
-     * @throws TaxCoreRequestException
-     */
-    public function advanceSale(array $items, array $advanceSaleItems): ResponseBuilder
-    {
-        $serviceRequest = new RequestAdvanceSale($items, $advanceSaleItems);
-        return $this->run($serviceRequest);
-    }
-
-    /**
-     * @param ItemInterface[] $items
      * @param array $advanceSaleItems
      * @param string $buyerId
      * @return ResponseBuilder
@@ -106,57 +106,6 @@ final class Request extends RequestBuilder implements RequestMethods
     public function advanceSaleBuyerIdentified(array $items, array $advanceSaleItems, string $buyerId): ResponseBuilder
     {
         $serviceRequest = new RequestAdvanceSaleBuyerIdentified($items, $advanceSaleItems, $buyerId);
-        return $this->run($serviceRequest);
-    }
-
-    /**
-     * @param ItemInterface[] $items
-     * @param string $referentDocumentNumber
-     * @param DateTimeInterface $referentDocumentDateTime
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
-     * @param string $buyerId
-     * @return ResponseBuilder
-     * @throws TaxCoreRequestException
-     */
-    public function advanceSaleBuyerIdentifiedRefund(
-        array             $items,
-        string            $referentDocumentNumber,
-        DateTimeInterface $referentDocumentDateTime,
-        array             $advanceSaleItems,
-        string            $buyerId
-    ): ResponseBuilder
-    {
-        $serviceRequest = new RequestAdvanceSaleBuyerIdentifiedRefund(
-            $items,
-            $referentDocumentNumber,
-            $referentDocumentDateTime,
-            $advanceSaleItems,
-            $buyerId
-        );
-        return $this->run($serviceRequest);
-    }
-
-    /**
-     * @param ItemInterface[] $items
-     * @param string $referentDocumentNumber
-     * @param DateTimeInterface $referentDocumentDateTime
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
-     * @return ResponseBuilder
-     * @throws TaxCoreRequestException
-     */
-    public function advanceSaleRefund(
-        array             $items,
-        string            $referentDocumentNumber,
-        DateTimeInterface $referentDocumentDateTime,
-        array             $advanceSaleItems
-    ): ResponseBuilder
-    {
-        $serviceRequest = new RequestAdvanceSaleRefund(
-            $items,
-            $referentDocumentNumber,
-            $referentDocumentDateTime,
-            $advanceSaleItems
-        );
         return $this->run($serviceRequest);
     }
 
@@ -174,51 +123,6 @@ final class Request extends RequestBuilder implements RequestMethods
     ): ResponseBuilder
     {
         $serviceRequest = new RequestCopySale(
-            $items,
-            $referentDocumentNumber,
-            $referentDocumentDateTime
-        );
-        return $this->run($serviceRequest);
-    }
-
-    /**
-     * @param ItemInterface[] $items
-     * @param string $referentDocumentNumber
-     * @param DateTimeInterface $referentDocumentDateTime
-     * @param string $buyerId
-     * @return ResponseBuilder
-     * @throws TaxCoreRequestException
-     */
-    public function copySaleBuyerIdentifiedBuilder(
-        array             $items,
-        string            $referentDocumentNumber,
-        DateTimeInterface $referentDocumentDateTime,
-        string            $buyerId
-    ): ResponseBuilder
-    {
-        $serviceRequest = new RequestCopySaleBuyerIdentified(
-            $items,
-            $referentDocumentNumber,
-            $referentDocumentDateTime,
-            $buyerId
-        );
-        return $this->run($serviceRequest);
-    }
-
-    /**
-     * @param ItemInterface[] $items
-     * @param string $referentDocumentNumber
-     * @param DateTimeInterface $referentDocumentDateTime
-     * @return ResponseBuilder
-     * @throws TaxCoreRequestException
-     */
-    public function copySaleRefund(
-        array             $items,
-        string            $referentDocumentNumber,
-        DateTimeInterface $referentDocumentDateTime
-    ): ResponseBuilder
-    {
-        $serviceRequest = new RequestCopySaleRefund(
             $items,
             $referentDocumentNumber,
             $referentDocumentDateTime
@@ -283,17 +187,52 @@ final class Request extends RequestBuilder implements RequestMethods
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param string $buyerId
-     * @return ResponseBuilder
+     * @return ResponsesBuilder
      * @throws TaxCoreRequestException
+     * @throws Exception
      */
     public function normalSaleBuyerIdentifiedRefund(
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         string            $buyerId
+    ): ResponsesBuilder
+    {
+        $normalSaleBuyerIdentifiedRefundResponseBuilder = $this->run(new RequestNormalSaleBuyerIdentifiedRefund(
+            $items,
+            $referentDocumentNumber,
+            $referentDocumentDateTime,
+            $buyerId
+        ));
+        $copySaleBuyerIdentifiedResponseBuilder = $this->copySaleBuyerIdentifiedBuilder(
+            $items,
+            $normalSaleBuyerIdentifiedRefundResponseBuilder->getResponse()->invoiceNumber(),
+            $normalSaleBuyerIdentifiedRefundResponseBuilder->getResponse()->sdcDateTime(),
+            $buyerId
+        );
+
+        return new ResponsesBuilder(
+            $normalSaleBuyerIdentifiedRefundResponseBuilder,
+            $copySaleBuyerIdentifiedResponseBuilder
+        );
+    }
+
+    /**
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param string $buyerId
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function copySaleBuyerIdentifiedBuilder(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        string            $buyerId
     ): ResponseBuilder
     {
-        $serviceRequest = new RequestNormalSaleBuyerIdentifiedRefund(
+        $serviceRequest = new RequestCopySaleBuyerIdentified(
             $items,
             $referentDocumentNumber,
             $referentDocumentDateTime,
@@ -310,6 +249,7 @@ final class Request extends RequestBuilder implements RequestMethods
      * @param string $buyerId
      * @return ResponsesBuilder
      * @throws TaxCoreRequestException
+     * @throws Exception
      */
     public function normalSaleBuyerIdentifiedWithClosingAdvanceSale(
         array             $items,
@@ -328,17 +268,70 @@ final class Request extends RequestBuilder implements RequestMethods
         );
 
         $advanceSaleResponse = $advanceSaleResponseBuilder->getResponse();
-        $serviceRequest = new RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale(
+
+        $normalSaleResponseBuilder = $this->run(new RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale(
             $items,
-            $referentDocumentNumber,
-            $referentDocumentDateTime,
+            $advanceSaleResponse->invoiceNumber(),
+            $advanceSaleResponse->sdcDateTime(),
             $advanceSaleResponse->totalAmount(),
             $advanceSaleResponse->taxItems(),
             $buyerId
-        );
-
-        $normalSaleResponseBuilder = $this->run($serviceRequest);
+        ));
         return new ResponsesBuilder($advanceSaleResponseBuilder, $normalSaleResponseBuilder);
+    }
+
+    /**
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param string $buyerId
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function advanceSaleBuyerIdentifiedRefund(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        array             $advanceSaleItems,
+        string            $buyerId
+    ): ResponseBuilder
+    {
+        $serviceRequest = new RequestAdvanceSaleBuyerIdentifiedRefund(
+            $items,
+            $referentDocumentNumber,
+            $referentDocumentDateTime,
+            $advanceSaleItems,
+            $buyerId
+        );
+        return $this->run($serviceRequest);
+    }
+
+    /**
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @return ResponsesBuilder
+     * @throws TaxCoreRequestException
+     * @throws Exception
+     */
+    public function normalSaleRefund(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime
+    ): ResponsesBuilder
+    {
+        $normalSaleRefundResponseBuilder = $this->run(new RequestNormalSaleRefund(
+            $items,
+            $referentDocumentNumber,
+            $referentDocumentDateTime,
+        ));
+        $copySaleRefundResponseBuilder = $this->copySaleRefund(
+            $items,
+            $normalSaleRefundResponseBuilder->getResponse()->invoiceNumber(),
+            $normalSaleRefundResponseBuilder->getResponse()->sdcDateTime(),
+        );
+        return new ResponsesBuilder($normalSaleRefundResponseBuilder, $copySaleRefundResponseBuilder);
     }
 
     /**
@@ -348,16 +341,16 @@ final class Request extends RequestBuilder implements RequestMethods
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function normalSaleRefund(
+    public function copySaleRefund(
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime
     ): ResponseBuilder
     {
-        $serviceRequest = new RequestNormalSaleRefund(
+        $serviceRequest = new RequestCopySaleRefund(
             $items,
             $referentDocumentNumber,
-            $referentDocumentDateTime,
+            $referentDocumentDateTime
         );
         return $this->run($serviceRequest);
     }
@@ -369,6 +362,7 @@ final class Request extends RequestBuilder implements RequestMethods
      * @param AdvanceSaleItemInterface[] $advanceSaleItems
      * @return ResponsesBuilder
      * @throws TaxCoreRequestException
+     * @throws Exception
      */
     public function normalSaleWithClosingAdvanceSale(
         array             $items,
@@ -385,15 +379,38 @@ final class Request extends RequestBuilder implements RequestMethods
         );
 
         $advanceSaleResponse = $advanceSaleResponseBuilder->getResponse();
-        $serviceRequest = new RequestNormalSaleWithClosingAdvanceSale(
+
+        $normalSaleResponseBuilder = $this->run(new RequestNormalSaleWithClosingAdvanceSale(
+            $items,
+            $advanceSaleResponse->invoiceNumber(),
+            $advanceSaleResponse->sdcDateTime(),
+            $advanceSaleResponse->totalAmount(),
+            $advanceSaleResponse->taxItems(),
+        ));
+        return new ResponsesBuilder($advanceSaleResponseBuilder, $normalSaleResponseBuilder);
+    }
+
+    /**
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
+    public function advanceSaleRefund(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        array             $advanceSaleItems
+    ): ResponseBuilder
+    {
+        $serviceRequest = new RequestAdvanceSaleRefund(
             $items,
             $referentDocumentNumber,
             $referentDocumentDateTime,
-            $advanceSaleResponse->totalAmount(),
-            $advanceSaleResponse->taxItems(),
+            $advanceSaleItems
         );
-
-        $normalSaleResponseBuilder = $this->run($serviceRequest);
-        return new ResponsesBuilder($advanceSaleResponseBuilder, $normalSaleResponseBuilder);
+        return $this->run($serviceRequest);
     }
 }
