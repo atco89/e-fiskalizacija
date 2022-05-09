@@ -97,8 +97,7 @@ interface RequestMethods
     public function copySaleRefund(
         array             $items,
         string            $referentDocumentNumber,
-        DateTimeInterface $referentDocumentDateTime,
-        string            $buyerId
+        DateTimeInterface $referentDocumentDateTime
     ): ResponseBuilder;
 
     /**

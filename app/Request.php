@@ -209,15 +209,13 @@ final class Request extends RequestBuilder implements RequestMethods
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @param string $buyerId
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
     public function copySaleRefund(
         array             $items,
         string            $referentDocumentNumber,
-        DateTimeInterface $referentDocumentDateTime,
-        string            $buyerId
+        DateTimeInterface $referentDocumentDateTime
     ): ResponseBuilder
     {
         $serviceRequest = new RequestCopySaleRefund(
