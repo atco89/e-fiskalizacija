@@ -3,26 +3,42 @@ declare(strict_types=1);
 
 namespace TaxCore\Request;
 
-use TaxCore\Entities\AdvanceSaleItemInterface;
+use DateTimeInterface;
 use TaxCore\Entities\AdvertisementItemInterface;
+use TaxCore\Entities\Enums\TaxRateLabel;
 use TaxCore\Entities\ItemInterface;
-use TaxCore\Entities\Request\RequestInterface;
 
 abstract class AdvanceSaleRefundBuilder extends RefundBuilder
 {
 
     /**
-     * @var AdvanceSaleItemInterface[]
+     * @var TaxRateLabel
      */
-    protected array $advanceSaleItems;
+    protected TaxRateLabel $taxRateLabel;
 
     /**
-     * @param RequestInterface $request
+     * @var float
      */
-    public function __construct(RequestInterface $request)
+    protected float $recievedAmount;
+
+    /**
+     * @param array $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
+     */
+    public function __construct(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount
+    )
     {
-        $this->advanceSaleItems = $request->advanceSaleItems();
-        parent::__construct($request);
+        $this->taxRateLabel = $taxRateLabel;
+        $this->recievedAmount = $recievedAmount;
+        parent::__construct($items, $referentDocumentNumber, $referentDocumentDateTime);
     }
 
     /**
@@ -31,18 +47,18 @@ abstract class AdvanceSaleRefundBuilder extends RefundBuilder
      */
     final public function items(): array
     {
-        return array_map(function (AdvanceSaleItemInterface $item): ItemInterface {
-            return $this->buildAdvanceSaleItem($item);
-        }, $this->advanceSaleItems);
+        return [$this->buildAdvanceSaleItem($this->taxRateLabel, $this->recievedAmount)];
     }
 
     /**
-     * @param AdvanceSaleItemInterface $item
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $amount
      * @return ItemInterface
+     * @noinspection DuplicatedCode
      */
-    final protected function buildAdvanceSaleItem(AdvanceSaleItemInterface $item): ItemInterface
+    final protected function buildAdvanceSaleItem(TaxRateLabel $taxRateLabel, float $amount): ItemInterface
     {
-        return new class($item) implements ItemInterface {
+        return new class($taxRateLabel, $amount) implements ItemInterface {
 
             /**
              * @const int
@@ -50,16 +66,23 @@ abstract class AdvanceSaleRefundBuilder extends RefundBuilder
             const DEFAULT_QUANTITY = 1.00;
 
             /**
-             * @var AdvanceSaleItemInterface
+             * @var TaxRateLabel
              */
-            private AdvanceSaleItemInterface $item;
+            protected TaxRateLabel $taxRateLabel;
 
             /**
-             * @param AdvanceSaleItemInterface $item
+             * @var float
              */
-            public function __construct(AdvanceSaleItemInterface $item)
+            protected float $amount;
+
+            /**
+             * @param TaxRateLabel $taxRateLabel
+             * @param float $amount
+             */
+            public function __construct(TaxRateLabel $taxRateLabel, float $amount)
             {
-                $this->item = $item;
+                $this->taxRateLabel = $taxRateLabel;
+                $this->amount = $amount;
             }
 
             /**
@@ -68,7 +91,7 @@ abstract class AdvanceSaleRefundBuilder extends RefundBuilder
             private function buildName(): string
             {
                 return implode(': ', [
-                    trim(str_replace('TL', '', $this->item->taxRateLabel()->name)), 'Аванс'
+                    trim(str_replace('TL', '', $this->taxRateLabel->name)), 'Аванс'
                 ]);
             }
 
@@ -101,7 +124,7 @@ abstract class AdvanceSaleRefundBuilder extends RefundBuilder
              */
             public function unitPrice(): float
             {
-                return $this->item->amount();
+                return $this->amount;
             }
 
             /**
@@ -109,7 +132,7 @@ abstract class AdvanceSaleRefundBuilder extends RefundBuilder
              */
             public function labels(): array
             {
-                return [$this->item->taxRateLabel()->value];
+                return [$this->taxRateLabel->value];
             }
 
             /**

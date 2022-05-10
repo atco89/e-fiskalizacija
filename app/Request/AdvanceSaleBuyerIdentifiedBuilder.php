@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace TaxCore\Request;
 
 use TaxCore\Entities\BuyerInterface;
-use TaxCore\Entities\Request\RequestBuyerIdentifiedInterface;
+use TaxCore\Entities\Enums\TaxRateLabel;
 
 abstract class AdvanceSaleBuyerIdentifiedBuilder extends AdvanceSaleBuilder implements BuyerInterface
 {
@@ -15,12 +15,15 @@ abstract class AdvanceSaleBuyerIdentifiedBuilder extends AdvanceSaleBuilder impl
     protected string $buyerId;
 
     /**
-     * @param RequestBuyerIdentifiedInterface $request
+     * @param array $items
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
+     * @param string $buyerId
      */
-    public function __construct(RequestBuyerIdentifiedInterface $request)
+    public function __construct(array $items, TaxRateLabel $taxRateLabel, float $recievedAmount, string $buyerId)
     {
-        parent::__construct($request);
-        $this->buyerId = $request->buyerId();
+        parent::__construct($items, $taxRateLabel, $recievedAmount);
+        $this->buyerId = $buyerId;
     }
 
     /**

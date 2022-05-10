@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace TaxCore;
 
-use TaxCore\Entities\Request\RequestBuyerAndCostCenterIdentifiedInterface;
-use TaxCore\Entities\Request\RequestBuyerIdentifiedInterface;
-use TaxCore\Entities\Request\RequestInterface;
-use TaxCore\Entities\Request\RequestWithReferentDocumentBuyerIdentifiedInterface;
-use TaxCore\Entities\Request\RequestWithReferentDocumentInterface;
+use DateTimeInterface;
+use TaxCore\Entities\Enums\TaxRateLabel;
+use TaxCore\Entities\ItemInterface;
 use TaxCore\Response\ResponseBuilder;
 use TaxCore\Response\ResponsesBuilder;
 
@@ -15,102 +13,192 @@ interface RequestMethods
 {
 
     /**
-     * @param RequestInterface $request
+     * @param ItemInterface[] $items
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @return ResponseBuilder
      */
-    public function advanceSale(RequestInterface $request): ResponseBuilder;
+    public function advanceSale(
+        array        $items,
+        TaxRateLabel $taxRateLabel,
+        float        $recievedAmount
+    ): ResponseBuilder;
 
     /**
-     * @param RequestBuyerIdentifiedInterface $request
+     * @param ItemInterface[] $items
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
+     * @param string $buyerId
      * @return ResponseBuilder
      */
-    public function advanceSaleBuyerIdentified(RequestBuyerIdentifiedInterface $request): ResponseBuilder;
+    public function advanceSaleBuyerIdentified(
+        array        $items,
+        TaxRateLabel $taxRateLabel,
+        float        $recievedAmount,
+        string       $buyerId
+    ): ResponseBuilder;
 
     /**
-     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $request
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
+     * @param string $buyerId
      * @return ResponseBuilder
      */
     public function advanceSaleBuyerIdentifiedRefund(
-        RequestWithReferentDocumentBuyerIdentifiedInterface $request
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
+        string            $buyerId
     ): ResponseBuilder;
 
     /**
-     * @param RequestWithReferentDocumentInterface $request
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @return ResponseBuilder
      */
-    public function advanceSaleRefund(RequestWithReferentDocumentInterface $request): ResponseBuilder;
-
-    /**
-     * @param RequestWithReferentDocumentInterface $request
-     * @return ResponseBuilder
-     */
-    public function copySale(RequestWithReferentDocumentInterface $request): ResponseBuilder;
-
-    /**
-     * @param $request
-     * @return ResponseBuilder
-     */
-    public function copySaleBuyerIdentifiedBuilder($request): ResponseBuilder;
-
-    /**
-     * @param RequestWithReferentDocumentInterface $request
-     * @return ResponseBuilder
-     */
-    public function copySaleRefund(RequestWithReferentDocumentInterface $request): ResponseBuilder;
-
-    /**
-     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $request
-     * @return ResponseBuilder
-     */
-    public function copySaleRefundBuyerIdentified(
-        RequestWithReferentDocumentBuyerIdentifiedInterface $request
+    public function advanceSaleRefund(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
     ): ResponseBuilder;
 
     /**
-     * @param RequestInterface $request
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
      * @return ResponseBuilder
      */
-    public function normalSale(RequestInterface $request): ResponseBuilder;
+    public function copySale(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime
+    ): ResponseBuilder;
 
     /**
-     * @param RequestBuyerAndCostCenterIdentifiedInterface $request
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param string $buyerId
+     * @return ResponseBuilder
+     */
+    public function copySaleBuyerIdentifiedBuilder(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        string            $buyerId
+    ): ResponseBuilder;
+
+    /**
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @return ResponseBuilder
+     */
+    public function copySaleRefund(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime
+    ): ResponseBuilder;
+
+    /**
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param string $buyerId
+     * @return ResponseBuilder
+     */
+    public function copySaleBuyerIdentifiedRefund(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        string            $buyerId
+    ): ResponseBuilder;
+
+    /**
+     * @param ItemInterface[] $items
+     * @return ResponseBuilder
+     */
+    public function normalSale(array $items): ResponseBuilder;
+
+    /**
+     * @param ItemInterface[] $items
+     * @param string $buyerId
+     * @param string|null $buyerCostCenterId
      * @return ResponseBuilder
      */
     public function normalSaleBuyerAndCostCenterIdentified(
-        RequestBuyerAndCostCenterIdentifiedInterface $request
+        array       $items,
+        string      $buyerId,
+        string|null $buyerCostCenterId
     ): ResponseBuilder;
 
     /**
-     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $request
-     * @return ResponseBuilder
-     */
-    public function normalSaleBuyerIdentifiedRefund(
-        RequestWithReferentDocumentBuyerIdentifiedInterface $request
-    ): ResponseBuilder;
-
-    /**
-     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $requestRefund
-     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $requestSale
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param string $buyerId
      * @return ResponsesBuilder
      */
-    public function normalSaleBuyerIdentifiedWithClosingAdvanceSale(
-        RequestWithReferentDocumentBuyerIdentifiedInterface $requestRefund,
-        RequestWithReferentDocumentBuyerIdentifiedInterface $requestSale
+    public function normalSaleBuyerIdentifiedRefund(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        string            $buyerId
     ): ResponsesBuilder;
 
     /**
-     * @param RequestWithReferentDocumentInterface $request
-     * @return ResponseBuilder
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
+     * @param string $buyerId
+     * @return ResponsesBuilder
      */
-    public function normalSaleRefund(RequestWithReferentDocumentInterface $request): ResponseBuilder;
+    public function normalSaleBuyerIdentifiedWithClosingAdvanceSale(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
+        string            $buyerId
+    ): ResponsesBuilder;
 
     /**
-     * @param RequestWithReferentDocumentInterface $requestRefund
-     * @param RequestWithReferentDocumentInterface $requestSale
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @return ResponsesBuilder
+     */
+    public function normalSaleRefund(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime
+    ): ResponsesBuilder;
+
+    /**
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @return ResponsesBuilder
      */
     public function normalSaleWithClosingAdvanceSale(
-        RequestWithReferentDocumentInterface $requestRefund,
-        RequestWithReferentDocumentInterface $requestSale
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
     ): ResponsesBuilder;
 }

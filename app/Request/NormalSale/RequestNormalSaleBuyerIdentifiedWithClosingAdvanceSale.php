@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace TaxCore\Request\NormalSale;
 
+use DateTimeInterface;
 use TaxCore\Entities\BuyerInterface;
-use TaxCore\Entities\Request\RequestBuyerIdentifiedInterface;
+use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\TaxItemInterface;
 use TaxCore\Request\CloseAdvanceSaleBuilder;
-use TaxCore\Response\Response;
 
 final class RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale extends CloseAdvanceSaleBuilder
     implements BuyerInterface
@@ -18,16 +19,24 @@ final class RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale extends Close
     protected string $buyerId;
 
     /**
-     * @param RequestBuyerIdentifiedInterface $request
-     * @param Response $response
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param float $receivedAmount
+     * @param TaxItemInterface[] $receivedTax
+     * @param string $buyerId
      */
     public function __construct(
-        RequestBuyerIdentifiedInterface $request,
-        Response                        $response
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        float             $receivedAmount,
+        array             $receivedTax,
+        string            $buyerId
     )
     {
-        $this->buyerId = $request->buyerId();
-        parent::__construct($request, $response);
+        parent::__construct($items, $referentDocumentNumber, $referentDocumentDateTime, $receivedAmount, $receivedTax);
+        $this->buyerId = $buyerId;
     }
 
     /**

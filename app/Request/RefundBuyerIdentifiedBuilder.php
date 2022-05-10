@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace TaxCore\Request;
 
+use DateTimeInterface;
 use TaxCore\Entities\BuyerInterface;
-use TaxCore\Entities\Request\RequestWithReferentDocumentBuyerIdentifiedInterface;
+use TaxCore\Entities\ItemInterface;
 
 abstract class RefundBuyerIdentifiedBuilder extends RefundBuilder implements BuyerInterface
 {
@@ -15,12 +16,20 @@ abstract class RefundBuyerIdentifiedBuilder extends RefundBuilder implements Buy
     protected string $buyerId;
 
     /**
-     * @param RequestWithReferentDocumentBuyerIdentifiedInterface $request
+     * @param ItemInterface[] $items
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param string $buyerId
      */
-    public function __construct(RequestWithReferentDocumentBuyerIdentifiedInterface $request)
+    public function __construct(
+        array             $items,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        string            $buyerId
+    )
     {
-        $this->buyerId = $request->buyerId();
-        parent::__construct($request);
+        $this->buyerId = $buyerId;
+        parent::__construct($items, $referentDocumentNumber, $referentDocumentDateTime);
     }
 
     /**
