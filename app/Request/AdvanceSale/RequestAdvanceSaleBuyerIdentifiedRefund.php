@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace TaxCore\Request\AdvanceSale;
 
 use DateTimeInterface;
-use TaxCore\Entities\AdvanceSaleItemInterface;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Enums\InvoiceType;
+use TaxCore\Entities\Enums\TaxRateLabel;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Request\AdvanceSaleRefundBuilder;
 
@@ -22,19 +22,21 @@ final class RequestAdvanceSaleBuyerIdentifiedRefund extends AdvanceSaleRefundBui
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @param string $buyerId
      */
     public function __construct(
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
-        array             $advanceSaleItems,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
         string            $buyerId
     )
     {
-        parent::__construct($items, $referentDocumentNumber, $referentDocumentDateTime, $advanceSaleItems);
         $this->buyerId = $buyerId;
+        parent::__construct($items, $referentDocumentNumber, $referentDocumentDateTime, $taxRateLabel, $recievedAmount);
     }
 
     /**

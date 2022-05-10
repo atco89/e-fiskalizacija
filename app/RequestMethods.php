@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace TaxCore;
 
 use DateTimeInterface;
-use TaxCore\Entities\AdvanceSaleItemInterface;
+use TaxCore\Entities\Enums\TaxRateLabel;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Response\ResponseBuilder;
 use TaxCore\Response\ResponsesBuilder;
@@ -14,28 +14,36 @@ interface RequestMethods
 
     /**
      * @param ItemInterface[] $items
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @return ResponseBuilder
      */
-    public function advanceSale(array $items, array $advanceSaleItems): ResponseBuilder;
+    public function advanceSale(
+        array        $items,
+        TaxRateLabel $taxRateLabel,
+        float        $recievedAmount
+    ): ResponseBuilder;
 
     /**
      * @param ItemInterface[] $items
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @param string $buyerId
      * @return ResponseBuilder
      */
     public function advanceSaleBuyerIdentified(
-        array  $items,
-        array  $advanceSaleItems,
-        string $buyerId
+        array        $items,
+        TaxRateLabel $taxRateLabel,
+        float        $recievedAmount,
+        string       $buyerId
     ): ResponseBuilder;
 
     /**
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @param string $buyerId
      * @return ResponseBuilder
      */
@@ -43,7 +51,8 @@ interface RequestMethods
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
-        array             $advanceSaleItems,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
         string            $buyerId
     ): ResponseBuilder;
 
@@ -51,14 +60,16 @@ interface RequestMethods
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @return ResponseBuilder
      */
     public function advanceSaleRefund(
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
-        array             $advanceSaleItems
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
     ): ResponseBuilder;
 
     /**
@@ -149,7 +160,8 @@ interface RequestMethods
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @param string $buyerId
      * @return ResponsesBuilder
      */
@@ -157,7 +169,8 @@ interface RequestMethods
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
-        array             $advanceSaleItems,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
         string            $buyerId
     ): ResponsesBuilder;
 
@@ -177,13 +190,15 @@ interface RequestMethods
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @return ResponsesBuilder
      */
     public function normalSaleWithClosingAdvanceSale(
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
-        array             $advanceSaleItems,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
     ): ResponsesBuilder;
 }

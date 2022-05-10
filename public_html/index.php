@@ -14,7 +14,7 @@ use TaxCore\Response\ResponsesBuilder;
 $items = include __DIR__ . '/../app/Examples/data/items.php';
 $buyerId = include __DIR__ . '/../app/Examples/data/buyer-id.php';
 $buyerCostCenterId = include __DIR__ . '/../app/Examples/data/buyer-cost-center-id.php';
-$advanceSaleItems = include __DIR__ . '/../app/Examples/data/advance-sale-items.php';
+$advanceSale = include __DIR__ . '/../app/Examples/data/advance-sale.php';
 
 try {
     $request = new Request(new Configuration());
@@ -50,13 +50,15 @@ try {
 
     $a1 = $request->advanceSale(
         $items,
-        $advanceSaleItems,
+        $advanceSale['taxRateLabel'],
+        floatval($advanceSale['amount']),
     );
     saveOne($a1);
 
     $a2 = $request->advanceSaleBuyerIdentified(
         $items,
-        $advanceSaleItems,
+        $advanceSale['taxRateLabel'],
+        floatval($advanceSale['amount']),
         $buyerId,
     );
     saveOne($a2);
@@ -67,7 +69,8 @@ try {
         $items,
         $a1->getResponse()->invoiceNumber(),
         $a1->getResponse()->sdcDateTime(),
-        $advanceSaleItems,
+        $advanceSale['taxRateLabel'],
+        floatval($advanceSale['amount']),
     );
     saveAll($n5);
 
@@ -75,7 +78,8 @@ try {
         $items,
         $a2->getResponse()->invoiceNumber(),
         $a2->getResponse()->sdcDateTime(),
-        $advanceSaleItems,
+        $advanceSale['taxRateLabel'],
+        floatval($advanceSale['amount']),
         $buyerId,
     );
     saveAll($n6);
@@ -135,6 +139,7 @@ function directoryName(ApiRequestInterface $request): string
 
 /**
  * @param ResponsesBuilder $builder
+ * @throws Exception
  */
 function saveAll(ResponsesBuilder $builder): void
 {

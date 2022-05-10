@@ -5,6 +5,8 @@ namespace TaxCore\Request\AdvanceSale;
 
 use DateTime;
 use DateTimeInterface;
+use TaxCore\Entities\Enums\TaxRateLabel;
+use TaxCore\Entities\ItemInterface;
 use TaxCore\Request\AdvanceSaleBuilder;
 
 final class RequestAdvanceSale extends AdvanceSaleBuilder
@@ -16,13 +18,14 @@ final class RequestAdvanceSale extends AdvanceSaleBuilder
     protected DateTimeInterface $issueDateTime;
 
     /**
-     * @param array $items
-     * @param array $advanceSaleItems
+     * @param ItemInterface[] $items
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      */
-    public function __construct(array $items, array $advanceSaleItems)
+    public function __construct(array $items, TaxRateLabel $taxRateLabel, float $recievedAmount)
     {
         $this->issueDateTime = $this->generateIssueDateTime();
-        parent::__construct($items, $advanceSaleItems);
+        parent::__construct($items, $taxRateLabel, $recievedAmount);
     }
 
     /**

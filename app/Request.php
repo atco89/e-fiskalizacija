@@ -7,9 +7,9 @@ use DateTimeInterface;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use TaxCore\Entities\AdvanceSaleItemInterface;
 use TaxCore\Entities\ApiRequestInterface;
 use TaxCore\Entities\ConfigurationInterface;
+use TaxCore\Entities\Enums\TaxRateLabel;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
 use TaxCore\Request\AdvanceSale\RequestAdvanceSale;
@@ -54,13 +54,18 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function advanceSale(array $items, array $advanceSaleItems): ResponseBuilder
+    public function advanceSale(
+        array        $items,
+        TaxRateLabel $taxRateLabel,
+        float        $recievedAmount
+    ): ResponseBuilder
     {
-        $serviceRequest = new RequestAdvanceSale($items, $advanceSaleItems);
+        $serviceRequest = new RequestAdvanceSale($items, $taxRateLabel, $recievedAmount);
         return $this->run($serviceRequest);
     }
 
@@ -89,7 +94,10 @@ final class Request extends RequestBuilder implements RequestMethods
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    private function buildResponse(ApiRequestInterface $request, Response $response): ResponseBuilder
+    private function buildResponse(
+        ApiRequestInterface $request,
+        Response            $response
+    ): ResponseBuilder
     {
         $configuration = $this->configuration;
         $environment = $this->twig->getEnvironment();
@@ -98,14 +106,20 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
-     * @param array $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @param string $buyerId
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function advanceSaleBuyerIdentified(array $items, array $advanceSaleItems, string $buyerId): ResponseBuilder
+    public function advanceSaleBuyerIdentified(
+        array        $items,
+        TaxRateLabel $taxRateLabel,
+        float        $recievedAmount,
+        string       $buyerId
+    ): ResponseBuilder
     {
-        $serviceRequest = new RequestAdvanceSaleBuyerIdentified($items, $advanceSaleItems, $buyerId);
+        $serviceRequest = new RequestAdvanceSaleBuyerIdentified($items, $taxRateLabel, $recievedAmount, $buyerId);
         return $this->run($serviceRequest);
     }
 
@@ -245,7 +259,8 @@ final class Request extends RequestBuilder implements RequestMethods
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @param string $buyerId
      * @return ResponsesBuilder
      * @throws TaxCoreRequestException
@@ -255,7 +270,8 @@ final class Request extends RequestBuilder implements RequestMethods
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
-        array             $advanceSaleItems,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
         string            $buyerId
     ): ResponsesBuilder
     {
@@ -263,7 +279,8 @@ final class Request extends RequestBuilder implements RequestMethods
             $items,
             $referentDocumentNumber,
             $referentDocumentDateTime,
-            $advanceSaleItems,
+            $taxRateLabel,
+            $recievedAmount,
             $buyerId
         );
 
@@ -284,7 +301,8 @@ final class Request extends RequestBuilder implements RequestMethods
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @param string $buyerId
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
@@ -293,7 +311,8 @@ final class Request extends RequestBuilder implements RequestMethods
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
-        array             $advanceSaleItems,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
         string            $buyerId
     ): ResponseBuilder
     {
@@ -301,7 +320,8 @@ final class Request extends RequestBuilder implements RequestMethods
             $items,
             $referentDocumentNumber,
             $referentDocumentDateTime,
-            $advanceSaleItems,
+            $taxRateLabel,
+            $recievedAmount,
             $buyerId
         );
         return $this->run($serviceRequest);
@@ -359,7 +379,8 @@ final class Request extends RequestBuilder implements RequestMethods
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @return ResponsesBuilder
      * @throws TaxCoreRequestException
      * @throws Exception
@@ -368,14 +389,16 @@ final class Request extends RequestBuilder implements RequestMethods
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
-        array             $advanceSaleItems,
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
     ): ResponsesBuilder
     {
         $advanceSaleResponseBuilder = $this->advanceSaleRefund(
             $items,
             $referentDocumentNumber,
             $referentDocumentDateTime,
-            $advanceSaleItems,
+            $taxRateLabel,
+            $recievedAmount
         );
 
         $advanceSaleResponse = $advanceSaleResponseBuilder->getResponse();
@@ -394,7 +417,8 @@ final class Request extends RequestBuilder implements RequestMethods
      * @param ItemInterface[] $items
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
-     * @param AdvanceSaleItemInterface[] $advanceSaleItems
+     * @param TaxRateLabel $taxRateLabel
+     * @param float $recievedAmount
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
@@ -402,14 +426,16 @@ final class Request extends RequestBuilder implements RequestMethods
         array             $items,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
-        array             $advanceSaleItems
+        TaxRateLabel      $taxRateLabel,
+        float             $recievedAmount,
     ): ResponseBuilder
     {
         $serviceRequest = new RequestAdvanceSaleRefund(
             $items,
             $referentDocumentNumber,
             $referentDocumentDateTime,
-            $advanceSaleItems
+            $taxRateLabel,
+            $recievedAmount
         );
         return $this->run($serviceRequest);
     }
