@@ -188,10 +188,12 @@
                                 <th class="text-end">{{ '0.00' | decimal }}</th>
                             </tr>
                         {% else %}
-                            <tr>
-                                <td class="text-start">Готовина:</td>
-                                <td class="text-end">{{ request.amount | decimal }}</td>
-                            </tr>
+                            {% for paymentType in request.payment %}
+                                <tr>
+                                    <td class="text-start">{{ paymentType.name }}:</td>
+                                    <td class="text-end">{{ paymentType.amount | decimal }}</td>
+                                </tr>
+                            {% endfor %}
                         {% endif %}
 
                         {% if request.invoiceType.value == 2 %}
