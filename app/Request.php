@@ -11,6 +11,7 @@ use TaxCore\Entities\ApiRequestInterface;
 use TaxCore\Entities\ConfigurationInterface;
 use TaxCore\Entities\Enums\TaxRateLabel;
 use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Exceptions\TaxCoreRequestException;
 use TaxCore\Request\AdvanceSale\RequestAdvanceSale;
 use TaxCore\Request\AdvanceSale\RequestAdvanceSaleBuyerIdentified;
@@ -54,6 +55,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param TaxRateLabel $taxRateLabel
      * @param float $recievedAmount
      * @return ResponseBuilder
@@ -61,11 +63,12 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function advanceSale(
         array        $items,
+        array        $payment,
         TaxRateLabel $taxRateLabel,
         float        $recievedAmount
     ): ResponseBuilder
     {
-        $serviceRequest = new RequestAdvanceSale($items, $taxRateLabel, $recievedAmount);
+        $serviceRequest = new RequestAdvanceSale($items, $payment, $taxRateLabel, $recievedAmount);
         return $this->run($serviceRequest);
     }
 
@@ -106,6 +109,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param TaxRateLabel $taxRateLabel
      * @param float $recievedAmount
      * @param string $buyerId
@@ -114,17 +118,25 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function advanceSaleBuyerIdentified(
         array        $items,
+        array        $payment,
         TaxRateLabel $taxRateLabel,
         float        $recievedAmount,
         string       $buyerId
     ): ResponseBuilder
     {
-        $serviceRequest = new RequestAdvanceSaleBuyerIdentified($items, $taxRateLabel, $recievedAmount, $buyerId);
+        $serviceRequest = new RequestAdvanceSaleBuyerIdentified(
+            $items,
+            $payment,
+            $taxRateLabel,
+            $recievedAmount,
+            $buyerId
+        );
         return $this->run($serviceRequest);
     }
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @return ResponseBuilder
@@ -132,12 +144,14 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function copySale(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime
     ): ResponseBuilder
     {
         $serviceRequest = new RequestCopySale(
             $items,
+            $payment,
             $referentDocumentNumber,
             $referentDocumentDateTime
         );
@@ -146,6 +160,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param string $buyerId
@@ -154,6 +169,7 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function copySaleBuyerIdentifiedRefund(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         string            $buyerId
@@ -161,6 +177,7 @@ final class Request extends RequestBuilder implements RequestMethods
     {
         $serviceRequest = new RequestCopySaleBuyerIdentifiedRefund(
             $items,
+            $payment,
             $referentDocumentNumber,
             $referentDocumentDateTime,
             $buyerId
@@ -170,17 +187,22 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
-    public function normalSale(array $items): ResponseBuilder
+    public function normalSale(
+        array $items,
+        array $payment
+    ): ResponseBuilder
     {
-        $serviceRequest = new RequestNormalSale($items);
+        $serviceRequest = new RequestNormalSale($items, $payment);
         return $this->run($serviceRequest);
     }
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $buyerId
      * @param string|null $buyerCostCenterId
      * @return ResponseBuilder
@@ -188,16 +210,23 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function normalSaleBuyerAndCostCenterIdentified(
         array       $items,
+        array       $payment,
         string      $buyerId,
         string|null $buyerCostCenterId
     ): ResponseBuilder
     {
-        $serviceRequest = new RequestNormalSaleBuyerAndCostCenterIdentified($items, $buyerId, $buyerCostCenterId);
+        $serviceRequest = new RequestNormalSaleBuyerAndCostCenterIdentified(
+            $items,
+            $payment,
+            $buyerId,
+            $buyerCostCenterId
+        );
         return $this->run($serviceRequest);
     }
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param string $buyerId
@@ -207,6 +236,7 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function normalSaleBuyerIdentifiedRefund(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         string            $buyerId
@@ -214,12 +244,15 @@ final class Request extends RequestBuilder implements RequestMethods
     {
         $normalSaleBuyerIdentifiedRefundResponseBuilder = $this->run(new RequestNormalSaleBuyerIdentifiedRefund(
             $items,
+            $payment,
             $referentDocumentNumber,
             $referentDocumentDateTime,
             $buyerId
         ));
+
         $copySaleBuyerIdentifiedResponseBuilder = $this->copySaleBuyerIdentifiedBuilder(
             $items,
+            $payment,
             $normalSaleBuyerIdentifiedRefundResponseBuilder->getResponse()->invoiceNumber(),
             $normalSaleBuyerIdentifiedRefundResponseBuilder->getResponse()->sdcDateTime(),
             $buyerId
@@ -233,6 +266,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param string $buyerId
@@ -241,6 +275,7 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function copySaleBuyerIdentifiedBuilder(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         string            $buyerId
@@ -248,6 +283,7 @@ final class Request extends RequestBuilder implements RequestMethods
     {
         $serviceRequest = new RequestCopySaleBuyerIdentified(
             $items,
+            $payment,
             $referentDocumentNumber,
             $referentDocumentDateTime,
             $buyerId
@@ -257,6 +293,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param TaxRateLabel $taxRateLabel
@@ -268,6 +305,7 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function normalSaleBuyerIdentifiedWithClosingAdvanceSale(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         TaxRateLabel      $taxRateLabel,
@@ -277,6 +315,7 @@ final class Request extends RequestBuilder implements RequestMethods
     {
         $advanceSaleResponseBuilder = $this->advanceSaleBuyerIdentifiedRefund(
             $items,
+            $payment,
             $referentDocumentNumber,
             $referentDocumentDateTime,
             $taxRateLabel,
@@ -288,6 +327,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
         $normalSaleResponseBuilder = $this->run(new RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale(
             $items,
+            $payment,
             $advanceSaleResponse->invoiceNumber(),
             $advanceSaleResponse->sdcDateTime(),
             $advanceSaleResponse->totalAmount(),
@@ -299,6 +339,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param TaxRateLabel $taxRateLabel
@@ -309,6 +350,7 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function advanceSaleBuyerIdentifiedRefund(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         TaxRateLabel      $taxRateLabel,
@@ -318,6 +360,7 @@ final class Request extends RequestBuilder implements RequestMethods
     {
         $serviceRequest = new RequestAdvanceSaleBuyerIdentifiedRefund(
             $items,
+            $payment,
             $referentDocumentNumber,
             $referentDocumentDateTime,
             $taxRateLabel,
@@ -329,6 +372,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @return ResponsesBuilder
@@ -337,17 +381,20 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function normalSaleRefund(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime
     ): ResponsesBuilder
     {
         $normalSaleRefundResponseBuilder = $this->run(new RequestNormalSaleRefund(
             $items,
+            $payment,
             $referentDocumentNumber,
             $referentDocumentDateTime,
         ));
         $copySaleRefundResponseBuilder = $this->copySaleRefund(
             $items,
+            $payment,
             $normalSaleRefundResponseBuilder->getResponse()->invoiceNumber(),
             $normalSaleRefundResponseBuilder->getResponse()->sdcDateTime(),
         );
@@ -356,6 +403,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @return ResponseBuilder
@@ -363,12 +411,14 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function copySaleRefund(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime
     ): ResponseBuilder
     {
         $serviceRequest = new RequestCopySaleRefund(
             $items,
+            $payment,
             $referentDocumentNumber,
             $referentDocumentDateTime
         );
@@ -377,6 +427,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param TaxRateLabel $taxRateLabel
@@ -387,6 +438,7 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function normalSaleWithClosingAdvanceSale(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         TaxRateLabel      $taxRateLabel,
@@ -395,6 +447,7 @@ final class Request extends RequestBuilder implements RequestMethods
     {
         $advanceSaleResponseBuilder = $this->advanceSaleRefund(
             $items,
+            $payment,
             $referentDocumentNumber,
             $referentDocumentDateTime,
             $taxRateLabel,
@@ -405,6 +458,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
         $normalSaleResponseBuilder = $this->run(new RequestNormalSaleWithClosingAdvanceSale(
             $items,
+            $payment,
             $advanceSaleResponse->invoiceNumber(),
             $advanceSaleResponse->sdcDateTime(),
             $advanceSaleResponse->totalAmount(),
@@ -415,6 +469,7 @@ final class Request extends RequestBuilder implements RequestMethods
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param TaxRateLabel $taxRateLabel
@@ -424,6 +479,7 @@ final class Request extends RequestBuilder implements RequestMethods
      */
     public function advanceSaleRefund(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         TaxRateLabel      $taxRateLabel,
@@ -432,6 +488,7 @@ final class Request extends RequestBuilder implements RequestMethods
     {
         $serviceRequest = new RequestAdvanceSaleRefund(
             $items,
+            $payment,
             $referentDocumentNumber,
             $referentDocumentDateTime,
             $taxRateLabel,

@@ -9,8 +9,8 @@ use TaxCore\Entities\ApiRequestInterface;
 use TaxCore\Entities\BuyerCostCenterInterface;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\ConfigurationInterface;
-use TaxCore\Entities\Enums\PaymentType;
 use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
 use TaxCore\Request\AdvanceSale\RequestAdvanceSale;
 
@@ -90,7 +90,7 @@ abstract class RequestBuilder
             'referentDocumentNumber' => $this->loadReferentDocumentNumber($request),
             'referentDocumentDT'     => $this->loadReferentDocumentDateTime($request),
             'items'                  => $this->buildItems($request->items()),
-            'payment'                => $this->buildPayment($request->amount()),
+            'payment'                => $this->buildPayment($request->payment()),
             'options'                => $this->buildOptions(),
         ];
 
@@ -151,17 +151,17 @@ abstract class RequestBuilder
     }
 
     /**
-     * @param float $amount
+     * @param PaymentTypeInterface[] $paymentTypes
      * @return array[]
      */
-    private function buildPayment(float $amount): array
+    private function buildPayment(array $paymentTypes): array
     {
-        return [
-            [
-                'paymentType' => PaymentType::CASH->value,
-                'amount'      => $amount,
-            ]
-        ];
+        return array_map(function (PaymentTypeInterface $paymentType) {
+            return [
+                'paymentType' => $paymentType->type()->value,
+                'amount'      => $paymentType->amount(),
+            ];
+        }, $paymentTypes);
     }
 
     /**

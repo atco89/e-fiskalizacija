@@ -5,6 +5,7 @@ namespace TaxCore\Request;
 
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 
 abstract class SaleBuyerIdentifiedBuilder extends SaleBuilder implements BuyerInterface
 {
@@ -16,12 +17,13 @@ abstract class SaleBuyerIdentifiedBuilder extends SaleBuilder implements BuyerIn
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $buyerId
      */
-    public function __construct(array $items, string $buyerId)
+    public function __construct(array $items, array $payment, string $buyerId)
     {
         $this->buyerId = $buyerId;
-        parent::__construct($items);
+        parent::__construct($items, $payment);
     }
 
     /**

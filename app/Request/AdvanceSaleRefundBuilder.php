@@ -7,6 +7,7 @@ use DateTimeInterface;
 use TaxCore\Entities\AdvertisementItemInterface;
 use TaxCore\Entities\Enums\TaxRateLabel;
 use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 
 abstract class AdvanceSaleRefundBuilder extends RefundBuilder
 {
@@ -22,7 +23,8 @@ abstract class AdvanceSaleRefundBuilder extends RefundBuilder
     protected float $recievedAmount;
 
     /**
-     * @param array $items
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param TaxRateLabel $taxRateLabel
@@ -30,6 +32,7 @@ abstract class AdvanceSaleRefundBuilder extends RefundBuilder
      */
     public function __construct(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         TaxRateLabel      $taxRateLabel,
@@ -38,7 +41,7 @@ abstract class AdvanceSaleRefundBuilder extends RefundBuilder
     {
         $this->taxRateLabel = $taxRateLabel;
         $this->recievedAmount = $recievedAmount;
-        parent::__construct($items, $referentDocumentNumber, $referentDocumentDateTime);
+        parent::__construct($items, $payment, $referentDocumentNumber, $referentDocumentDateTime);
     }
 
     /**

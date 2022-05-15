@@ -36,6 +36,11 @@ interface ApiRequestInterface
     public function items(): array;
 
     /**
+     * @return PaymentTypeInterface[]
+     */
+    public function payment(): array;
+
+    /**
      * @return float
      */
     public function amount(): float;

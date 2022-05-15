@@ -6,6 +6,7 @@ namespace TaxCore\Request\NormalSale;
 use TaxCore\Entities\BuyerCostCenterInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Request\SaleBuyerIdentifiedBuilder;
 
 final class RequestNormalSaleBuyerAndCostCenterIdentified extends SaleBuyerIdentifiedBuilder
@@ -19,13 +20,14 @@ final class RequestNormalSaleBuyerAndCostCenterIdentified extends SaleBuyerIdent
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $buyerId
      * @param string|null $buyerCostCenterId
      */
-    public function __construct(array $items, string $buyerId, string|null $buyerCostCenterId)
+    public function __construct(array $items, array $payment, string $buyerId, string|null $buyerCostCenterId)
     {
-        parent::__construct($items, $buyerId);
         $this->buyerCostCenterId = $buyerCostCenterId;
+        parent::__construct($items, $payment, $buyerId);
     }
 
     /**

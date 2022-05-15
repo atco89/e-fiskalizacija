@@ -9,6 +9,7 @@ use TaxCore\Entities\AdvanceSaleAmountInterface;
 use TaxCore\Entities\AdvertisementItemInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
 use TaxCore\Entities\TaxItemInterface;
 
@@ -38,6 +39,7 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param float $receivedAmount
@@ -45,6 +47,7 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
      */
     public function __construct(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         float             $receivedAmount,
@@ -55,7 +58,7 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
         $this->referentDocumentDateTime = $referentDocumentDateTime;
         $this->receivedAmount = $receivedAmount;
         $this->receivedTax = $receivedTax;
-        parent::__construct($items);
+        parent::__construct($items, $payment);
     }
 
     /**

@@ -8,6 +8,7 @@ use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TaxRateLabel;
 use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Request\AdvanceSaleRefundBuilder;
 
 final class RequestAdvanceSaleBuyerIdentifiedRefund extends AdvanceSaleRefundBuilder implements BuyerInterface
@@ -20,6 +21,7 @@ final class RequestAdvanceSaleBuyerIdentifiedRefund extends AdvanceSaleRefundBui
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param TaxRateLabel $taxRateLabel
@@ -28,6 +30,7 @@ final class RequestAdvanceSaleBuyerIdentifiedRefund extends AdvanceSaleRefundBui
      */
     public function __construct(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         TaxRateLabel      $taxRateLabel,
@@ -36,7 +39,14 @@ final class RequestAdvanceSaleBuyerIdentifiedRefund extends AdvanceSaleRefundBui
     )
     {
         $this->buyerId = $buyerId;
-        parent::__construct($items, $referentDocumentNumber, $referentDocumentDateTime, $taxRateLabel, $recievedAmount);
+        parent::__construct(
+            $items,
+            $payment,
+            $referentDocumentNumber,
+            $referentDocumentDateTime,
+            $taxRateLabel,
+            $recievedAmount
+        );
     }
 
     /**

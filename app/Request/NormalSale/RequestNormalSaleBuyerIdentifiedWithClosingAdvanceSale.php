@@ -6,6 +6,7 @@ namespace TaxCore\Request\NormalSale;
 use DateTimeInterface;
 use TaxCore\Entities\BuyerInterface;
 use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\TaxItemInterface;
 use TaxCore\Request\CloseAdvanceSaleBuilder;
 
@@ -20,6 +21,7 @@ final class RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale extends Close
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param float $receivedAmount
@@ -28,6 +30,7 @@ final class RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale extends Close
      */
     public function __construct(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         float             $receivedAmount,
@@ -35,8 +38,15 @@ final class RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale extends Close
         string            $buyerId
     )
     {
-        parent::__construct($items, $referentDocumentNumber, $referentDocumentDateTime, $receivedAmount, $receivedTax);
         $this->buyerId = $buyerId;
+        parent::__construct(
+            $items,
+            $payment,
+            $referentDocumentNumber,
+            $referentDocumentDateTime,
+            $receivedAmount,
+            $receivedTax
+        );
     }
 
     /**

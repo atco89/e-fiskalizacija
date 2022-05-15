@@ -6,6 +6,7 @@ namespace TaxCore\Request\CopySale;
 use DateTimeInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 use TaxCore\Entities\ReferentDocumentInterface;
 use TaxCore\Request\SaleBuyerIdentifiedBuilder;
 
@@ -24,20 +25,22 @@ final class RequestCopySaleBuyerIdentified extends SaleBuyerIdentifiedBuilder im
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param string $buyerId
      */
     public function __construct(
         array             $items,
+        array             $payment,
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         string            $buyerId
     )
     {
-        parent::__construct($items, $buyerId);
         $this->referentDocumentNumber = $referentDocumentNumber;
         $this->referentDocumentDateTime = $referentDocumentDateTime;
+        parent::__construct($items, $payment, $buyerId);
     }
 
     /**

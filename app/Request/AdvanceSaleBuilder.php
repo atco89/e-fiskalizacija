@@ -7,6 +7,7 @@ use TaxCore\Entities\AdvertisementItemInterface;
 use TaxCore\Entities\Enums\InvoiceType;
 use TaxCore\Entities\Enums\TaxRateLabel;
 use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 
 abstract class AdvanceSaleBuilder extends SaleBuilder
 {
@@ -23,14 +24,15 @@ abstract class AdvanceSaleBuilder extends SaleBuilder
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      * @param TaxRateLabel $taxRateLabel
      * @param float $recievedAmount
      */
-    public function __construct(array $items, TaxRateLabel $taxRateLabel, float $recievedAmount)
+    public function __construct(array $items, array $payment, TaxRateLabel $taxRateLabel, float $recievedAmount)
     {
         $this->taxRateLabel = $taxRateLabel;
         $this->recievedAmount = $recievedAmount;
-        parent::__construct($items);
+        parent::__construct($items, $payment);
     }
 
     /**

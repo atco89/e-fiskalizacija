@@ -7,14 +7,20 @@ use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
 use TaxCore\Entities\ApiRequestInterface;
 use TaxCore\Entities\ItemInterface;
+use TaxCore\Entities\PaymentTypeInterface;
 
 abstract class ApiRequestBase implements ApiRequestInterface
 {
 
     /**
-     * @var array
+     * @var ItemInterface[]
      */
     protected array $items;
+
+    /**
+     * @var PaymentTypeInterface[]
+     */
+    protected array $payment;
 
     /**
      * @var float
@@ -28,10 +34,12 @@ abstract class ApiRequestBase implements ApiRequestInterface
 
     /**
      * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
      */
-    public function __construct(array $items)
+    public function __construct(array $items, array $payment)
     {
         $this->items = $items;
+        $this->payment = $payment;
         $this->amount = $this->sumItemsAmount($this->items());
         $this->requestId = $this->generateRequestId();
     }
@@ -62,6 +70,14 @@ abstract class ApiRequestBase implements ApiRequestInterface
     private function generateRequestId(): string
     {
         return Uuid::uuid4()->toString();
+    }
+
+    /**
+     * @return PaymentTypeInterface[]
+     */
+    public function payment(): array
+    {
+        return $this->payment;
     }
 
     /**
