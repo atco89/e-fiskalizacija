@@ -189,6 +189,11 @@
                                 <th class="text-start">Преостало за плаћање:</th>
                                 <th class="text-end">{{ '0.00' | decimal }}</th>
                             </tr>
+                        {% elseif request | instanceof('\\TaxCore\\Request\\RefundBuilder') %}
+                            <tr>
+                                <th class="text-start">Готовина:</th>
+                                <td class="text-end">{{ request.amount | decimal }}</td>
+                            </tr>
                         {% else %}
                             {% for paymentType in request.payment %}
                                 <tr>
