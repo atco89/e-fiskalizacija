@@ -192,7 +192,7 @@
                         {% elseif request | instanceof('\\TaxCore\\Request\\RefundBuilder') %}
                             <tr>
                                 <th class="text-start">Готовина:</th>
-                                <td class="text-end">{{ request.amount | decimal }}</td>
+                                <th class="text-end">{{ request.amount | decimal }}</th>
                             </tr>
                         {% else %}
                             {% for paymentType in request.payment %}
