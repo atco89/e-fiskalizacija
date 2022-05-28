@@ -178,8 +178,7 @@
                             </tr>
                         {% endif %}
 
-                        {% if request | instanceof('\\TaxCore\\Entities\\AdvanceSaleAmountInterface')
-                            and request | instanceof('\\TaxCore\\Entities\\NormalSaleInterface') %}
+                        {% if request | instanceof('\\TaxCore\\Entities\\AdvanceSaleAmountInterface') %}
                             {% for paymentType in request.payment %}
                                 <tr>
                                     <td class="text-start">{{ paymentType.name }}:</td>
@@ -189,11 +188,6 @@
                             <tr>
                                 <th class="text-start">Преостало за плаћање:</th>
                                 <th class="text-end">{{ '0.00' | decimal }}</th>
-                            </tr>
-                        {% elseif request | instanceof('\\TaxCore\\Entities\\RefundInterface') %}
-                            <tr>
-                                <td class="text-start">Готовина:</td>
-                                <td class="text-end">{{ request.amount | decimal }}</td>
                             </tr>
                         {% else %}
                             {% for paymentType in request.payment %}
