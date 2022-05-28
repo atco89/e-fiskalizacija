@@ -315,7 +315,7 @@ final class Request extends RequestBuilder implements RequestMethods
     {
         $advanceSaleResponseBuilder = $this->advanceSaleBuyerIdentifiedRefund(
             $items,
-            $payment,
+            $advanceSalePayment,
             $referentDocumentNumber,
             $referentDocumentDateTime,
             $taxRateLabel,
