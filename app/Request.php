@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use TaxCore\Entities\ApiRequestInterface;
 use TaxCore\Entities\ConfigurationInterface;
+use TaxCore\Entities\Enums\PaymentType;
 use TaxCore\Entities\Enums\TaxRateLabel;
 use TaxCore\Entities\ItemInterface;
 use TaxCore\Entities\PaymentTypeInterface;
@@ -445,9 +446,50 @@ final class Request extends RequestBuilder implements RequestMethods
         float             $recievedAmount,
     ): ResponsesBuilder
     {
+        $advanceSalePayment = [new class($recievedAmount) implements PaymentTypeInterface {
+
+            /**
+             * @var float
+             */
+            protected float $recievedAmount;
+
+            /**
+             * @param float $recievedAmount
+             */
+            public function __construct(float $recievedAmount)
+            {
+                $this->recievedAmount = $recievedAmount;
+            }
+
+            /**
+             * @return PaymentType
+             */
+            public function type(): PaymentType
+            {
+                return PaymentType::CASH;
+            }
+
+            /**
+             * @return string
+             */
+            public function name(): string
+            {
+                return 'Готовина';
+            }
+
+            /**
+             * @return float
+             */
+            public function amount(): float
+            {
+                return $this->recievedAmount;
+            }
+        }];
+
+
         $advanceSaleResponseBuilder = $this->advanceSaleRefund(
             $items,
-            $payment,
+            $advanceSalePayment,
             $referentDocumentNumber,
             $referentDocumentDateTime,
             $taxRateLabel,
