@@ -251,7 +251,7 @@ final class Request extends RequestBuilder implements RequestMethods
             $buyerId
         ));
 
-        $copySaleBuyerIdentifiedResponseBuilder = $this->copySaleBuyerIdentifiedBuilder(
+        $copySaleBuyerIdentifiedResponseBuilder = $this->copySaleBuyerIdentifiedRefund(
             $items,
             $payment,
             $normalSaleBuyerIdentifiedRefundResponseBuilder->getResponse()->invoiceNumber(),
