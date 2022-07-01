@@ -69,7 +69,7 @@ abstract class ApiRequestBase implements ApiRequestInterface
      */
     private function generateRequestId(): string
     {
-        return Uuid::uuid4()->toString();
+        return md5(Uuid::uuid4()->toString());
     }
 
     /**
