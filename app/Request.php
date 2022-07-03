@@ -85,7 +85,7 @@ final class Request extends RequestBuilder implements RequestMethods
             $httpClientResponse = $httpClient->post($this->configuration->apiUrl(), $this->requestOptions($request));
             $response = new Response(json_decode($httpClientResponse->getBody()->getContents()));
             return $this->buildResponse($request, $response);
-        } catch (LoaderError | RuntimeError | SyntaxError | GuzzleException | Exception | Throwable $e) {
+        } catch (LoaderError|RuntimeError|SyntaxError|GuzzleException|Exception|Throwable $e) {
             throw new TaxCoreRequestException($e->getMessage());
         }
     }
@@ -155,33 +155,6 @@ final class Request extends RequestBuilder implements RequestMethods
             $payment,
             $referentDocumentNumber,
             $referentDocumentDateTime
-        );
-        return $this->run($serviceRequest);
-    }
-
-    /**
-     * @param ItemInterface[] $items
-     * @param PaymentTypeInterface[] $payment
-     * @param string $referentDocumentNumber
-     * @param DateTimeInterface $referentDocumentDateTime
-     * @param string $buyerId
-     * @return ResponseBuilder
-     * @throws TaxCoreRequestException
-     */
-    public function copySaleBuyerIdentifiedRefund(
-        array             $items,
-        array             $payment,
-        string            $referentDocumentNumber,
-        DateTimeInterface $referentDocumentDateTime,
-        string            $buyerId
-    ): ResponseBuilder
-    {
-        $serviceRequest = new RequestCopySaleBuyerIdentifiedRefund(
-            $items,
-            $payment,
-            $referentDocumentNumber,
-            $referentDocumentDateTime,
-            $buyerId
         );
         return $this->run($serviceRequest);
     }
@@ -274,6 +247,33 @@ final class Request extends RequestBuilder implements RequestMethods
      * @return ResponseBuilder
      * @throws TaxCoreRequestException
      */
+    public function copySaleBuyerIdentifiedRefund(
+        array             $items,
+        array             $payment,
+        string            $referentDocumentNumber,
+        DateTimeInterface $referentDocumentDateTime,
+        string            $buyerId
+    ): ResponseBuilder
+    {
+        $serviceRequest = new RequestCopySaleBuyerIdentifiedRefund(
+            $items,
+            $payment,
+            $referentDocumentNumber,
+            $referentDocumentDateTime,
+            $buyerId
+        );
+        return $this->run($serviceRequest);
+    }
+
+    /**
+     * @param ItemInterface[] $items
+     * @param PaymentTypeInterface[] $payment
+     * @param string $referentDocumentNumber
+     * @param DateTimeInterface $referentDocumentDateTime
+     * @param string $buyerId
+     * @return ResponseBuilder
+     * @throws TaxCoreRequestException
+     */
     public function copySaleBuyerIdentifiedBuilder(
         array             $items,
         array             $payment,
@@ -333,6 +333,8 @@ final class Request extends RequestBuilder implements RequestMethods
             $advanceSaleResponse->sdcDateTime(),
             $advanceSaleResponse->totalAmount(),
             $advanceSaleResponse->taxItems(),
+            $referentDocumentNumber,
+            $referentDocumentDateTime,
             $buyerId
         ));
         return new ResponsesBuilder($advanceSaleResponseBuilder, $normalSaleResponseBuilder);
@@ -505,6 +507,8 @@ final class Request extends RequestBuilder implements RequestMethods
             $advanceSaleResponse->sdcDateTime(),
             $advanceSaleResponse->totalAmount(),
             $advanceSaleResponse->taxItems(),
+            $referentDocumentNumber,
+            $referentDocumentDateTime,
         ));
         return new ResponsesBuilder($advanceSaleResponseBuilder, $normalSaleResponseBuilder);
     }

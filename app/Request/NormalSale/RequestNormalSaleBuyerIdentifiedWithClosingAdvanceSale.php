@@ -26,6 +26,8 @@ final class RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale extends Close
      * @param DateTimeInterface $referentDocumentDateTime
      * @param float $receivedAmount
      * @param TaxItemInterface[] $receivedTax
+     * @param string $lastReferentDocumentNumber
+     * @param DateTimeInterface $lastReferentDocumentDateTime
      * @param string $buyerId
      */
     public function __construct(
@@ -35,6 +37,8 @@ final class RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale extends Close
         DateTimeInterface $referentDocumentDateTime,
         float             $receivedAmount,
         array             $receivedTax,
+        string            $lastReferentDocumentNumber,
+        DateTimeInterface $lastReferentDocumentDateTime,
         string            $buyerId
     )
     {
@@ -45,7 +49,9 @@ final class RequestNormalSaleBuyerIdentifiedWithClosingAdvanceSale extends Close
             $referentDocumentNumber,
             $referentDocumentDateTime,
             $receivedAmount,
-            $receivedTax
+            $receivedTax,
+            $lastReferentDocumentNumber,
+            $lastReferentDocumentDateTime
         );
     }
 

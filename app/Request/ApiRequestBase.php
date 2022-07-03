@@ -57,6 +57,14 @@ abstract class ApiRequestBase implements ApiRequestInterface
     }
 
     /**
+     * @return float
+     */
+    final public function amount(): float
+    {
+        return $this->amount;
+    }
+
+    /**
      * @return ItemInterface[]
      */
     public function items(): array
@@ -94,14 +102,6 @@ abstract class ApiRequestBase implements ApiRequestInterface
     final public function requestId(): string
     {
         return $this->requestId;
-    }
-
-    /**
-     * @return float
-     */
-    final public function amount(): float
-    {
-        return $this->amount;
     }
 
     /**

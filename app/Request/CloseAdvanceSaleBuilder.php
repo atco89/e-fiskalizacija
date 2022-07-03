@@ -38,12 +38,24 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
     protected array $receivedTax;
 
     /**
+     * @var string
+     */
+    protected string $lastReferentDocumentNumber;
+
+    /**
+     * @var DateTimeInterface
+     */
+    protected DateTimeInterface $lastReferentDocumentDateTime;
+
+    /**
      * @param ItemInterface[] $items
      * @param PaymentTypeInterface[] $payment
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param float $receivedAmount
      * @param TaxItemInterface[] $receivedTax
+     * @param string $lastReferentDocumentNumber
+     * @param DateTimeInterface $lastReferentDocumentDateTime
      */
     public function __construct(
         array             $items,
@@ -51,13 +63,17 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         float             $receivedAmount,
-        array             $receivedTax
+        array             $receivedTax,
+        string            $lastReferentDocumentNumber,
+        DateTimeInterface $lastReferentDocumentDateTime
     )
     {
         $this->referentDocumentNumber = $referentDocumentNumber;
         $this->referentDocumentDateTime = $referentDocumentDateTime;
         $this->receivedAmount = $receivedAmount;
         $this->receivedTax = $receivedTax;
+        $this->lastReferentDocumentNumber = $lastReferentDocumentNumber;
+        $this->lastReferentDocumentDateTime = $lastReferentDocumentDateTime;
         parent::__construct($items, $payment);
     }
 
@@ -104,27 +120,30 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
      */
     public function advertisementItems(): array|null
     {
-        return [new class($this->referentDocumentNumber(), $this->referentDocumentDateTime())
+        return [new class($this->lastReferentDocumentNumber, $this->lastReferentDocumentDateTime)
             implements AdvertisementItemInterface {
 
             /**
              * @var string
              */
-            protected string $referentDocumentNumber;
+            protected string $lastReferentDocumentNumber;
 
             /**
              * @var DateTimeInterface
              */
-            protected DateTimeInterface $referentDocumentDateTime;
+            protected DateTimeInterface $lastReferentDocumentDateTime;
 
             /**
-             * @param string $referentDocumentNumber
-             * @param DateTimeInterface $referentDocumentDateTime
+             * @param string $lastReferentDocumentNumber
+             * @param DateTimeInterface $lastReferentDocumentDateTime
              */
-            public function __construct(string $referentDocumentNumber, DateTimeInterface $referentDocumentDateTime)
+            public function __construct(
+                string            $lastReferentDocumentNumber,
+                DateTimeInterface $lastReferentDocumentDateTime
+            )
             {
-                $this->referentDocumentNumber = $referentDocumentNumber;
-                $this->referentDocumentDateTime = $referentDocumentDateTime;
+                $this->lastReferentDocumentNumber = $lastReferentDocumentNumber;
+                $this->lastReferentDocumentDateTime = $lastReferentDocumentDateTime;
             }
 
             /**
@@ -133,8 +152,8 @@ abstract class CloseAdvanceSaleBuilder extends SaleBuilder
             public function name(): string
             {
                 return implode(' ', [
-                    $this->referentDocumentNumber,
-                    $this->referentDocumentDateTime->format('d.m.Y')
+                    $this->lastReferentDocumentNumber,
+                    $this->lastReferentDocumentDateTime->format('d.m.Y')
                 ]);
             }
 
