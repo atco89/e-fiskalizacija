@@ -18,21 +18,21 @@ interface RequestMethods
      * @param ItemInterface[] $items
      * @param PaymentTypeInterface[] $payment
      * @param TaxRateLabel $taxRateLabel
-     * @param float $recievedAmount
+     * @param float $receivedAmount
      * @return ResponseBuilder
      */
     public function advanceSale(
         array        $items,
         array        $payment,
         TaxRateLabel $taxRateLabel,
-        float        $recievedAmount
+        float        $receivedAmount
     ): ResponseBuilder;
 
     /**
      * @param ItemInterface[] $items
      * @param PaymentTypeInterface[] $payment
      * @param TaxRateLabel $taxRateLabel
-     * @param float $recievedAmount
+     * @param float $receivedAmount
      * @param string $buyerId
      * @return ResponseBuilder
      */
@@ -40,7 +40,7 @@ interface RequestMethods
         array        $items,
         array        $payment,
         TaxRateLabel $taxRateLabel,
-        float        $recievedAmount,
+        float        $receivedAmount,
         string       $buyerId
     ): ResponseBuilder;
 
@@ -50,7 +50,7 @@ interface RequestMethods
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param TaxRateLabel $taxRateLabel
-     * @param float $recievedAmount
+     * @param float $receivedAmount
      * @param string $buyerId
      * @return ResponseBuilder
      */
@@ -60,7 +60,7 @@ interface RequestMethods
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         TaxRateLabel      $taxRateLabel,
-        float             $recievedAmount,
+        float             $receivedAmount,
         string            $buyerId
     ): ResponseBuilder;
 
@@ -70,7 +70,7 @@ interface RequestMethods
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param TaxRateLabel $taxRateLabel
-     * @param float $recievedAmount
+     * @param float $receivedAmount
      * @return ResponseBuilder
      */
     public function advanceSaleRefund(
@@ -79,7 +79,7 @@ interface RequestMethods
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         TaxRateLabel      $taxRateLabel,
-        float             $recievedAmount,
+        float             $receivedAmount,
     ): ResponseBuilder;
 
     /**
@@ -189,7 +189,7 @@ interface RequestMethods
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param TaxRateLabel $taxRateLabel
-     * @param float $recievedAmount
+     * @param float $receivedAmount
      * @param string $buyerId
      * @return ResponsesBuilder
      */
@@ -199,7 +199,7 @@ interface RequestMethods
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         TaxRateLabel      $taxRateLabel,
-        float             $recievedAmount,
+        float             $receivedAmount,
         string            $buyerId
     ): ResponsesBuilder;
 
@@ -224,7 +224,7 @@ interface RequestMethods
      * @param string $referentDocumentNumber
      * @param DateTimeInterface $referentDocumentDateTime
      * @param TaxRateLabel $taxRateLabel
-     * @param float $recievedAmount
+     * @param float $receivedAmount
      * @return ResponsesBuilder
      */
     public function normalSaleWithClosingAdvanceSale(
@@ -233,6 +233,6 @@ interface RequestMethods
         string            $referentDocumentNumber,
         DateTimeInterface $referentDocumentDateTime,
         TaxRateLabel      $taxRateLabel,
-        float             $recievedAmount,
+        float             $receivedAmount,
     ): ResponsesBuilder;
 }

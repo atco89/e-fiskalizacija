@@ -43,9 +43,9 @@ abstract class RequestBuilder
     protected function requestOptions(ApiRequestInterface $request): array
     {
         return [
-            RequestOptions::CERT => $this->cert(),
+            RequestOptions::CERT    => $this->cert(),
             RequestOptions::HEADERS => $this->headers($request->requestId()),
-            RequestOptions::JSON => $this->requestBody($request),
+            RequestOptions::JSON    => $this->requestBody($request),
         ];
     }
 
@@ -68,11 +68,11 @@ abstract class RequestBuilder
     private function headers(string $requestId): array
     {
         return [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'RequestId' => $requestId,
+            'Accept'          => 'application/json',
+            'Content-Type'    => 'application/json',
+            'RequestId'       => $requestId,
             'Accept-Language' => $this->configuration->language(),
-            'PAC' => $this->configuration->pac(),
+            'PAC'             => $this->configuration->pac(),
         ];
     }
 
@@ -83,15 +83,15 @@ abstract class RequestBuilder
     private function requestBody(ApiRequestInterface $request): array
     {
         $props = [
-            'invoiceType' => $request->invoiceType()->value,
-            'transactionType' => $request->transactionType()->value,
-            'invoiceNumber' => $this->configuration->esdcNumber(),
-            'cashier' => $this->configuration->cashier(),
+            'invoiceType'            => $request->invoiceType()->value,
+            'transactionType'        => $request->transactionType()->value,
+            'invoiceNumber'          => $this->configuration->esdcNumber(),
+            'cashier'                => $this->configuration->cashier(),
             'referentDocumentNumber' => $this->loadReferentDocumentNumber($request),
-            'referentDocumentDT' => $this->loadReferentDocumentDateTime($request),
-            'items' => $this->buildItems($request->items()),
-            'payment' => $this->buildPayment($request->payment()),
-            'options' => $this->buildOptions(),
+            'referentDocumentDT'     => $this->loadReferentDocumentDateTime($request),
+            'items'                  => $this->buildItems($request->items()),
+            'payment'                => $this->buildPayment($request->payment()),
+            'options'                => $this->buildOptions(),
         ];
 
         if ($request instanceof RequestAdvanceSale) {
@@ -140,11 +140,11 @@ abstract class RequestBuilder
     {
         return array_map(function (ItemInterface $item): array {
             return [
-                'gtin' => $item->gtin(),
-                'name' => $item->name(),
-                'quantity' => $item->quantity(),
-                'unitPrice' => $item->unitPrice(),
-                'labels' => $item->labels(),
+                'gtin'        => $item->gtin(),
+                'name'        => $item->name(),
+                'quantity'    => $item->quantity(),
+                'unitPrice'   => $item->unitPrice(),
+                'labels'      => $item->labels(),
                 'totalAmount' => $item->amount(),
             ];
         }, $items);
@@ -159,7 +159,7 @@ abstract class RequestBuilder
         return array_map(function (PaymentTypeInterface $paymentType) {
             return [
                 'paymentType' => $paymentType->type()->value,
-                'amount' => $paymentType->amount(),
+                'amount'      => $paymentType->amount(),
             ];
         }, $paymentTypes);
     }
@@ -171,7 +171,7 @@ abstract class RequestBuilder
     private function buildOptions(): array
     {
         return [
-            'OmitQRCodeGen' => 0,
+            'OmitQRCodeGen'             => 0,
             'OmitTextualRepresentation' => 1,
         ];
     }

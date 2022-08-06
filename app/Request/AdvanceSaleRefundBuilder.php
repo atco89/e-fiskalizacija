@@ -20,7 +20,7 @@ abstract class AdvanceSaleRefundBuilder extends RefundBuilder
     /**
      * @var float
      */
-    protected float $recievedAmount;
+    protected float $receivedAmount;
 
     /**
      * @param ItemInterface[] $items
@@ -40,7 +40,7 @@ abstract class AdvanceSaleRefundBuilder extends RefundBuilder
     )
     {
         $this->taxRateLabel = $taxRateLabel;
-        $this->recievedAmount = $recievedAmount;
+        $this->receivedAmount = $recievedAmount;
         parent::__construct($items, $payment, $referentDocumentNumber, $referentDocumentDateTime);
     }
 
@@ -50,7 +50,7 @@ abstract class AdvanceSaleRefundBuilder extends RefundBuilder
      */
     final public function items(): array
     {
-        return [$this->buildAdvanceSaleItem($this->taxRateLabel, $this->recievedAmount)];
+        return [$this->buildAdvanceSaleItem($this->taxRateLabel, $this->receivedAmount)];
     }
 
     /**

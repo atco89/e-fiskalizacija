@@ -20,18 +20,18 @@ abstract class AdvanceSaleBuilder extends SaleBuilder
     /**
      * @var float
      */
-    protected float $recievedAmount;
+    protected float $receivedAmount;
 
     /**
      * @param ItemInterface[] $items
      * @param PaymentTypeInterface[] $payment
      * @param TaxRateLabel $taxRateLabel
-     * @param float $recievedAmount
+     * @param float $receivedAmount
      */
-    public function __construct(array $items, array $payment, TaxRateLabel $taxRateLabel, float $recievedAmount)
+    public function __construct(array $items, array $payment, TaxRateLabel $taxRateLabel, float $receivedAmount)
     {
         $this->taxRateLabel = $taxRateLabel;
-        $this->recievedAmount = $recievedAmount;
+        $this->receivedAmount = $receivedAmount;
         parent::__construct($items, $payment);
     }
 
@@ -49,7 +49,7 @@ abstract class AdvanceSaleBuilder extends SaleBuilder
      */
     final public function items(): array
     {
-        return [$this->buildAdvanceSaleItem($this->taxRateLabel, $this->recievedAmount)];
+        return [$this->buildAdvanceSaleItem($this->taxRateLabel, $this->receivedAmount)];
     }
 
     /**

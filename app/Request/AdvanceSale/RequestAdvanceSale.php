@@ -22,12 +22,12 @@ final class RequestAdvanceSale extends AdvanceSaleBuilder
      * @param ItemInterface[] $items
      * @param PaymentTypeInterface[] $payment
      * @param TaxRateLabel $taxRateLabel
-     * @param float $recievedAmount
+     * @param float $receivedAmount
      */
-    public function __construct(array $items, array $payment, TaxRateLabel $taxRateLabel, float $recievedAmount)
+    public function __construct(array $items, array $payment, TaxRateLabel $taxRateLabel, float $receivedAmount)
     {
         $this->issueDateTime = $this->generateIssueDateTime();
-        parent::__construct($items, $payment, $taxRateLabel, $recievedAmount);
+        parent::__construct($items, $payment, $taxRateLabel, $receivedAmount);
     }
 
     /**

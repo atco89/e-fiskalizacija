@@ -76,11 +76,11 @@ final class ResponseBuilder
     private function title(): string
     {
         $invoiceType = match ($this->request->invoiceType()) {
-            InvoiceType::NORMAL   => 'промет',
+            InvoiceType::NORMAL => 'промет',
             InvoiceType::PROFORMA => 'предрачун',
-            InvoiceType::COPY     => 'копија',
+            InvoiceType::COPY => 'копија',
             InvoiceType::TRAINING => 'обука',
-            InvoiceType::ADVANCE  => 'аванс',
+            InvoiceType::ADVANCE => 'аванс',
         };
         $transactionType = $this->request->transactionType() === TransactionType::SALE ? 'продаја' : 'рефундација';
         return implode(' - ', [$invoiceType, $transactionType]);

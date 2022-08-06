@@ -20,19 +20,19 @@ abstract class AdvanceSaleBuyerIdentifiedBuilder extends AdvanceSaleBuilder impl
      * @param ItemInterface[] $items
      * @param PaymentTypeInterface[] $payment
      * @param TaxRateLabel $taxRateLabel
-     * @param float $recievedAmount
+     * @param float $receivedAmount
      * @param string $buyerId
      */
     public function __construct(
         array        $items,
         array        $payment,
         TaxRateLabel $taxRateLabel,
-        float        $recievedAmount,
+        float        $receivedAmount,
         string       $buyerId
     )
     {
         $this->buyerId = $buyerId;
-        parent::__construct($items, $payment, $taxRateLabel, $recievedAmount);
+        parent::__construct($items, $payment, $taxRateLabel, $receivedAmount);
     }
 
     /**
